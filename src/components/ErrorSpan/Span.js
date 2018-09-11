@@ -9,3 +9,11 @@ export const ErrorSpan = props => {
         <span style={styles} className="">x</span>
     );
 };
+
+export const MessageSpan = props => {
+    return(
+        <span className="error-register" style={{ display: props.formIsValid ? 'none' : 'block' }}>
+        {props.message}
+      </span>
+    );
+};

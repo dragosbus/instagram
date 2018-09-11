@@ -51,6 +51,7 @@
     border: 1.5px solid rgb(245, 50, 50);
     border-radius: 50%;
     padding: 0 0.6rem;
+    display: none;
 }
 
 .register-form input {
@@ -76,6 +77,12 @@ hr {
     text-align: center;
     font-size: 1.5rem;
     color: rgba(5, 5, 5, 0.77);
+}
+
+.error-register {
+    color: rgb(247, 71, 71);
+    font-size: 1.6rem;
+    display: none;
 }
 
 footer {
