@@ -7,7 +7,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <LoginPage />
+        <BrowserRouter>
+          <div className="app">
+            <Route to="/" component={LoginPage}/>
+          </div>
+        </BrowserRouter>
       </div>
     );
   }
