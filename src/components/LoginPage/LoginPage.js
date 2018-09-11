@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {auth} from '../../firebase/firebase';
+import { auth } from '../../firebase/firebase';
 import { ErrorSpan, MessageSpan } from '../ErrorSpan/Span';
 import './LoginPage.css';
 
@@ -120,7 +120,7 @@ class LoginPage extends Component {
         this.setState({
           formIsValid: true
         });
-        console.log(auth);
+        auth.createUserWithEmailAndPassword(email.value, pass.value);
       }
     }
   };
