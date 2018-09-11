@@ -80,6 +80,8 @@ hr {
 }
 
 .error-register {
+    width: 80%;
+    text-align: center;
     color: rgb(247, 71, 71);
     font-size: 1.6rem;
     display: none;
