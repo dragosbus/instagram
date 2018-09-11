@@ -120,6 +120,7 @@ class LoginPage extends Component {
         this.setState({
           formIsValid: true
         });
+        //register user here.What is up, are just error handlers
         auth.createUserWithEmailAndPassword(email.value, pass.value);
       }
     }
