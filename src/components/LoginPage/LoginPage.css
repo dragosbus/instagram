@@ -34,8 +34,27 @@
     flex-direction: column;
 }
 
+.register-form div {
+    display: block;
+    width: 80%;
+    text-align: center;
+    position: relative;
+    height: 4.5rem;
+}
+
+.register-form div span {
+    position: absolute;
+    top: 32.5%;
+    right: 1rem;
+    color: rgb(245, 50, 50);
+    font-size: 1.5rem;
+    border: 1.5px solid rgb(245, 50, 50);
+    border-radius: 50%;
+    padding: 0 0.6rem;
+}
+
 .register-form input {
-    width: 75%;
+    width: 100%;
     margin: 1rem auto;
     height: 3.5rem;
     border-radius: 4px;
