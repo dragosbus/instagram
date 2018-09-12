@@ -1,4 +1,5 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
+import {firebase} from '../firebase/firebase';
 
 const loginSuccess = (user) => ({
   type: ActionTypes.LOG_IN_SUCCESS,

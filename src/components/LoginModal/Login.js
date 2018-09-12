@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { loginMiddleware } from '../../actionCreators/actions';
 import './Login.css';
 
 class LoginModal extends Component {
@@ -10,19 +13,28 @@ class LoginModal extends Component {
     };
   }
 
-  onPasswordChange = e => {};
+  onPasswordChange = e => {
+    this.setState({ email: e.target.value });
+  };
 
-  onEmailChange = e => {};
+  onEmailChange = e => {
+    this.setState({ email: e.target.value });
+  };
 
   submitLogin = e => {
     e.preventDefault();
+    this.props.logIn(this.state);
   };
 
   render() {
     return (
       <div
         className="login-modal"
-        onClick={this.props.toggleLoginModal}
+        onClick={e => {
+          if (e.target.className === 'login-modal') {
+            this.props.toggleLoginModal();
+          }
+        }}
         style={{ display: this.props.showModal ? 'flex' : 'none' }}
       >
         <form onSubmit={this.submitLogin}>
@@ -35,4 +47,15 @@ class LoginModal extends Component {
   }
 }
 
-export default LoginModal;
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      logIn: loginMiddleware
+    },
+    dispatch
+  );
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(LoginModal);
