@@ -129,51 +129,56 @@ class LoginPage extends Component {
   render() {
     let { email, fullName, username, pass, repeatPass, errorMessage, formIsValid } = this.state;
     return (
-      <div className="login">
-        <header>
-          <h1 className="logo">Instagram</h1>
-          <h3 className="intro">Sign up to see photos and videos from your friends.</h3>
-        </header>
-        <main>
-          <button className="btn-login">Log in</button>
-          <hr />
-          <form className="register-form" onSubmit={this.submitRegister}>
-            <div>
-              <input type="email" placeholder="Email" value={email.value} onChange={this.onEmailChange} />
-              <ErrorSpan isValidInput={email.isValid} />
-            </div>
-            <div>
-              <input type="text" placeholder="Full Name" value={fullName.value} onChange={this.onFullNameChange} />
-              <ErrorSpan isValidInput={fullName.isValid} />
-            </div>
-            <div>
-              <input type="text" placeholder="Username" value={username.value} onChange={this.onUsernameChange} />
-              <ErrorSpan isValidInput={username.isValid} />
-            </div>
-            <div>
-              <input type="password" placeholder="Password" value={pass.value} onChange={this.onPasswordChange} />
-              <ErrorSpan isValidInput={pass.isValid} />
-            </div>
-            <div>
-              <input
-                type="password"
-                placeholder="Repeat password"
-                value={repeatPass.value}
-                onChange={this.onRepeatPasswordChange}
-              />
-              <ErrorSpan isValidInput={repeatPass.isValid} />
-            </div>
-            <button type="submit">Register</button>
-            <MessageSpan message={errorMessage} formIsValid={formIsValid} />
-          </form>
-          <p>
-            By signing up, you agree to our Terms. Learn how we collect, use and share your data in our Data Policy and
-            how we use cookies and similar technology in our Cookies Policy.
-          </p>
-        </main>
-        <footer>
-          <p>2018 Instagram clone</p>
-        </footer>
+      <div className="login-page">
+        <div className="intro-images">
+          <img src="https://www.instagram.com/static/images/homepage/screenshot3.jpg/f0c687aa6ec2.jpg" alt="intro"/>
+        </div>
+        <div className="login">
+          <header>
+            <h1 className="logo">Instagram</h1>
+            <h3 className="intro">Sign up to see photos and videos from your friends.</h3>
+          </header>
+          <main>
+            <button className="btn-login">Log in</button>
+            <hr />
+            <form className="register-form" onSubmit={this.submitRegister}>
+              <div>
+                <input type="email" placeholder="Email" value={email.value} onChange={this.onEmailChange} />
+                <ErrorSpan isValidInput={email.isValid} />
+              </div>
+              <div>
+                <input type="text" placeholder="Full Name" value={fullName.value} onChange={this.onFullNameChange} />
+                <ErrorSpan isValidInput={fullName.isValid} />
+              </div>
+              <div>
+                <input type="text" placeholder="Username" value={username.value} onChange={this.onUsernameChange} />
+                <ErrorSpan isValidInput={username.isValid} />
+              </div>
+              <div>
+                <input type="password" placeholder="Password" value={pass.value} onChange={this.onPasswordChange} />
+                <ErrorSpan isValidInput={pass.isValid} />
+              </div>
+              <div>
+                <input
+                  type="password"
+                  placeholder="Repeat password"
+                  value={repeatPass.value}
+                  onChange={this.onRepeatPasswordChange}
+                />
+                <ErrorSpan isValidInput={repeatPass.isValid} />
+              </div>
+              <button type="submit">Register</button>
+              <MessageSpan message={errorMessage} formIsValid={formIsValid} />
+            </form>
+            <p>
+              By signing up, you agree to our Terms. Learn how we collect, use and share your data in our Data Policy
+              and how we use cookies and similar technology in our Cookies Policy.
+            </p>
+          </main>
+          <footer>
+            <p>2018 Instagram clone</p>
+          </footer>
+        </div>
       </div>
     );
   }

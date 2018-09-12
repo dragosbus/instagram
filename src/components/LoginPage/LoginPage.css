@@ -94,3 +94,36 @@ footer {
 footer p {
     color: rgb(10, 10, 10);
 }
+
+.intro-images {
+    background: url('https://www.instagram.com/static/images/homepage/home-phones.png/43cc71bb1b43.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 600px;
+    margin: 0 auto;
+    display: none;
+    position: relative;
+}
+
+.intro-images img {
+    position: absolute;
+    top: 7.2rem;
+    right: 7.5rem;
+    width: 25.5rem;
+    height: 45rem;
+}
+
+@media (min-width: 960px) {
+    .login-page {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .intro-images {
+        width: 50rem;
+        display: block;
+    }
+    .login {
+        width: 50%;
+    }
+}
