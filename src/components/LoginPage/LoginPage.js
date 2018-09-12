@@ -30,7 +30,8 @@ class LoginPage extends Component {
         value: ''
       },
       formIsValid: true,
-      errorMessage: ''
+      errorMessage: '',
+      successMessage: ''
     };
   }
 
@@ -124,7 +125,8 @@ class LoginPage extends Component {
         });
       } else {
         this.setState({
-          formIsValid: true
+          formIsValid: true,
+          successMessage: 'Welcome'
         });
         //register user here.What is up, are just error handlers
         auth.createUserWithEmailAndPassword(email.value, pass.value);
@@ -134,6 +136,13 @@ class LoginPage extends Component {
 
   render() {
     let { email, fullName, username, pass, repeatPass, errorMessage, formIsValid } = this.state;
+
+    let messageSpan = !formIsValid ? (
+      <MessageSpan message={errorMessage} formIsValid={formIsValid} />
+    ) : (
+      <span style={{display: this.state.successMessage ? 'block' : 'none'}} className="success-register">"Welcome"</span>
+    );
+
     return (
       <div className="login-page">
         <div className="intro-images">
@@ -176,7 +185,7 @@ class LoginPage extends Component {
                 <ErrorSpan isValidInput={repeatPass.isValid} />
               </div>
               <button type="submit">Register</button>
-              <MessageSpan message={errorMessage} formIsValid={formIsValid} />
+              {messageSpan}
             </form>
             <p>
               By signing up, you agree to our Terms. Learn how we collect, use and share your data in our Data Policy

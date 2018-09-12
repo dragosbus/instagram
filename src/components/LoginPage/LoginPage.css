@@ -87,6 +87,14 @@ hr {
     display: none;
 }
 
+.success-register {
+    width: 80%;
+    text-align: center;
+    color: rgb(7, 206, 66);
+    font-size: 1.6rem;
+    display: none;
+}
+
 footer {
     padding: 1rem 0;
 }
