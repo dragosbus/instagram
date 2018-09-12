@@ -16,7 +16,7 @@ class App extends Component {
             <Route
               to="/"
               render={props => {
-                return !this.props.user.isSignedIn ? <Home /> : <LoginPage />;
+                return this.props.user.isSignedIn ? <Home /> : <LoginPage />;
               }}
             />
           </div>

@@ -18,7 +18,7 @@ class Home extends Component {
           <NavLink to="/add" activeStyle={activeStyle}>
             <FaCamera />
           </NavLink>
-          <NavLink to="/add" className="logo">
+          <NavLink to="/" className="logo">
             Instagram
           </NavLink>
           <NavLink to="/recomandations" activeStyle={activeStyle}>
