@@ -8,6 +8,7 @@ class LoginPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showModal: false,
       email: {
         isValid: true,
         value: ''
@@ -32,6 +33,10 @@ class LoginPage extends Component {
       errorMessage: ''
     };
   }
+
+  toggleLoginModal = () => {
+    this.setState({ showModal: !this.state.showModal });
+  };
 
   changeInputHandler = (e, stateTarget) => {
     if (e.target.value) {
@@ -132,7 +137,7 @@ class LoginPage extends Component {
     return (
       <div className="login-page">
         <div className="intro-images">
-          <img src="https://www.instagram.com/static/images/homepage/screenshot3.jpg/f0c687aa6ec2.jpg" alt="intro"/>
+          <img src="https://www.instagram.com/static/images/homepage/screenshot3.jpg/f0c687aa6ec2.jpg" alt="intro" />
         </div>
         <div className="login">
           <header>
@@ -140,7 +145,9 @@ class LoginPage extends Component {
             <h3 className="intro">Sign up to see photos and videos from your friends.</h3>
           </header>
           <main>
-            <button className="btn-login">Log in</button>
+            <button className="btn-login" onClick={this.toggleLoginModal}>
+              Log in
+            </button>
             <hr />
             <form className="register-form" onSubmit={this.submitRegister}>
               <div>
@@ -180,7 +187,7 @@ class LoginPage extends Component {
             <p>2018 Instagram clone</p>
           </footer>
         </div>
-        <LoginModal/>
+        <LoginModal toggleLoginModal={this.toggleLoginModal} showModal={this.state.showModal} />
       </div>
     );
   }

@@ -20,7 +20,11 @@ class LoginModal extends Component {
 
   render() {
     return (
-      <div className="login-modal">
+      <div
+        className="login-modal"
+        onClick={this.props.toggleLoginModal}
+        style={{ display: this.props.showModal ? 'flex' : 'none' }}
+      >
         <form onSubmit={this.submitLogin}>
           <input type="email" placeholder="Email" value={this.state.email} onChange={this.onEmailChange} />
           <input type="password" placeholder="Password" value={this.state.password} onChange={this.onPasswordChange} />
