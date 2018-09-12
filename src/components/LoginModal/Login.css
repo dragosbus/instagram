@@ -42,6 +42,11 @@
     font-weight: 700;
 }
 
+.error-login {
+  font-size: 1.5rem;
+  color: rgb(252, 81, 81);
+}
+
 @media(min-width: 660px) {
   .login-modal form {
     width: 65%;

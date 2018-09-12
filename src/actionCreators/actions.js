@@ -11,9 +11,18 @@ const loginError = () => ({
 });
 
 export const loginMiddleware = ({email ,password}) => dispatch => {
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(()=>console.log('succes'))
-    .catch(err=>console.log('not success'));
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(()=>{
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          dispatch(loginSuccess(user));
+        } else {
+          // User is signed out.
+          // ...
+        }
+      });
+    })
+    .catch(err=>dispatch(loginError()));
 };
 
 

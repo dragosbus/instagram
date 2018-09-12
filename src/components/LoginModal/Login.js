@@ -14,7 +14,7 @@ class LoginModal extends Component {
   }
 
   onPasswordChange = e => {
-    this.setState({ email: e.target.value });
+    this.setState({ password: e.target.value });
   };
 
   onEmailChange = e => {
@@ -27,6 +27,7 @@ class LoginModal extends Component {
   };
 
   render() {
+    let errorSpan = this.props.user.error ? <span className="error-login">{this.props.user.error}</span> : '';
     return (
       <div
         className="login-modal"
@@ -38,6 +39,7 @@ class LoginModal extends Component {
         style={{ display: this.props.showModal ? 'flex' : 'none' }}
       >
         <form onSubmit={this.submitLogin}>
+          {errorSpan}
           <input type="email" placeholder="Email" value={this.state.email} onChange={this.onEmailChange} />
           <input type="password" placeholder="Password" value={this.state.password} onChange={this.onPasswordChange} />
           <button type="submit">Login</button>
@@ -55,7 +57,11 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
+const mapStateToProps = state => ({
+  user: state.user
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(LoginModal);
