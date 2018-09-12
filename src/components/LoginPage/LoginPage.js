@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { auth } from '../../firebase/firebase';
 import { ErrorSpan, MessageSpan } from '../ErrorSpan/Span';
+import LoginModal from '../LoginModal/Login';
 import './LoginPage.css';
 
 class LoginPage extends Component {
@@ -179,6 +180,7 @@ class LoginPage extends Component {
             <p>2018 Instagram clone</p>
           </footer>
         </div>
+        <LoginModal/>
       </div>
     );
   }
