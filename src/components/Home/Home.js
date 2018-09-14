@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { BrowserRouter, Route, NavLink } from 'react-router-dom';
 import { FaHome, FaSearch, FaPlus, FaHeart, FaUser, FaCamera, FaUserPlus } from 'react-icons/fa';
 import './Home.css';
+
+import Profile from '../Profile/Profile';
 
 class Home extends Component {
   constructor(props) {
@@ -25,7 +27,9 @@ class Home extends Component {
             <FaUserPlus />
           </NavLink>
         </header>
-        <main />
+        <main>
+        <Profile/>
+        </main>
         <footer>
           <NavLink to="/" activeStyle={activeStyle}>
             <FaHome />

@@ -14,7 +14,7 @@ class App extends Component {
         <BrowserRouter>
           <div className="app">
             <Route
-              to="/"
+              exact path="/"
               render={props => {
                 return this.props.user.isSignedIn ? <Home /> : <LoginPage />;
               }}
