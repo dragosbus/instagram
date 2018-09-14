@@ -13,40 +13,46 @@ class Home extends Component {
   }
 
   render() {
+    console.log(this.props);
     let activeStyle = { fontSize: '30px' };
     return (
       <div className="home">
-        <header>
-          <NavLink to="/add" activeStyle={activeStyle}>
-            <FaCamera />
-          </NavLink>
-          <NavLink to="/" className="logo">
-            Instagram
-          </NavLink>
-          <NavLink to="/recomandations" activeStyle={activeStyle}>
-            <FaUserPlus />
-          </NavLink>
-        </header>
-        <main>
-        <Profile/>
-        </main>
-        <footer>
-          <NavLink to="/" activeStyle={activeStyle}>
-            <FaHome />
-          </NavLink>
-          <NavLink to="/search" activeStyle={activeStyle}>
-            <FaSearch />
-          </NavLink>
-          <NavLink to="/add" activeStyle={activeStyle}>
-            <FaPlus />
-          </NavLink>
-          <NavLink to="/activity" activeStyle={activeStyle}>
-            <FaHeart />
-          </NavLink>
-          <NavLink to="/profile" activeStyle={activeStyle}>
-            <FaUser />
-          </NavLink>
-        </footer>
+        <BrowserRouter>
+          <div>
+            <header>
+              <NavLink to="/add" activeStyle={activeStyle}>
+                <FaCamera />
+              </NavLink>
+              <NavLink to="/" className="logo">
+                Instagram
+              </NavLink>
+              <NavLink to="/recomandations" activeStyle={activeStyle}>
+                <FaUserPlus />
+              </NavLink>
+            </header>
+            <main>
+              <Route exact path="/" render={props => "hello"} />
+              <Route exact path="/profile" component={Profile} />
+            </main>
+            <footer>
+              <NavLink to="/" activeStyle={activeStyle}>
+                <FaHome />
+              </NavLink>
+              <NavLink to="/search" activeStyle={activeStyle}>
+                <FaSearch />
+              </NavLink>
+              <NavLink to="/add" activeStyle={activeStyle}>
+                <FaPlus />
+              </NavLink>
+              <NavLink to="/activity" activeStyle={activeStyle}>
+                <FaHeart />
+              </NavLink>
+              <NavLink to="/profile" activeStyle={activeStyle}>
+                <FaUser />
+              </NavLink>
+            </footer>
+          </div>
+        </BrowserRouter>
       </div>
     );
   }

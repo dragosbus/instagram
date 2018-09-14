@@ -4,23 +4,13 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import LoginPage from './components/LoginPage/LoginPage';
-import Home from './components/Home/Home';
+import Profile from './components/Profile/Profile';
 
 class App extends Component {
   render() {
-    console.log(this.props.user.isSignedIn);
     return (
       <div className="App">
-        <BrowserRouter>
-          <div className="app">
-            <Route
-              exact path="/"
-              render={props => {
-                return this.props.user.isSignedIn ? <Home /> : <LoginPage />;
-              }}
-            />
-          </div>
-        </BrowserRouter>
+        <LoginPage/>
       </div>
     );
   }
