@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import './Profile.css';
 
 class Profile extends Component {
   render() {
-    console.log(this.props);
+    console.log(this.props.reduxProps);
     return (
       <div className="profile">
         <div className="profile-header">
           <img src="https://www.sgbt.lu/uploads/tx_bisgbio/default-profile_01.png" />
-          <p>{this.props.userData.username}</p>
+          <p>{this.props.reduxProps.userData.username}</p>
           <button>Edit Profile</button>
-          <h4>{this.props.userData.fullName}</h4>
+          <h4>{this.props.reduxProps.userData.fullName}</h4>
         </div>
         <div className="profile-data">
           <p>0 posts</p>
@@ -25,8 +24,4 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  userData: state.userData
-});
-
-export default connect(mapStateToProps)(Profile);
+export default Profile;

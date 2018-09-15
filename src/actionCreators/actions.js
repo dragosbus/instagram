@@ -15,6 +15,11 @@ const loginError = () => ({
   type: ActionTypes.LOG_IN_ERROR
 });
 
+const getUserPosts = (posts) => ({
+  type: ActionTypes.GET_USER_POST,
+  payload: posts
+});
+
 export const loginMiddleware = ({email ,password}) => dispatch => {
   firebase.auth().signInWithEmailAndPassword(email, password)
     .then(()=>{
@@ -23,6 +28,7 @@ export const loginMiddleware = ({email ,password}) => dispatch => {
           dispatch(loginSuccess(user));
           firebase.database().ref(`users/${user.uid}`).on('value', s=>{
             dispatch(getUserData(s.val()));
+            getUserPostMiddleware(user.uid);
           });
         } else {
           // User is signed out.
@@ -31,6 +37,13 @@ export const loginMiddleware = ({email ,password}) => dispatch => {
       });
     })
     .catch(err=>dispatch(loginError()));
+};
+
+export const getUserPostMiddleware = (userId) => dispatch => {
+  firebase.database().ref(`posts/${userId}`).on('value', s=>{
+    // dispatch(getUserPosts(s.val()));
+    console.log(s.val())
+  });
 };
 
 

@@ -136,6 +136,7 @@ class LoginPage extends Component {
             if (user) {
               var uid = user.uid;
               db.ref(`users/${uid}`).set({
+                id: uid,
                 username: this.state.username.value,
                 email: this.state.email.value,
                 gender: '',

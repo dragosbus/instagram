@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import {getUserPostMiddleware} from '../../actionCreators/actions';
 import { BrowserRouter, Route, NavLink, Switch } from 'react-router-dom';
 import { FaHome, FaSearch, FaPlus, FaHeart, FaUser, FaCamera, FaUserPlus } from 'react-icons/fa';
 import './Home.css';
 
 import Profile from '../Profile/Profile';
+import AddPage from '../Add/Add';
 
 class Home extends Component {
+  
   render() {
+    // console.log(this.props)
     let activeStyle = { fontSize: '30px' };
     return (
       <div className="home">
@@ -28,7 +32,12 @@ class Home extends Component {
             <main>
               <Switch>
                 <Route exact path="/" render={props => 'hello'} />
-                <Route exact path="/profile" component={Profile} />
+                <Route exact path="/profile" render={()=>{
+                  return <Profile reduxProps={this.props}/>
+                }} />
+                <Route exact path="/add" render={props=>{
+                  return <AddPage userId={this.props.user.uid}/>
+                }} />
               </Switch>
             </main>
             <footer>
@@ -56,7 +65,18 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user
+  user: state.user,
+  posts: state.userPosts,
+  userData: state.userData
 });
 
-export default connect(mapStateToProps)(Home);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      getPosts: getUserPostMiddleware
+    },
+    dispatch
+  );
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
