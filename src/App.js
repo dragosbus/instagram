@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
+import { BrowserRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import LoginPage from './components/LoginPage/LoginPage';
-import Profile from './components/Profile/Profile';
+import Home from './components/Home/Home';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <LoginPage/>
-      </div>
+      <BrowserRouter>
+        <div className="app">{this.props.user.isSignedIn ? <Home /> : <LoginPage />}</div>
+      </BrowserRouter>
     );
   }
 }

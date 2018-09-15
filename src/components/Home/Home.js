@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { BrowserRouter, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Route, NavLink, Switch } from 'react-router-dom';
 import { FaHome, FaSearch, FaPlus, FaHeart, FaUser, FaCamera, FaUserPlus } from 'react-icons/fa';
 import './Home.css';
 
 import Profile from '../Profile/Profile';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    console.log(this.props);
     let activeStyle = { fontSize: '30px' };
     return (
       <div className="home">
@@ -31,8 +26,10 @@ class Home extends Component {
               </NavLink>
             </header>
             <main>
-              <Route exact path="/" render={props => "hello"} />
-              <Route exact path="/profile" component={Profile} />
+              <Switch>
+                <Route exact path="/" render={props => 'hello'} />
+                <Route exact path="/profile" component={Profile} />
+              </Switch>
             </main>
             <footer>
               <NavLink to="/" activeStyle={activeStyle}>
