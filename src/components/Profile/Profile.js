@@ -50,7 +50,7 @@ class Profile extends Component {
         <div className="profile-posts">
           {
             this.state.posts.map((post, i)=> {
-              return <PostCard key={i} showDetails={()=>this.showDetails(this.state.posts[i])} image={post.photo} likes={post.likes}/>
+              return <PostCard key={i} showDetails={()=>this.showDetails(this.state.posts[i])} image={post.photo} likes={post.likes} comments={0}/>
             })
           }
         </div>

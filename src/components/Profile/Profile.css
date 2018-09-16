@@ -90,6 +90,7 @@
   background: rgba(255, 255, 255, 0.534);
   opacity: 0;
   transition: opacity 0.4s ease-in;
+  cursor: pointer;
 }
 
 .profile-posts .hovered:hover {
@@ -106,6 +107,10 @@
   font-size: 1.75rem;
   margin-right: 1rem;
   text-align: center;
+}
+
+.profile-posts .hovered div a {
+  display: inline-block;
 }
 
 @media(min-width: 900px) {
