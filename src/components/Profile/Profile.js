@@ -60,6 +60,7 @@ class Profile extends Component {
           likes={this.state.currentPost.likes} 
           createdAt={0} 
           showDetailsPost={this.state.showDetailsPost}
+          toggleModal={this.toggleDetailsPost}
         />
       </div>
     );

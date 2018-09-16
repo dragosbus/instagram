@@ -90,6 +90,15 @@
   font-size: 1.5rem;
 }
 
+.close-post-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2rem;
+  background: none;
+  border: none;
+}
+
 @media (min-width:660px) {
   .post-details {
     width: 65%;
@@ -139,5 +148,10 @@
 
   .post-image img {
     height: 50rem;
+  }
+
+  .close-post-modal {
+    color: #fff;
+    font-size: 2.5rem;
   }
 }

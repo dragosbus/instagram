@@ -8,6 +8,7 @@ class PostDetails extends React.Component {
     let data = this.props.data;
     return (
       <div className="overlay" style={{ display: this.props.showDetailsPost ? 'block' : 'none' }}>
+        <button className="close-post-modal" onClick={this.props.toggleModal}>X</button>
         <div className="post-details">
           <div className="header">
             <Link to={`/:${this.props.useridfrompostkey}`}>
