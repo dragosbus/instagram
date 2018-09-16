@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import './Profile.css';
 
 import PostCard from '../PostCard/PostCard';
+import PostDetails from '../PostDetails/Post';
 
 class Profile extends Component {
   state = {
-    posts: []
+    posts: [],
+    currentPost: {},
+    showDetailsPost: false
   }
+
   makePosts = () => {
     for(let id in this.props.reduxProps.posts) {
       this.setState(prevState=>({
@@ -15,9 +19,19 @@ class Profile extends Component {
     }
   }
 
+  toggleDetailsPost = () => {
+    this.setState({showDetailsPost: !this.state.showDetailsPost});
+  };
+
+  showDetails = post =>  {
+    this.setState({currentPost: post});
+    this.toggleDetailsPost();
+  }
+
   componentDidMount() {
     this.makePosts();
   }
+
   render() {
     console.log(this.props)
     return (
@@ -35,11 +49,18 @@ class Profile extends Component {
         </div>
         <div className="profile-posts">
           {
-            this.state.posts.map(post=> {
-              return <PostCard image={post.photo}/>
+            this.state.posts.map((post, i)=> {
+              return <PostCard key={i} showDetails={()=>this.showDetails(this.state.posts[i])} image={post.photo} likes={post.likes}/>
             })
           }
         </div>
+        <PostDetails 
+          data={this.props.reduxProps} 
+          postImg={this.state.currentPost.photo} 
+          likes={this.state.currentPost.likes} 
+          createdAt={0} 
+          showDetailsPost={this.state.showDetailsPost}
+        />
       </div>
     );
   }
