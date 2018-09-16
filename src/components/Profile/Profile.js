@@ -3,7 +3,6 @@ import './Profile.css';
 
 class Profile extends Component {
   render() {
-    console.log(this.props.reduxProps);
     return (
       <div className="profile">
         <div className="profile-header">

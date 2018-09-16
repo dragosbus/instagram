@@ -1,5 +1,7 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
-import {firebase} from '../firebase/firebase';
+import {
+  firebase
+} from '../firebase/firebase';
 
 const loginSuccess = (user) => ({
   type: ActionTypes.LOG_IN_SUCCESS,
@@ -20,31 +22,29 @@ const getUserPosts = (posts) => ({
   payload: posts
 });
 
-export const loginMiddleware = ({email ,password}) => dispatch => {
+export const loginMiddleware = ({
+  email,
+  password
+}) => dispatch => {
   firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(()=>{
-      firebase.auth().onAuthStateChanged(function(user) {
+    .then(() => {
+      firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
+          //login user
           dispatch(loginSuccess(user));
-          firebase.database().ref(`users/${user.uid}`).on('value', s=>{
+          //get user data
+          firebase.database().ref(`users/${user.uid}`).on('value', s => {
             dispatch(getUserData(s.val()));
-            getUserPostMiddleware(user.uid);
+          });
+          //get user posts
+          firebase.database().ref(`posts/${user.uid}`).on('value', s => {
+            dispatch(getUserPosts(s.val()));
           });
         } else {
           // User is signed out.
           // ...
         }
-      });
+      })
     })
-    .catch(err=>dispatch(loginError()));
+    .catch(err => dispatch(loginError()));
 };
-
-export const getUserPostMiddleware = (userId) => dispatch => {
-  firebase.database().ref(`posts/${userId}`).on('value', s=>{
-    // dispatch(getUserPosts(s.val()));
-    console.log(s.val())
-  });
-};
-
-
-

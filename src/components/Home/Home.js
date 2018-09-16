@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {getUserPostMiddleware} from '../../actionCreators/actions';
+import {} from '../../actionCreators/actions';
 import { BrowserRouter, Route, NavLink, Switch } from 'react-router-dom';
 import { FaHome, FaSearch, FaPlus, FaHeart, FaUser, FaCamera, FaUserPlus } from 'react-icons/fa';
 import './Home.css';
@@ -70,13 +70,13 @@ const mapStateToProps = state => ({
   userData: state.userData
 });
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      getPosts: getUserPostMiddleware
-    },
-    dispatch
-  );
+// const mapDispatchToProps = dispatch =>
+//   bindActionCreators(
+//     {
+      
+//     },
+//     dispatch
+//   );
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, null)(Home);
