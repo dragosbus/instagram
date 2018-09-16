@@ -12,7 +12,6 @@ import AddPage from '../Add/Add';
 class Home extends Component {
   
   render() {
-    // console.log(this.props)
     let activeStyle = { fontSize: '30px' };
     return (
       <div className="home">
