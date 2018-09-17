@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import {getUserProfileClikedMiddleware} from '../../actionCreators/actions';
 import './Profile.css';
 
 import PostCard from '../PostCard/PostCard';
@@ -12,9 +15,9 @@ class Profile extends Component {
   }
 
   makePosts = () => {
-    for(let id in this.props.reduxProps.posts) {
+    for(let id in this.props.ownPosts) {
       this.setState(prevState=>({
-        posts: prevState.posts.concat(this.props.reduxProps.posts[id])
+        posts: prevState.posts.concat(this.props.ownPosts[id])
       }));
     }
   }
@@ -34,13 +37,15 @@ class Profile extends Component {
 
   render() {
     console.log(this.props)
+    let data = this.props.path === '/profile' ? this.props.userData : this.props.userClickedData;
+
     return (
       <div className="profile">
         <div className="profile-header">
           <img src="https://www.sgbt.lu/uploads/tx_bisgbio/default-profile_01.png" />
-          <p>{this.props.reduxProps.userData.username}</p>
+          <p>{data.username}</p>
           <button>Edit Profile</button>
-          <h4>{this.props.reduxProps.userData.fullName}</h4>
+          <h4>{data.fullName}</h4>
         </div>
         <div className="profile-data">
           <p>{this.state.posts.length} posts</p>
@@ -55,16 +60,28 @@ class Profile extends Component {
           }
         </div>
         <PostDetails 
-          data={this.props.reduxProps} 
+          data={data} 
           postImg={this.state.currentPost.photo} 
           likes={this.state.currentPost.likes} 
           createdAt={0} 
           showDetailsPost={this.state.showDetailsPost}
           toggleModal={this.toggleDetailsPost}
+          userId={this.state.currentPost.userId}
         />
       </div>
     );
   }
 }
 
-export default Profile;
+const mapStateToProps = state => ({
+  user: state.user,
+  ownPosts: state.ownPosts,
+  userData: state.userData,
+  userClickedData: state.userClickedData,
+  userPosts: state.userPosts
+});
+
+export default connect(
+  mapStateToProps,
+  null
+)(Profile);

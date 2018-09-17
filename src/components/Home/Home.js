@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {} from '../../actionCreators/actions';
 import { BrowserRouter, Route, NavLink, Switch } from 'react-router-dom';
 import { FaCamera, FaUserPlus } from 'react-icons/fa';
 import './Home.css';
@@ -32,8 +30,8 @@ class Home extends Component {
                 <Route exact path="/" render={props => 'hello'} />
                 <Route
                   path="/profile"
-                  render={() => {
-                    return <Profile reduxProps={this.props} />;
+                  render={(props) => {
+                    return <Profile path={props.match.path} />;
                   }}
                 />
                 <Route
@@ -41,6 +39,13 @@ class Home extends Component {
                   path="/add"
                   render={props => {
                     return <AddPage userId={this.props.user.uid} />;
+                  }}
+                />
+                <Route
+                  exact
+                  path="/user/:userId"
+                  render={(props) => {
+                    return <Profile path={props.match.path} userId={props.match.params.userId} />;
                   }}
                 />
               </Switch>
@@ -70,20 +75,9 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user,
-  posts: state.userPosts,
-  userData: state.userData
+  user: state.user
 });
 
-// const mapDispatchToProps = dispatch =>
-//   bindActionCreators(
-//     {
-
-//     },
-//     dispatch
-//   );
-
 export default connect(
-  mapStateToProps,
-  null
+  mapStateToProps
 )(Home);

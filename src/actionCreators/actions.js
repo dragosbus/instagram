@@ -17,10 +17,33 @@ const loginError = () => ({
   type: ActionTypes.LOG_IN_ERROR
 });
 
-const getUserPosts = (posts) => ({
-  type: ActionTypes.GET_USER_POST,
+const getOwnPosts = (posts) => ({
+  type: ActionTypes.GET_OWN_POSTS,
   payload: posts
 });
+
+const getPosts = (posts) => ({
+  type: ActionTypes.GET_USER_POSTS,
+  payload: posts
+});
+
+const getUserProfileCliked = (userId) => ({
+  type: ActionTypes.GET_USER_CLIKED_PROFILE,
+  payload: userId
+});
+
+export const getUserProfileClikedMiddleware = userId => dispatch => {
+  firebase.database().ref(`users/${userId}`).on('value', s => {
+    dispatch(getUserProfileCliked(s.val()));
+  });
+};
+
+export const getPostsMiddleware = userId => dispatch => {
+  //get user posts
+  firebase.database().ref(`posts/${userId}`).on('value', s => {
+    dispatch(getPosts(s.val()));
+  });
+};
 
 export const loginMiddleware = ({
   email,
@@ -35,10 +58,10 @@ export const loginMiddleware = ({
           //get user data
           firebase.database().ref(`users/${user.uid}`).on('value', s => {
             dispatch(getUserData(s.val()));
-          });
-          //get user posts
-          firebase.database().ref(`posts/${user.uid}`).on('value', s => {
-            dispatch(getUserPosts(s.val()));
+            //get own posts
+            firebase.database().ref(`posts/${user.uid}`).on('value', s => {
+              dispatch(getOwnPosts(s.val()));
+            });
           });
         } else {
           // User is signed out.

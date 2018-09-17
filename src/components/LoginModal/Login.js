@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { loginMiddleware } from '../../actionCreators/actions';
+import { loginMiddleware, getPostsMiddleware } from '../../actionCreators/actions';
 import './Login.css';
 
 class LoginModal extends Component {
@@ -52,7 +52,8 @@ class LoginModal extends Component {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      logIn: loginMiddleware
+      logIn: loginMiddleware,
+      getOwnPosts: getPostsMiddleware
     },
     dispatch
   );

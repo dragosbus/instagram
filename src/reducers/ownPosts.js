@@ -1,8 +1,8 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
 
-export const userPosts = (state={}, action) => {
+export const ownPosts = (state={}, action) => {
   switch (action.type) {
-    case ActionTypes.GET_USER_POSTS:
+    case ActionTypes.GET_OWN_POSTS:
       return Object.assign({}, action.payload);
     default:
       return state;
