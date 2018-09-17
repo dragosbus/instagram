@@ -1,3 +1,10 @@
+/*
+Try to set the data for the profile page by checking if of the user in session
+and not by routes, with the id of the user clicked.
+
+*/
+
+
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
