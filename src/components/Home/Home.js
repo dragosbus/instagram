@@ -7,6 +7,7 @@ import { MdFavoriteBorder, MdHome, MdSearch, MdPersonOutline, MdAddCircleOutline
 
 import Profile from '../Profile/Profile';
 import AddPage from '../Add/Add';
+import Search from '../Search/Search';
 
 class Home extends Component {
   render() {
@@ -29,17 +30,22 @@ class Home extends Component {
               <Switch>
                 <Route exact path="/" render={props => 'hello'} />
                 <Route
-                  exact
+                  path="/search"
+                  render={props => {
+                    return <Search />;
+                  }}
+                />
+                <Route
                   path="/add"
                   render={props => {
                     return <AddPage userId={this.props.user.uid} />;
                   }}
                 />
                 <Route
-                  exact
                   path="/:userId"
-                  render={(props) => {
-                    return <Profile userId={props.match.params.userId}/>;
+                  render={props => {
+                    console.log(props);
+                    return <Profile userId={props.match.params.userId} />;
                   }}
                 />
               </Switch>
@@ -72,6 +78,4 @@ const mapStateToProps = state => ({
   user: state.user
 });
 
-export default connect(
-  mapStateToProps
-)(Home);
+export default connect(mapStateToProps)(Home);
