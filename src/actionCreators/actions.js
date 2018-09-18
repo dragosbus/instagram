@@ -22,6 +22,11 @@ const getPosts = (posts) => ({
   payload: posts
 });
 
+const getUsersSearched = (users) => ({
+  type: ActionTypes.GET_USER_SEARCHED,
+  payload: users
+});
+
 export const getUserDataMiddleware = userId => dispatch => {
   firebase.database().ref(`users/${userId}`).on('value', s => {
     dispatch(getUserData(s.val()));
@@ -32,6 +37,19 @@ export const getPostsMiddleware = userId => dispatch => {
   //get user posts
   firebase.database().ref(`posts/${userId}`).on('value', s => {
     dispatch(getPosts(s.val()));
+  });
+};
+
+export const getUsersSearchedMiddleware = query => dispatch => {
+  firebase.database().ref(`users`).on('value', s => {
+    let allUsers = s.val();
+    let users = [];
+    for (let user in allUsers) {
+      if (allUsers[user].username.includes(query) || allUsers[user].fullName.includes(query)) {
+        users.push(allUsers[user]);
+      }
+    }
+    dispatch(getUsersSearched(users));
   });
 };
 
