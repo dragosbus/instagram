@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {getPostsMiddleware, getUserProfileClikedMiddleware} from '../../actionCreators/actions';
+import {getPostsMiddleware} from '../../actionCreators/actions';
 
 class PostDetails extends React.Component {
   getUserPosts = () => {
@@ -55,8 +55,7 @@ class PostDetails extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  getPosts: getPostsMiddleware,
-  getDataUserClicked: getUserProfileClikedMiddleware
+  getPosts: getPostsMiddleware
 }, dispatch);
 
 export default connect(

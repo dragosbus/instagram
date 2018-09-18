@@ -17,24 +17,14 @@ const loginError = () => ({
   type: ActionTypes.LOG_IN_ERROR
 });
 
-const getOwnPosts = (posts) => ({
-  type: ActionTypes.GET_OWN_POSTS,
-  payload: posts
-});
-
 const getPosts = (posts) => ({
   type: ActionTypes.GET_USER_POSTS,
   payload: posts
 });
 
-const getUserProfileCliked = (userId) => ({
-  type: ActionTypes.GET_USER_CLIKED_PROFILE,
-  payload: userId
-});
-
-export const getUserProfileClikedMiddleware = userId => dispatch => {
+export const getUserDataMiddleware = userId => dispatch => {
   firebase.database().ref(`users/${userId}`).on('value', s => {
-    dispatch(getUserProfileCliked(s.val()));
+    dispatch(getUserData(s.val()));
   });
 };
 
@@ -58,10 +48,6 @@ export const loginMiddleware = ({
           //get user data
           firebase.database().ref(`users/${user.uid}`).on('value', s => {
             dispatch(getUserData(s.val()));
-            //get own posts
-            firebase.database().ref(`posts/${user.uid}`).on('value', s => {
-              dispatch(getOwnPosts(s.val()));
-            });
           });
         } else {
           // User is signed out.

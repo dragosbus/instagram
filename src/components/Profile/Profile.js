@@ -1,14 +1,7 @@
-/*
-Try to set the data for the profile page by checking if of the user in session
-and not by routes, with the id of the user clicked.
-
-*/
-
-
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {getUserProfileClikedMiddleware} from '../../actionCreators/actions';
+import {getUserDataMiddleware, getPostsMiddleware} from '../../actionCreators/actions';
 import './Profile.css';
 
 import PostCard from '../PostCard/PostCard';
@@ -18,7 +11,8 @@ class Profile extends Component {
   state = {
     posts: [],
     currentPost: {},
-    showDetailsPost: false
+    showDetailsPost: false,
+    userLogged: false
   }
 
   makePosts = () => {
@@ -39,20 +33,27 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    this.makePosts();
+    this.props.getUserData(this.props.userId);
+    this.props.getPosts(this.props.userId);
+
+    if(this.props.userId === this.props.user.uid) {
+      this.setState({userLogged: true});
+    } else {
+      this.setState({userLogged: false});
+    }
   }
 
   render() {
-    console.log(this.props)
-    let data = this.props.path === '/profile' ? this.props.userData : this.props.userClickedData;
+    
+    let btnProfile = this.state.userLogged ? <button>Edit Profile</button> : <button>Follow</button>
 
     return (
       <div className="profile">
         <div className="profile-header">
           <img src="https://www.sgbt.lu/uploads/tx_bisgbio/default-profile_01.png" />
-          <p>{data.username}</p>
-          <button>Edit Profile</button>
-          <h4>{data.fullName}</h4>
+          <p>{this.props.userData.username}</p>
+          {btnProfile}
+          <h4>{this.props.userData.fullName}</h4>
         </div>
         <div className="profile-data">
           <p>{this.state.posts.length} posts</p>
@@ -67,7 +68,7 @@ class Profile extends Component {
           }
         </div>
         <PostDetails 
-          data={data} 
+          data={this.props.userData} 
           postImg={this.state.currentPost.photo} 
           likes={this.state.currentPost.likes} 
           createdAt={0} 
@@ -82,13 +83,16 @@ class Profile extends Component {
 
 const mapStateToProps = state => ({
   user: state.user,
-  ownPosts: state.ownPosts,
   userData: state.userData,
-  userClickedData: state.userClickedData,
   userPosts: state.userPosts
 });
 
+const mapDisptachToProps = dispatch => bindActionCreators({
+  getUserData: getUserDataMiddleware,
+  getPosts: getPostsMiddleware
+}, dispatch);
+
 export default connect(
   mapStateToProps,
-  null
+  mapDisptachToProps
 )(Profile);

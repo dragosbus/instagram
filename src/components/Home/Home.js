@@ -29,12 +29,6 @@ class Home extends Component {
               <Switch>
                 <Route exact path="/" render={props => 'hello'} />
                 <Route
-                  path="/profile"
-                  render={(props) => {
-                    return <Profile path={props.match.path} />;
-                  }}
-                />
-                <Route
                   exact
                   path="/add"
                   render={props => {
@@ -43,9 +37,9 @@ class Home extends Component {
                 />
                 <Route
                   exact
-                  path="/user/:userId"
+                  path="/:userId"
                   render={(props) => {
-                    return <Profile path={props.match.path} userId={props.match.params.userId} />;
+                    return <Profile userId={props.match.params.userId}/>;
                   }}
                 />
               </Switch>
@@ -63,7 +57,7 @@ class Home extends Component {
               <NavLink to="/activity" activeClassName="activeStyle">
                 <MdFavoriteBorder />
               </NavLink>
-              <NavLink to="/profile" activeClassName="activeStyle">
+              <NavLink to={`/${this.props.user.uid}`} activeClassName="activeStyle">
                 <MdPersonOutline />
               </NavLink>
             </footer>
