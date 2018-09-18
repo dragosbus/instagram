@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {getUserDataMiddleware, getPostsMiddleware} from '../../actionCreators/actions';
+import { getUserDataMiddleware, getPostsMiddleware } from '../../actionCreators/actions';
 import './Profile.css';
 
 import PostCard from '../PostCard/PostCard';
@@ -13,39 +13,46 @@ class Profile extends Component {
     currentPost: {},
     showDetailsPost: false,
     userLogged: false
-  }
+  };
 
   makePosts = () => {
-    for(let id in this.props.ownPosts) {
-      this.setState(prevState=>({
+    for (let id in this.props.ownPosts) {
+      this.setState(prevState => ({
         posts: prevState.posts.concat(this.props.ownPosts[id])
       }));
     }
-  }
-
-  toggleDetailsPost = () => {
-    this.setState({showDetailsPost: !this.state.showDetailsPost});
   };
 
-  showDetails = post =>  {
-    this.setState({currentPost: post});
+  toggleDetailsPost = () => {
+    this.setState({ showDetailsPost: !this.state.showDetailsPost });
+  };
+
+  showDetails = post => {
+    this.setState({ currentPost: post });
     this.toggleDetailsPost();
-  }
+  };
 
   componentDidMount() {
     this.props.getUserData(this.props.userId);
     this.props.getPosts(this.props.userId);
 
-    if(this.props.userId === this.props.user.uid) {
-      this.setState({userLogged: true});
+    if (this.props.userId === this.props.user.uid) {
+      this.setState({ userLogged: true });
     } else {
-      this.setState({userLogged: false});
+      this.setState({ userLogged: false });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.userId !== this.props.userId) {
+      this.props.getUserData(this.props.userId);
+      this.props.getPosts(this.props.userId);
+      this.setState({ userLogged: true });
     }
   }
 
   render() {
-    
-    let btnProfile = this.state.userLogged ? <button>Edit Profile</button> : <button>Follow</button>
+    let btnProfile = this.state.userLogged ? <button>Edit Profile</button> : <button>Follow</button>;
 
     return (
       <div className="profile">
@@ -61,17 +68,23 @@ class Profile extends Component {
           <p>0 following</p>
         </div>
         <div className="profile-posts">
-          {
-            this.state.posts.map((post, i)=> {
-              return <PostCard key={i} showDetails={()=>this.showDetails(this.state.posts[i])} image={post.photo} likes={post.likes} comments={0}/>
-            })
-          }
+          {this.state.posts.map((post, i) => {
+            return (
+              <PostCard
+                key={i}
+                showDetails={() => this.showDetails(this.state.posts[i])}
+                image={post.photo}
+                likes={post.likes}
+                comments={0}
+              />
+            );
+          })}
         </div>
-        <PostDetails 
-          data={this.props.userData} 
-          postImg={this.state.currentPost.photo} 
-          likes={this.state.currentPost.likes} 
-          createdAt={0} 
+        <PostDetails
+          data={this.props.userData}
+          postImg={this.state.currentPost.photo}
+          likes={this.state.currentPost.likes}
+          createdAt={0}
           showDetailsPost={this.state.showDetailsPost}
           toggleModal={this.toggleDetailsPost}
           userId={this.state.currentPost.userId}
@@ -87,10 +100,14 @@ const mapStateToProps = state => ({
   userPosts: state.userPosts
 });
 
-const mapDisptachToProps = dispatch => bindActionCreators({
-  getUserData: getUserDataMiddleware,
-  getPosts: getPostsMiddleware
-}, dispatch);
+const mapDisptachToProps = dispatch =>
+  bindActionCreators(
+    {
+      getUserData: getUserDataMiddleware,
+      getPosts: getPostsMiddleware
+    },
+    dispatch
+  );
 
 export default connect(
   mapStateToProps,

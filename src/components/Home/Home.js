@@ -45,7 +45,7 @@ class Home extends Component {
                   path="/:userId"
                   render={props => {
                     console.log(props);
-                    return <Profile userId={props.match.params.userId} />;
+                    return <Profile history={props.history} userId={props.match.params.userId} />;
                   }}
                 />
               </Switch>
