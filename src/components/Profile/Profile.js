@@ -10,18 +10,9 @@ import FollowBtn from '../FollowBtn/Follow';
 
 class Profile extends Component {
   state = {
-    posts: [],
     currentPost: {},
     showDetailsPost: false,
     userLogged: false
-  };
-
-  makePosts = (posts) => {
-    for (let id in posts) {
-      this.setState(prevState => ({
-        posts: prevState.posts.concat(posts[id])
-      }));
-    }
   };
 
   toggleDetailsPost = () => {
@@ -34,9 +25,8 @@ class Profile extends Component {
   };
 
   componentDidMount() {
-    this.makePosts(this.props.userPosts);
-    this.props.getUserData(this.props.userId);
     this.props.getPosts(this.props.userId);
+    this.props.getUserData(this.props.userId);
 
     if (this.props.userId === this.props.user.uid) {
       this.setState({ userLogged: true });
@@ -48,19 +38,22 @@ class Profile extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.userId !== this.props.userId) {
       this.props.getUserData(this.props.userId);
-      this.props.getPosts(this.props.userId);
-      this.setState({ userLogged: true });
-    }
+      this.props.getPosts(this.props.userData.id);
+    } //when the route profile si changed from random user to user logged, the data sin ot changing
   }
 
   render() {
-    let btnProfile = this.state.userLogged ? <button className="edit-profile">Edit Profile</button> : <FollowBtn
-      follow={this.props.follow}
-      userDataId={this.props.userData.id}
-      userId={this.props.user.uid}
-      followers={this.props.followers}
-    />;
-
+    let btnProfile = this.state.userLogged ? (
+      <button className="edit-profile">Edit Profile</button>
+    ) : (
+      <FollowBtn
+        follow={this.props.follow}
+        userDataId={this.props.userData.id}
+        userId={this.props.user.uid}
+        followers={this.props.followers}
+      />
+    );
+      console.log(this.props);
     return (
       <div className="profile">
         <div className="profile-header">
@@ -70,16 +63,16 @@ class Profile extends Component {
           <h4>{this.props.userData.fullName}</h4>
         </div>
         <div className="profile-data">
-          <p>{this.state.posts.length} posts</p>
+          <p>{this.props.userPosts.length} posts</p>
           <p>0 followers</p>
           <p>0 following</p>
         </div>
         <div className="profile-posts">
-          {this.state.posts.map((post, i) => {
+          {this.props.userPosts.map((post, i) => {
             return (
               <PostCard
                 key={i}
-                showDetails={() => this.showDetails(this.state.posts[i])}
+                showDetails={() => this.showDetails(this.props.userPosts[i])}
                 image={post.photo}
                 likes={post.likes}
                 comments={0}

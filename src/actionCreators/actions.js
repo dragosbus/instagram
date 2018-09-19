@@ -40,8 +40,12 @@ export const getUserDataMiddleware = userId => dispatch => {
 
 export const getPostsMiddleware = userId => dispatch => {
   //get user posts
+  const posts = [];
   firebase.database().ref(`posts/${userId}`).on('value', s => {
-    dispatch(getPosts(s.val()));
+    for(let post in s.val()) {
+      posts.push({...s.val()[post]});
+    }
+    dispatch(getPosts(posts));
   });
 };
 
