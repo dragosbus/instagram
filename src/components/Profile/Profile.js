@@ -25,6 +25,7 @@ class Profile extends Component {
   };
 
   componentDidMount() {
+    //when component mount, get the data and check if it is the route with the profile of the user logged
     this.props.getPosts(this.props.userId);
     this.props.getUserData(this.props.userId);
 
@@ -36,6 +37,10 @@ class Profile extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    /* 
+    -when change route from the profile of an user to the own profile, we should check if are not the same for get the data of the own user.
+    -I did this in componentdidupdate and not in componentdidmount, because when the route is changed, the old component is not unmounting, just the data, and we want the component updated with the new data
+    */
     if (prevProps.userId !== this.props.userId) {
       this.props.getUserData(this.props.userId);
       this.props.getPosts(this.props.userId);
@@ -54,7 +59,7 @@ class Profile extends Component {
         followers={this.props.followers}
       />
     );
-      console.log(this.props);
+      
     return (
       <div className="profile">
         <div className="profile-header">
