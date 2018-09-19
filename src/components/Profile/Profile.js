@@ -38,8 +38,9 @@ class Profile extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.userId !== this.props.userId) {
       this.props.getUserData(this.props.userId);
-      this.props.getPosts(this.props.userData.id);
-    } //when the route profile si changed from random user to user logged, the data sin ot changing
+      this.props.getPosts(this.props.userId);
+      this.setState({userLogged: true})
+    } 
   }
 
   render() {
