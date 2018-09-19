@@ -93,6 +93,14 @@ export const loginMiddleware = ({
           firebase.database().ref(`users/${user.uid}`).on('value', s => {
             dispatch(getUserData(s.val()));
           });
+          //get followers
+          const followers = [];
+          firebase.database().ref(`users/${user.uid}/following`).on('value', s => {
+            for (let follow in s.val()) {
+              followers.push(s.val()[follow]['id']);
+            }
+            dispatch(getFolowers(followers));
+          });
         } else {
           // User is signed out.
           // ...

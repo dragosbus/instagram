@@ -6,6 +6,7 @@ import './Profile.css';
 
 import PostCard from '../PostCard/PostCard';
 import PostDetails from '../PostDetails/Post';
+import FollowBtn from '../FollowBtn/Follow';
 
 class Profile extends Component {
   state = {
@@ -52,7 +53,12 @@ class Profile extends Component {
   }
 
   render() {
-    let btnProfile = this.state.userLogged ? <button>Edit Profile</button> : <button onClick={()=>this.props.follow(this.props.user.uid, this.props.userData.id)}>Follow</button>;
+    let btnProfile = this.state.userLogged ? <button>Edit Profile</button> : <FollowBtn
+      follow={this.props.follow}
+      userDataId={this.props.userData.id}
+      userId={this.props.user.uid}
+      followers={this.props.followers}
+    />;
 
     return (
       <div className="profile">
@@ -97,7 +103,8 @@ class Profile extends Component {
 const mapStateToProps = state => ({
   user: state.user,
   userData: state.userData,
-  userPosts: state.userPosts
+  userPosts: state.userPosts,
+  followers: state.followers
 });
 
 const mapDisptachToProps = dispatch =>
