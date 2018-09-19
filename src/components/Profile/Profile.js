@@ -45,7 +45,7 @@ class Profile extends Component {
       this.props.getUserData(this.props.userId);
       this.props.getPosts(this.props.userId);
       this.setState({userLogged: true})
-    } 
+    }
   }
 
   render() {
