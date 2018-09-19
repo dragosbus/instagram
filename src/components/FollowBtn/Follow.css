@@ -1,0 +1,20 @@
+.btn {
+  display: block;
+  width: 75%;
+  margin: 1rem auto;
+  padding: 1rem;
+  border-radius: 4px;
+  font-weight: 700;
+  border: none;
+}
+
+.not-follow {
+  color: #fff;
+  background: rgb(11, 123, 197);
+}
+
+.follow {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: none;
+  color: rgba(0, 0, 0, 0.801);
+}

@@ -53,7 +53,7 @@ class Profile extends Component {
   }
 
   render() {
-    let btnProfile = this.state.userLogged ? <button>Edit Profile</button> : <FollowBtn
+    let btnProfile = this.state.userLogged ? <button className="edit-profile">Edit Profile</button> : <FollowBtn
       follow={this.props.follow}
       userDataId={this.props.userData.id}
       userId={this.props.user.uid}
