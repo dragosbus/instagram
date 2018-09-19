@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getUserDataMiddleware, getPostsMiddleware } from '../../actionCreators/actions';
+import { getUserDataMiddleware, getPostsMiddleware, followMiddleware } from '../../actionCreators/actions';
 import './Profile.css';
 
 import PostCard from '../PostCard/PostCard';
@@ -52,7 +52,7 @@ class Profile extends Component {
   }
 
   render() {
-    let btnProfile = this.state.userLogged ? <button>Edit Profile</button> : <button>Follow</button>;
+    let btnProfile = this.state.userLogged ? <button>Edit Profile</button> : <button onClick={()=>this.props.follow(this.props.user.uid, this.props.userData.id)}>Follow</button>;
 
     return (
       <div className="profile">
@@ -104,7 +104,8 @@ const mapDisptachToProps = dispatch =>
   bindActionCreators(
     {
       getUserData: getUserDataMiddleware,
-      getPosts: getPostsMiddleware
+      getPosts: getPostsMiddleware,
+      follow: followMiddleware
     },
     dispatch
   );

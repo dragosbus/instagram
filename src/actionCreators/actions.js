@@ -27,6 +27,11 @@ const getUsersSearched = (users) => ({
   payload: users
 });
 
+const getFolowers = (data) => ({
+  type: ActionTypes.GET_FOLOWERS,
+  payload: data
+});
+
 export const getUserDataMiddleware = userId => dispatch => {
   firebase.database().ref(`users/${userId}`).on('value', s => {
     dispatch(getUserData(s.val()));
@@ -51,6 +56,27 @@ export const getUsersSearchedMiddleware = query => dispatch => {
     }
     dispatch(getUsersSearched(users));
   });
+};
+
+export const followMiddleware = (userId, userIdFollowed) => dispatch => {
+  const followers = [];
+  //get followers and check if exist
+  firebase.database().ref(`users/${userId}/following`).on('value', s => {
+    for (let follow in s.val()) {
+      followers.push(s.val()[follow]['id']);
+    }
+    dispatch(getFolowers(followers));
+  });
+  //update just if is not already follow
+  if (!followers.includes(userIdFollowed)) {
+    firebase.database().ref(`users/${userId}/following`).push().set({
+      id: userIdFollowed
+    });
+
+    firebase.database().ref(`users/${userIdFollowed}/followers`).push().set({
+      id: userId
+    });
+  }
 };
 
 export const loginMiddleware = ({

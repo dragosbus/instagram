@@ -4,3 +4,4 @@ export const LOG_OUT = 'LOG_OUT';
 export const GET_USER_DATA = 'GET_USER_DATA';
 export const GET_USER_POSTS = 'GET_USER_POSTS';
 export const GET_USER_SEARCHED = 'GET_USER_SEARCHED';
+export const GET_FOLOWERS = 'GET_FOLOWERS';
