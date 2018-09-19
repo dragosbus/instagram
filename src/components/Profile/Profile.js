@@ -16,10 +16,10 @@ class Profile extends Component {
     userLogged: false
   };
 
-  makePosts = () => {
-    for (let id in this.props.ownPosts) {
+  makePosts = (posts) => {
+    for (let id in posts) {
       this.setState(prevState => ({
-        posts: prevState.posts.concat(this.props.ownPosts[id])
+        posts: prevState.posts.concat(posts[id])
       }));
     }
   };
@@ -34,6 +34,7 @@ class Profile extends Component {
   };
 
   componentDidMount() {
+    this.makePosts(this.props.userPosts);
     this.props.getUserData(this.props.userId);
     this.props.getPosts(this.props.userId);
 

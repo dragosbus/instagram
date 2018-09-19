@@ -19,7 +19,7 @@ class PostDetails extends React.Component {
         <button className="close-post-modal" onClick={this.props.toggleModal}>X</button>
         <div className="post-details">
           <div className="header">
-            <Link to={`/user/${this.props.userId}`} onClick={this.getUserPosts}>
+            <Link to={`${this.props.userId}`} onClick={this.getUserPosts}>
               <img src={data.profile_picture} />
               <p>{data.username}</p>
             </Link>
