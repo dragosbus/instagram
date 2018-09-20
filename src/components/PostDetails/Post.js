@@ -3,15 +3,7 @@ import './Post.css';
 import { MdFavoriteBorder, MdChatBubbleOutline } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import {getPostsMiddleware} from '../../actionCreators/actions';
-
 class PostDetails extends React.Component {
-  getUserPosts = () => {
-    this.props.getPosts(this.props.userId);
-    this.props.getDataUserClicked(this.props.userId);
-  };
   render() {
     let data = this.props.data;
     return (
@@ -19,7 +11,9 @@ class PostDetails extends React.Component {
         <button className="close-post-modal" onClick={this.props.toggleModal}>X</button>
         <div className="post-details">
           <div className="header">
-            <Link to={`${this.props.userId}`} onClick={this.getUserPosts}>
+            <Link to={`/${this.props.userId}`} onClick={()=>{
+              this.props.hideModal();
+            }}>
               <img src={data.profile_picture} />
               <p>{data.username}</p>
             </Link>
@@ -54,11 +48,4 @@ class PostDetails extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  getPosts: getPostsMiddleware
-}, dispatch);
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(PostDetails);
+export default PostDetails;

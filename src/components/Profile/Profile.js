@@ -94,6 +94,7 @@ class Profile extends Component {
           showDetailsPost={this.state.showDetailsPost}
           toggleModal={this.toggleDetailsPost}
           userId={this.state.currentPost.userId}
+          hideModal={this.toggleDetailsPost}
         />
       </div>
     );
