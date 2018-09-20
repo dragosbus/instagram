@@ -40,11 +40,12 @@ export const getUserDataMiddleware = userId => dispatch => {
 
 export const getPostsMiddleware = userId => dispatch => {
   //is called every time the user route is changing to other user
-  //so it need to be empty, not to containt the posts of the previous user
+  //so it need to be empty, not to contain the posts of the previous user
   let userPosts = [];
   firebase.database().ref(`posts/${userId}`).on('value', s => {
-    if(s.val()) {
+    if (s.val()) {
       //if the selected user dosnt have posts, it return an error
+      //thats why we need to check
       userPosts = [...Object.values(s.val())];
     }
     dispatch(getPosts(userPosts));
@@ -52,12 +53,12 @@ export const getPostsMiddleware = userId => dispatch => {
 };
 
 export const getUsersSearchedMiddleware = query => dispatch => {
+  let users = [];
   firebase.database().ref(`users`).on('value', s => {
-    let allUsers = s.val();
-    let users = [];
-    for (let user in allUsers) {
-      if (allUsers[user].username.includes(query) || allUsers[user].fullName.includes(query)) {
-        users.push(allUsers[user]);
+    const usersFetched = Object.values(s.val());
+    for (let user in usersFetched) {
+      if (usersFetched[user].username.includes(query)) {
+        users.push(usersFetched[user]);
       }
     }
     dispatch(getUsersSearched(users));
@@ -94,7 +95,9 @@ export const loginMiddleware = ({
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
           //login user
-          dispatch(loginSuccess(user));
+          dispatch(loginSuccess({
+            id: user.uid
+          }));
           //get user data
           firebase.database().ref(`users/${user.uid}`).on('value', s => {
             dispatch(getUserData(s.val()));

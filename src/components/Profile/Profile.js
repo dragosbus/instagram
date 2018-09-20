@@ -29,7 +29,7 @@ class Profile extends Component {
     this.props.getPosts(this.props.userId);
     this.props.getUserData(this.props.userId);
 
-    if (this.props.userId === this.props.user.uid) {
+    if (this.props.userId === this.props.user.id) {
       this.setState({ userLogged: true });
     } else {
       this.setState({ userLogged: false });
@@ -55,7 +55,7 @@ class Profile extends Component {
       <FollowBtn
         follow={this.props.follow}
         userDataId={this.props.userData.id}
-        userId={this.props.user.uid}
+        userId={this.props.user.id}
         followers={this.props.followers}
       />
     );

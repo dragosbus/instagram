@@ -38,7 +38,7 @@ class Home extends Component {
                 <Route
                   path="/add"
                   render={props => {
-                    return <AddPage userId={this.props.user.uid} />;
+                    return <AddPage userId={this.props.user.id} />;
                   }}
                 />
                 <Route
@@ -63,7 +63,7 @@ class Home extends Component {
               <NavLink to="/activity" activeClassName="activeStyle">
                 <MdFavoriteBorder />
               </NavLink>
-              <NavLink to={`/${this.props.user.uid}`} activeClassName="activeStyle">
+              <NavLink to={`/${this.props.user.id}`} activeClassName="activeStyle">
                 <MdPersonOutline />
               </NavLink>
             </footer>
