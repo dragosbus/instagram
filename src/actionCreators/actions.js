@@ -39,13 +39,15 @@ export const getUserDataMiddleware = userId => dispatch => {
 };
 
 export const getPostsMiddleware = userId => dispatch => {
-  //get user posts
-  const posts = [];
+  //is called every time the user route is changing to other user
+  //so it need to be empty, not to containt the posts of the previous user
+  let userPosts = [];
   firebase.database().ref(`posts/${userId}`).on('value', s => {
-    for(let post in s.val()) {
-      posts.push({...s.val()[post]});
+    if(s.val()) {
+      //if the selected user dosnt have posts, it return an error
+      userPosts = [...Object.values(s.val())];
     }
-    dispatch(getPosts(posts));
+    dispatch(getPosts(userPosts));
   });
 };
 
