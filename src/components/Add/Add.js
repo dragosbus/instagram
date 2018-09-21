@@ -28,17 +28,30 @@ class AddPage extends Component {
       description: this.state.description,
       likes: 0
     });
-    
+  };
+
+  handleFile = e => {
+    let url = window.URL.createObjectURL(e.target.files[0])
+    this.setState({photo: url});
   };
 
   render() {
     return (
       <div className="add">
         <form onSubmit={this.onAddPost}>
-          <input type="text" value={this.state.photo} onChange={this.onChangePhoto} />
+          <input
+            type="file"
+            id="photo"
+            onChange={e => {
+              this.handleFile(e);
+            }}
+          />
           <input type="text" value={this.state.description} onChange={this.onChangeDescription} />
           <button type="submit">Add Post</button>
         </form>
+        <div id="fileList">
+          <p>{this.state.photo}</p>
+        </div>
       </div>
     );
   }
