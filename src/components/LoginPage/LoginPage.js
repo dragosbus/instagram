@@ -102,7 +102,7 @@ class LoginPage extends Component {
           }
         }
       }
-    } else {
+    } else {    
       if (pass.value !== repeatPass.value) {
         this.setState({
           formIsValid: false,
@@ -126,12 +126,13 @@ class LoginPage extends Component {
           }
         });
       } else {
-        this.setState({
-          formIsValid: true,
-          successMessage: 'Welcome'
-        });
         //register user here.What is up, are just error handlers
         auth.createUserWithEmailAndPassword(email.value, pass.value).then(() => {
+          this.setState({
+            formIsValid: true,
+            successMessage: 'Welcome'
+          });
+
           auth.onAuthStateChanged(user=> {
             if (user) {
               var uid = user.uid;
@@ -144,6 +145,11 @@ class LoginPage extends Component {
                 fullName: this.state.fullName.value
               });
             }
+          });
+        }).catch(err=>{
+          this.setState({
+            formIsValid: false,
+            errorMessage: err.message
           });
         });
       }
