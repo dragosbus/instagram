@@ -70,7 +70,7 @@ class Profile extends Component {
         </div>
         <div className="profile-data">
           <p>{this.props.userPosts.length} posts</p>
-          <p>0 followers</p>
+          <p>{this.props.followers.length} followers</p>
           <p>0 following</p>
         </div>
         <div className="profile-posts">
