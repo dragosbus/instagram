@@ -94,12 +94,34 @@ export const followMiddleware = (userId, userIdFollowed) => dispatch => {
 //get last post from the following
 export const getFollowingPostsMiddleware = userId => dispatch => {
   let posts = [];
+  //get the users who the current user follow
+  //iterate throught returned users
+  //get the posts from i'th user found
+  //find the userid for the every post found
+  //get the user data for the user found
+  //push to the empty array created in the begining, an object and then dispatch the getFollowingPosts action creator with the array with all data
+
   firebase.database().ref(`users/${userId}/following`).on('value', s => {
     for (let userFollowed in s.val()) {
       let userIdFollowed = s.val()[userFollowed].id;
       firebase.database().ref(`posts/${userIdFollowed}`).on('value', p => {
         if (p.val()) {
-          dispatch(getFollowingPosts(Object.values(p.val())));
+          for (let postId in p.val()) {
+            firebase.database().ref(`users/${p.val()[postId].userId}`).on('value', user => {
+              if (user.val()) {
+                posts.push({
+                  description: p.val()[postId].description,
+                  likes: p.val()[postId].likes,
+                  photo: p.val()[postId].photo,
+                  userId: p.val()[postId].userId,
+                  username: user.val().username,
+                  profile_photo: user.val().profile_picture
+                });
+              }
+              dispatch(getFollowingPosts([...posts]));
+            });
+            
+          }
         }
       });
     }
