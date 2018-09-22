@@ -32,6 +32,11 @@ const getFolowers = (data) => ({
   payload: data
 });
 
+const getFollowingPosts = (data) => ({
+  type: ActionTypes.GET_FOLLOWING_POSTS,
+  payload: data
+});
+
 export const getUserDataMiddleware = userId => dispatch => {
   firebase.database().ref(`users/${userId}`).on('value', s => {
     dispatch(getUserData(s.val()));
@@ -84,6 +89,11 @@ export const followMiddleware = (userId, userIdFollowed) => dispatch => {
       id: userId
     });
   }
+};
+
+//get last post from the following
+export const getFollowingPostsMiddleware = userId => disptach => {
+
 };
 
 export const loginMiddleware = ({
