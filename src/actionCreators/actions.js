@@ -92,8 +92,18 @@ export const followMiddleware = (userId, userIdFollowed) => dispatch => {
 };
 
 //get last post from the following
-export const getFollowingPostsMiddleware = userId => disptach => {
-
+export const getFollowingPostsMiddleware = userId => dispatch => {
+  let posts = [];
+  firebase.database().ref(`users/${userId}/following`).on('value', s => {
+    for (let userFollowed in s.val()) {
+      let userIdFollowed = s.val()[userFollowed].id;
+      firebase.database().ref(`posts/${userIdFollowed}`).on('value', p => {
+        if (p.val()) {
+          dispatch(getFollowingPosts(Object.values(p.val())));
+        }
+      });
+    }
+  });
 };
 
 export const loginMiddleware = ({

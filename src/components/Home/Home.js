@@ -8,6 +8,7 @@ import { MdFavoriteBorder, MdHome, MdSearch, MdPersonOutline, MdAddCircleOutline
 import Profile from '../Profile/Profile';
 import AddPage from '../Add/Add';
 import Search from '../Search/Search';
+import Feed from '../Feed/Feed';
 
 class Home extends Component {
   render() {
@@ -28,7 +29,9 @@ class Home extends Component {
             </header>
             <main>
               <Switch>
-                <Route exact path="/" render={props => 'hello'} />
+                <Route exact path="/" render={props => {
+                  return <Feed userId={this.props.user.id}/>
+                }} />
                 <Route
                   path="/search"
                   render={props => {
