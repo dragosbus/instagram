@@ -70,7 +70,7 @@ export const getUsersSearchedMiddleware = query => dispatch => {
   });
 };
 
-export const followMiddleware = (userId, userIdFollowed) => dispatch => {
+export const followMiddleware = (userId, userIdFollowed, type) => dispatch => {
   const followers = [];
   //get followers and check if exist
   firebase.database().ref(`users/${userId}/following`).on('value', s => {
@@ -80,13 +80,33 @@ export const followMiddleware = (userId, userIdFollowed) => dispatch => {
     dispatch(getFolowers(followers));
   });
   //update just if is not already follow
-  if (!followers.includes(userIdFollowed)) {
+  if (!followers.includes(userIdFollowed) && type === 'follow') {
     firebase.database().ref(`users/${userId}/following`).push().set({
       id: userIdFollowed
     });
 
     firebase.database().ref(`users/${userIdFollowed}/followers`).push().set({
       id: userId
+    });
+  } else if (followers.includes(userIdFollowed) && type === 'unfollow') {
+    console.log('unfollowe');
+    firebase.database().ref(`users/${userId}/following/`).on('value', s => {
+      for (let userFollowed in s.val()) {
+        let followId = s.val()[userFollowed].id;
+        if (userIdFollowed === followId) {
+          console.log(userIdFollowed, followId)
+          firebase.database().ref(`users/${userId}/following/${userFollowed}`).remove();
+
+          firebase.database().ref(`users/${userIdFollowed}/followers`).on('value', a => {
+            for (let u in a.val()) {
+              if (userId === a.val()[u].id) {
+                firebase.database().ref(`users/${userIdFollowed}/followers/${u}`).remove();
+              }
+            }
+          });
+        }
+      }
+      dispatch(getFolowers(followers.slice(followers.indexOf(userIdFollowed), 1)));
     });
   }
 };
@@ -120,7 +140,7 @@ export const getFollowingPostsMiddleware = userId => dispatch => {
               }
               dispatch(getFollowingPosts([...posts]));
             });
-            
+
           }
         }
       });
