@@ -9,9 +9,10 @@
 
 .profile-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
+  padding-left: 2rem; 
 }
 
 .profile-header img {
@@ -23,7 +24,6 @@
 .profile-header p {
   width: 50%;
   font-size: 2rem;
-  text-align: center;
 }
 
 .edit-profile {

@@ -3,6 +3,8 @@
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.15);
   height: 35rem;
   overflow-y: scroll;
+  width: 30rem;
+  margin: 0 auto;
 }
 
 .search-result ul {
@@ -10,6 +12,9 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem 0;
 }
 
 .search-result ul li {

@@ -1,5 +1,6 @@
 .feed {
   width: 100%;
+  margin: auto auto;
 }
 
 .feed ul {
@@ -11,7 +12,8 @@
 
 .feed ul li {
   width: 100%;
-  margin: 1rem auto;
+  margin: 0 auto;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .header-post {
@@ -20,6 +22,8 @@
   justify-content: flex-start;
   align-items: center;
   padding: 1rem;
+  background: rgba(248, 248, 248, 0.534);
+  border-radius: 0.5rem 0.5rem 0 0;
 }
 
 .header-post img {
@@ -46,4 +50,24 @@
 
 .main-post p span {
   font-weight: 700;
+}
+
+.header-post a {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: black;
+  font-size: 1.5rem;
+}
+
+@media (min-width: 660px) {
+  .feed {
+    width: 70%;
+  }
+}
+
+@media (min-width: 960px) {
+  .feed {
+    width: 50%;
+  }
 }

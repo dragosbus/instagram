@@ -1,5 +1,11 @@
 .search-page {
   width: 100%;
+  margin: auto auto;
+}
+
+form {
+  width: 100%;
+  text-align: center;
 }
 
 .search-page form input {
@@ -8,4 +14,5 @@
   border: none;
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.15);
   padding: 0.5rem 2rem;
+  margin: auto auto;
 }

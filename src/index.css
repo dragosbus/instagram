@@ -34,3 +34,8 @@ ul {
 button {
   cursor: pointer;
 }
+
+div {
+  width: 100%;
+  display: block;
+}
