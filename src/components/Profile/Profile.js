@@ -33,7 +33,8 @@ class Profile extends Component {
     //when component mount, get the data and check if it is the route with the profile of the user logged
     // this.props.getPosts(this.props.userId);
     this.props.getUserData(this.props.userId);
-
+    this.props.checkFollow(this.props.user.id, this.props.userData.id)
+    console.log('mounted')
     if (this.props.userId === this.props.user.id) {
       this.setState({ userLogged: true });
     } else {
@@ -49,7 +50,11 @@ class Profile extends Component {
     if (prevProps.userId !== this.props.userId) {
       this.props.getUserData(this.props.userId);
       // this.props.getPosts(this.props.userId);
+      console.log('update with user')
       this.setState({userLogged: true})
+    } else {
+      this.props.checkFollow(this.props.user.id, this.props.userData.id);
+      console.log('update with different')
     }
   }
 
@@ -65,11 +70,14 @@ class Profile extends Component {
             } else {
               saveFollow(this.props.user.id, this.props.userData.id, 'unfollow');
             }
-          }).then(()=>this.props.checkFollow(this.props.user.id, this.props.userData.id));
+          }).then(()=>{
+            this.props.checkFollow(this.props.user.id, this.props.userData.id);
+            console.log(this.props.follow)
+          });
         }}
         userDataId={this.props.userData.id}
         userId={this.props.user.id}
-        followers={this.props.followers}
+        isFollower={this.props.follow}
       />
     );
       
