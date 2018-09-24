@@ -15,7 +15,7 @@ class Profile extends Component {
     userLogged: false
   };
 
-  followHandler = (userId, userIdToFollow, action) => {
+  followHandlerDb = (userId, userIdToFollow, action) => {
     if (action === 'follow') {
       firebase
         .database()
@@ -63,6 +63,21 @@ class Profile extends Component {
     }
   };
 
+  followHandler = () => {
+    this.followUser()
+      .then(res => {
+        if (!res) {
+          this.followHandlerDb(this.props.user.id, this.props.userId, 'follow');
+        } else {
+          this.followHandlerDb(this.props.user.id, this.props.userId, 'unfollow');
+        }
+      })
+      .then(() => {
+        this.props.checkFollow(this.props.user.id, this.props.userId);
+        console.log(this.props.follow);
+      });
+  };
+
   toggleDetailsPost = () => {
     this.setState({ showDetailsPost: !this.state.showDetailsPost });
   };
@@ -72,7 +87,7 @@ class Profile extends Component {
     this.toggleDetailsPost();
   };
 
-  followUser = async (userId, userIdToFollow) => {
+  followUser = async () => {
     return await this.props.follow;
   };
 
@@ -81,7 +96,7 @@ class Profile extends Component {
 
     this.props.getUserData(this.props.userId);
     this.props.checkFollow(this.props.user.id, this.props.userId);
-
+    console.log('mount')
     if (this.props.userId === this.props.user.id) {
       this.setState({ userLogged: true });
     } else {
@@ -95,7 +110,12 @@ class Profile extends Component {
     -I did this in componentdidupdate and not in componentdidmount, because when the route is changed, the old component is not unmounting, just the data, and we want the component updated with the new data
     */
     if (prevProps.userId !== this.props.userId) {
-      this.setState({ userLogged: true });
+      this.setState(prevState=>({
+        userLogged: !prevState.userLogged
+      }), ()=>{
+        console.log('after update')
+        this.props.getUserData(this.props.userId);
+      });
     }
   }
 
@@ -103,25 +123,7 @@ class Profile extends Component {
     let btnProfile = this.state.userLogged ? (
       <button className="edit-profile">Edit Profile</button>
     ) : (
-      <FollowBtn
-        follow={() => {
-          this.followUser()
-            .then(res => {
-              if (!res) {
-                this.followHandler(this.props.user.id, this.props.userData.id, 'follow');
-              } else {
-                this.followHandler(this.props.user.id, this.props.userData.id, 'unfollow');
-              }
-            })
-            .then(() => {
-              this.props.checkFollow(this.props.user.id, this.props.userData.id);
-              console.log(this.props.follow);
-            });
-        }}
-        userDataId={this.props.userData.id}
-        userId={this.props.user.id}
-        isFollower={this.props.follow}
-      />
+      <FollowBtn follow={this.followHandler} isFollower={this.props.follow} />
     );
 
     return (
