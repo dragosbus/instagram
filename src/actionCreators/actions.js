@@ -37,6 +37,31 @@ const getFollowingPosts = (data) => ({
   payload: data
 });
 
+export const loginMiddleware = ({
+  email,
+  password
+}) => dispatch => {
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(() => {
+      firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+          //login user
+          dispatch(loginSuccess({
+            id: user.uid
+          }));
+          //get user data
+          firebase.database().ref(`users/${user.uid}`).once('value', s => {
+            dispatch(getUserData(s.val()));
+          });
+        } else {
+          // User is signed out.
+          // ...
+        }
+      })
+    })
+    .catch(err => dispatch(loginError()));
+};
+
 export const getUserDataMiddleware = userId => dispatch => {
   firebase.database().ref(`users/${userId}`).on('value', s => {
     dispatch(getUserData(s.val()));
@@ -72,6 +97,7 @@ export const isFollowMiddleware = (userId, userIdToFollow) => dispatch => {
   });
 }
 
+//TODO:must refactor
 export const getPostsMiddleware = userId => dispatch => {
   //is called every time the user route is changing to other user
   //so it need to be empty, not to contain the posts of the previous user
@@ -124,28 +150,3 @@ export const getPostsMiddleware = userId => dispatch => {
 //     }
 //   });
 // };
-
-export const loginMiddleware = ({
-  email,
-  password
-}) => dispatch => {
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(() => {
-      firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-          //login user
-          dispatch(loginSuccess({
-            id: user.uid
-          }));
-          //get user data
-          firebase.database().ref(`users/${user.uid}`).on('value', s => {
-            dispatch(getUserData(s.val()));
-          });
-        } else {
-          // User is signed out.
-          // ...
-        }
-      })
-    })
-    .catch(err => dispatch(loginError()));
-};
