@@ -34,20 +34,19 @@ class Home extends Component {
                 }} />
                 <Route
                   path="/search"
-                  render={props => {
+                  render={() => {
                     return <Search />;
                   }}
                 />
                 <Route
                   path="/add"
-                  render={props => {
+                  render={() => {
                     return <AddPage userId={this.props.user.id} />;
                   }}
                 />
                 <Route
                   path="/:userId"
                   render={props => {
-                    console.log(props);
                     return <Profile history={props.history} userId={props.match.params.userId} />;
                   }}
                 />

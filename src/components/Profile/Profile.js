@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getUserDataMiddleware, isFollowMiddleware, saveFollow } from '../../actionCreators/actions';
+import { getUserDataMiddleware, isFollowMiddleware } from '../../actionCreators/actions';
 import './Profile.css';
 
 import PostCard from '../PostCard/PostCard';
@@ -15,6 +15,54 @@ class Profile extends Component {
     userLogged: false
   };
 
+  followHandler = (userId, userIdToFollow, action) => {
+    if (action === 'follow') {
+      firebase
+        .database()
+        .ref(`users/${userId}/following`)
+        .push()
+        .set({
+          id: userIdToFollow
+        });
+
+      firebase
+        .database()
+        .ref(`users/${userIdToFollow}/followers`)
+        .push()
+        .set({
+          id: userId
+        });
+    } else if (action === 'unfollow') {
+      firebase
+        .database()
+        .ref(`users/${userId}/following`)
+        .once('value', s => {
+          for (let follow in s.val()) {
+            if (s.val()[follow].id === userIdToFollow) {
+              firebase
+                .database()
+                .ref(`users/${userId}/following/${follow}`)
+                .remove();
+            }
+          }
+        });
+
+      firebase
+        .database()
+        .ref(`users/${userIdToFollow}/followers`)
+        .once('value', s => {
+          for (let follow in s.val()) {
+            if (s.val()[follow].id === userId) {
+              firebase
+                .database()
+                .ref(`users/${userIdToFollow}/followers/${follow}`)
+                .remove();
+            }
+          }
+        });
+    }
+  };
+
   toggleDetailsPost = () => {
     this.setState({ showDetailsPost: !this.state.showDetailsPost });
   };
@@ -24,17 +72,16 @@ class Profile extends Component {
     this.toggleDetailsPost();
   };
 
-
   followUser = async (userId, userIdToFollow) => {
     return await this.props.follow;
-  }
+  };
 
   componentDidMount() {
     //when component mount, get the data and check if it is the route with the profile of the user logged
-    // this.props.getPosts(this.props.userId);
+
     this.props.getUserData(this.props.userId);
-    this.props.checkFollow(this.props.user.id, this.props.userData.id)
-    console.log('mounted')
+    this.props.checkFollow(this.props.user.id, this.props.userId);
+
     if (this.props.userId === this.props.user.id) {
       this.setState({ userLogged: true });
     } else {
@@ -42,19 +89,13 @@ class Profile extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     /* 
     -when change route from the profile of an user to the own profile, we should check if are not the same for get the data of the own user.
     -I did this in componentdidupdate and not in componentdidmount, because when the route is changed, the old component is not unmounting, just the data, and we want the component updated with the new data
     */
     if (prevProps.userId !== this.props.userId) {
-      this.props.getUserData(this.props.userId);
-      // this.props.getPosts(this.props.userId);
-      console.log('update with user')
-      this.setState({userLogged: true})
-    } else {
-      this.props.checkFollow(this.props.user.id, this.props.userData.id);
-      console.log('update with different')
+      this.setState({ userLogged: true });
     }
   }
 
@@ -63,24 +104,26 @@ class Profile extends Component {
       <button className="edit-profile">Edit Profile</button>
     ) : (
       <FollowBtn
-        follow={()=>{
-          this.followUser().then(res=>{
-            if(!res) {
-              saveFollow(this.props.user.id, this.props.userData.id, 'follow');
-            } else {
-              saveFollow(this.props.user.id, this.props.userData.id, 'unfollow');
-            }
-          }).then(()=>{
-            this.props.checkFollow(this.props.user.id, this.props.userData.id);
-            console.log(this.props.follow)
-          });
+        follow={() => {
+          this.followUser()
+            .then(res => {
+              if (!res) {
+                this.followHandler(this.props.user.id, this.props.userData.id, 'follow');
+              } else {
+                this.followHandler(this.props.user.id, this.props.userData.id, 'unfollow');
+              }
+            })
+            .then(() => {
+              this.props.checkFollow(this.props.user.id, this.props.userData.id);
+              console.log(this.props.follow);
+            });
         }}
         userDataId={this.props.userData.id}
         userId={this.props.user.id}
         isFollower={this.props.follow}
       />
     );
-      
+
     return (
       <div className="profile">
         <div className="profile-header">

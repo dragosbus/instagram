@@ -47,49 +47,20 @@ export const isFollowMiddleware = (userId, userIdToFollow) => dispatch => {
   //check if the user logged follow the user seen
   firebase.database().ref(`users/${userId}/following`).on('value', s => {
     if (s.val()) {
-      for (let follow in s.val()) {
-        if (userIdToFollow === s.val()[follow]['id']) {
-          dispatch(isFollower(true));
-          console.log('exist')
-          return;
-        } else {
-          dispatch(isFollower(false));
-          console.log('not exist')
-        }
+      let followingList = Object.keys(s.val()).map(key => {
+        return s.val()[key].id;
+      });
+
+      if (followingList.includes(userIdToFollow)) {
+        dispatch(isFollower(true));
+      } else {
+        dispatch(isFollower(false));
       }
     } else {
       dispatch(isFollower(false));
       console.log('empty')
     }
   });
-}
-
-export const saveFollow = (userId, userIdToFollow, action) => {
-  if (action === 'follow') {
-    firebase.database().ref(`users/${userId}/following`).push().set({
-      id: userIdToFollow
-    });
-
-    firebase.database().ref(`users/${userIdToFollow}/followers`).push().set({
-      id: userId
-    });
-  } else if (action === 'unfollow') {
-    firebase.database().ref(`users/${userId}/following`).once('value', s => {
-      for (let follow in s.val()) {
-        if (s.val()[follow].id === userIdToFollow) {
-          firebase.database().ref(`users/${userId}/following/${follow}`).remove();
-        }
-      }
-    });
-
-    firebase.database().ref(`users/${userIdToFollow}/followers`).once('value', s => {
-      for (let follow in s.val()) {
-        if (s.val()[follow].id === userId) {
-          firebase.database().ref(`users/${userIdToFollow}/followers/${follow}`).remove();
-        }
-      }
-    });
-  }
 }
 
 export const getPostsMiddleware = userId => dispatch => {
