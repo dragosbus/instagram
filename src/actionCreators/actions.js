@@ -58,7 +58,6 @@ export const isFollowMiddleware = (userId, userIdToFollow) => dispatch => {
       }
     } else {
       dispatch(isFollower(false));
-      console.log('empty')
     }
   });
 }
@@ -78,15 +77,12 @@ export const getPostsMiddleware = userId => dispatch => {
 };
 
 export const getUsersSearchedMiddleware = query => dispatch => {
-  let users = [];
   firebase.database().ref(`users`).on('value', s => {
-    const usersFetched = Object.values(s.val());
-    for (let user in usersFetched) {
-      if (usersFetched[user].username.includes(query)) {
-        users.push(usersFetched[user]);
-      }
-    }
-    dispatch(getUsersSearched(users));
+    const usersList = Object.values(s.val())
+      .map(user => user)
+      .filter(user => user.username.includes(query));
+
+    dispatch(getUsersSearched(usersList));
   });
 };
 

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { db } from '../../firebase/firebase';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getUserDataMiddleware, isFollowMiddleware } from '../../actionCreators/actions';
@@ -7,7 +8,8 @@ import './Profile.css';
 import PostCard from '../PostCard/PostCard';
 import PostDetails from '../PostDetails/Post';
 import FollowBtn from '../FollowBtn/Follow';
-import { firebase } from '../../firebase/firebase';
+
+
 class Profile extends Component {
   state = {
     currentPost: {},
@@ -17,53 +19,43 @@ class Profile extends Component {
 
   followHandlerDb = (userId, userIdToFollow, action) => {
     if (action === 'follow') {
-      firebase
-        .database()
-        .ref(`users/${userId}/following`)
+      db.ref(`users/${userId}/following`)
         .push()
         .set({
           id: userIdToFollow
         });
 
-      firebase
-        .database()
-        .ref(`users/${userIdToFollow}/followers`)
+      db.ref(`users/${userIdToFollow}/followers`)
         .push()
         .set({
           id: userId
         });
     } else if (action === 'unfollow') {
-      firebase
-        .database()
-        .ref(`users/${userId}/following`)
-        .once('value', s => {
-          for (let follow in s.val()) {
-            if (s.val()[follow].id === userIdToFollow) {
-              firebase
-                .database()
-                .ref(`users/${userId}/following/${follow}`)
-                .remove();
-            }
+      db.ref(`users/${userId}/following`).once('value', s => {
+        for (let follow in s.val()) {
+          if (s.val()[follow].id === userIdToFollow) {
+            db.ref(`users/${userId}/following/${follow}`).remove();
           }
-        });
+        }
+      });
 
-      firebase
-        .database()
-        .ref(`users/${userIdToFollow}/followers`)
-        .once('value', s => {
-          for (let follow in s.val()) {
-            if (s.val()[follow].id === userId) {
-              firebase
-                .database()
-                .ref(`users/${userIdToFollow}/followers/${follow}`)
-                .remove();
-            }
+      db.ref(`users/${userIdToFollow}/followers`).once('value', s => {
+        for (let follow in s.val()) {
+          if (s.val()[follow].id === userId) {
+            db.ref(`users/${userIdToFollow}/followers/${follow}`).remove();
           }
-        });
+        }
+      });
     }
   };
 
+  followUser = async () => {
+    return await this.props.follow;
+  };
+
   followHandler = () => {
+    //first get the current state of following
+    //if is true, should call the unfollow handler, otherwise should call the follow handler
     this.followUser()
       .then(res => {
         if (!res) {
@@ -73,22 +65,9 @@ class Profile extends Component {
         }
       })
       .then(() => {
+        //then change the state of follow
         this.props.checkFollow(this.props.user.id, this.props.userId);
-        console.log(this.props.follow);
       });
-  };
-
-  toggleDetailsPost = () => {
-    this.setState({ showDetailsPost: !this.state.showDetailsPost });
-  };
-
-  showDetails = post => {
-    this.setState({ currentPost: post });
-    this.toggleDetailsPost();
-  };
-
-  followUser = async () => {
-    return await this.props.follow;
   };
 
   componentDidMount() {
@@ -96,7 +75,7 @@ class Profile extends Component {
 
     this.props.getUserData(this.props.userId);
     this.props.checkFollow(this.props.user.id, this.props.userId);
-    console.log('mount')
+
     if (this.props.userId === this.props.user.id) {
       this.setState({ userLogged: true });
     } else {
@@ -110,12 +89,14 @@ class Profile extends Component {
     -I did this in componentdidupdate and not in componentdidmount, because when the route is changed, the old component is not unmounting, just the data, and we want the component updated with the new data
     */
     if (prevProps.userId !== this.props.userId) {
-      this.setState(prevState=>({
-        userLogged: !prevState.userLogged
-      }), ()=>{
-        console.log('after update')
-        this.props.getUserData(this.props.userId);
-      });
+      this.setState(
+        prevState => ({
+          userLogged: !prevState.userLogged
+        }),
+        () => {
+          this.props.getUserData(this.props.userId);
+        }
+      );
     }
   }
 
