@@ -3,7 +3,7 @@ import {userReducer} from './userReducer';
 import {userData} from './userData';
 import {userPosts} from './userPosts';
 import {usersSearched} from './usersSearched';
-import {follow} from './follow';
+import {checkFollow} from './follow';
 import {followingPosts} from './followingPosts';
 
 const rootReducer = combineReducers({
@@ -11,7 +11,7 @@ const rootReducer = combineReducers({
   userData: userData,
   userPosts: userPosts,
   usersSearched: usersSearched,
-  followers: follow,
+  checkFollow: checkFollow,
   followingPosts: followingPosts
 });
 

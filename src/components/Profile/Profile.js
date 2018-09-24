@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getUserDataMiddleware, getPostsMiddleware, followMiddleware } from '../../actionCreators/actions';
+import { getUserDataMiddleware, isFollowMiddleware, saveFollow } from '../../actionCreators/actions';
 import './Profile.css';
 
 import PostCard from '../PostCard/PostCard';
 import PostDetails from '../PostDetails/Post';
 import FollowBtn from '../FollowBtn/Follow';
-
+import { firebase } from '../../firebase/firebase';
 class Profile extends Component {
   state = {
     currentPost: {},
@@ -24,9 +24,14 @@ class Profile extends Component {
     this.toggleDetailsPost();
   };
 
+
+  followUser = async (userId, userIdToFollow) => {
+    return await this.props.follow;
+  }
+
   componentDidMount() {
     //when component mount, get the data and check if it is the route with the profile of the user logged
-    this.props.getPosts(this.props.userId);
+    // this.props.getPosts(this.props.userId);
     this.props.getUserData(this.props.userId);
 
     if (this.props.userId === this.props.user.id) {
@@ -43,7 +48,7 @@ class Profile extends Component {
     */
     if (prevProps.userId !== this.props.userId) {
       this.props.getUserData(this.props.userId);
-      this.props.getPosts(this.props.userId);
+      // this.props.getPosts(this.props.userId);
       this.setState({userLogged: true})
     }
   }
@@ -53,7 +58,15 @@ class Profile extends Component {
       <button className="edit-profile">Edit Profile</button>
     ) : (
       <FollowBtn
-        follow={this.props.follow}
+        follow={()=>{
+          this.followUser().then(res=>{
+            if(!res) {
+              saveFollow(this.props.user.id, this.props.userData.id, 'follow');
+            } else {
+              saveFollow(this.props.user.id, this.props.userData.id, 'unfollow');
+            }
+          }).then(()=>this.props.checkFollow(this.props.user.id, this.props.userData.id));
+        }}
         userDataId={this.props.userData.id}
         userId={this.props.user.id}
         followers={this.props.followers}
@@ -70,7 +83,7 @@ class Profile extends Component {
         </div>
         <div className="profile-data">
           <p>{this.props.userPosts.length} posts</p>
-          <p>{this.props.followers.length} followers</p>
+          <p>0 followers</p>
           <p>0 following</p>
         </div>
         <div className="profile-posts">
@@ -105,15 +118,14 @@ const mapStateToProps = state => ({
   user: state.user,
   userData: state.userData,
   userPosts: state.userPosts,
-  followers: state.followers
+  follow: state.checkFollow
 });
 
 const mapDisptachToProps = dispatch =>
   bindActionCreators(
     {
       getUserData: getUserDataMiddleware,
-      getPosts: getPostsMiddleware,
-      follow: followMiddleware
+      checkFollow: isFollowMiddleware
     },
     dispatch
   );

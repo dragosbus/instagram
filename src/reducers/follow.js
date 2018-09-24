@@ -1,8 +1,8 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
 
-export const follow = (state=[], action) => {
+export const checkFollow = (state=false, action) => {
   switch (action.type) {
-    case ActionTypes.GET_FOLOWERS:
+    case ActionTypes.IS_FOLLOW:
       return action.payload;
     default:
       return state;
