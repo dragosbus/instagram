@@ -43,12 +43,22 @@ export const getUserDataMiddleware = userId => dispatch => {
   });
 };
 
+export const getUsersSearchedMiddleware = query => dispatch => {
+  firebase.database().ref(`users`).on('value', s => {
+    const usersList = Object.values(s.val())
+      .map(user => user)
+      .filter(user => user.username.includes(query));
+
+    dispatch(getUsersSearched(usersList));
+  });
+};
+
 export const isFollowMiddleware = (userId, userIdToFollow) => dispatch => {
   //check if the user logged follow the user seen
   firebase.database().ref(`users/${userId}/following`).on('value', s => {
     if (s.val()) {
-      let followingList = Object.keys(s.val()).map(key => {
-        return s.val()[key].id;
+      let followingList = Object.values(s.val()).map(user => {
+        return user.id;
       });
 
       if (followingList.includes(userIdToFollow)) {
@@ -73,16 +83,6 @@ export const getPostsMiddleware = userId => dispatch => {
       userPosts = [...Object.values(s.val())];
     }
     dispatch(getPosts(userPosts));
-  });
-};
-
-export const getUsersSearchedMiddleware = query => dispatch => {
-  firebase.database().ref(`users`).on('value', s => {
-    const usersList = Object.values(s.val())
-      .map(user => user)
-      .filter(user => user.username.includes(query));
-
-    dispatch(getUsersSearched(usersList));
   });
 };
 
