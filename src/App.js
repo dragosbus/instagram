@@ -9,14 +9,14 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div className="app">{this.props.user.isSignedIn ? <Home /> : <LoginPage />}</div>
+        <div className="app">{this.props.userConnected.isSignedIn ? <Home /> : <LoginPage />}</div>
       </BrowserRouter>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  user: state.user
+  userConnected: state.userConnected
 });
 
 export default connect(mapStateToProps)(App);

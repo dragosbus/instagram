@@ -1,6 +1,6 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
 
-export const userReducer = (state = {
+const userConnected = (state = {
   isSignedIn: false
 }, action) => {
   switch (action.type) {
@@ -17,3 +17,5 @@ export const userReducer = (state = {
       return state;
   }
 };
+
+export default userConnected;

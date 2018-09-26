@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { loginMiddleware, getPostsMiddleware } from '../../actionCreators/actions';
+import { loginMiddleware } from '../../actionCreators/actions';
 import './Login.css';
 
 class LoginModal extends Component {
@@ -27,7 +27,8 @@ class LoginModal extends Component {
   };
 
   render() {
-    let errorSpan = this.props.user.error ? <span className="error-login">{this.props.user.error}</span> : '';
+    const {userConnected} = this.props;
+    let errorSpan = userConnected.error ? <span className="error-login">{userConnected.error}</span> : '';
     return (
       <div
         className="login-modal"
@@ -52,14 +53,13 @@ class LoginModal extends Component {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      logIn: loginMiddleware,
-      getOwnPosts: getPostsMiddleware
+      logIn: loginMiddleware
     },
     dispatch
   );
 
 const mapStateToProps = state => ({
-  user: state.user
+  userConnected: state.userConnected
 });
 
 export default connect(
