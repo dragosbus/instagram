@@ -9,44 +9,14 @@ import PostCard from '../PostCard/PostCard';
 import PostDetails from '../PostDetails/Post';
 import FollowBtn from '../FollowBtn/Follow';
 
+import {followHandlerDb} from '../../utils/firebaseHandlers';
+
 
 class Profile extends Component {
   state = {
     currentPost: {},
     showDetailsPost: false,
     userLogged: false
-  };
-
-  followHandlerDb = (userId, userIdToFollow, action) => {
-    if (action === 'follow') {
-      db.ref(`users/${userId}/following`)
-        .push()
-        .set({
-          id: userIdToFollow
-        });
-
-      db.ref(`users/${userIdToFollow}/followers`)
-        .push()
-        .set({
-          id: userId
-        });
-    } else if (action === 'unfollow') {
-      db.ref(`users/${userId}/following`).once('value', s => {
-        for (let follow in s.val()) {
-          if (s.val()[follow].id === userIdToFollow) {
-            db.ref(`users/${userId}/following/${follow}`).remove();
-          }
-        }
-      });
-
-      db.ref(`users/${userIdToFollow}/followers`).once('value', s => {
-        for (let follow in s.val()) {
-          if (s.val()[follow].id === userId) {
-            db.ref(`users/${userIdToFollow}/followers/${follow}`).remove();
-          }
-        }
-      });
-    }
   };
 
   followUser = async () => {
@@ -59,14 +29,14 @@ class Profile extends Component {
     this.followUser()
       .then(res => {
         if (!res) {
-          this.followHandlerDb(this.props.user.id, this.props.userId, 'follow');
+          followHandlerDb(this.props.userConnected.id, this.props.userId, 'follow');
         } else {
-          this.followHandlerDb(this.props.user.id, this.props.userId, 'unfollow');
+          followHandlerDb(this.props.userConnected.id, this.props.userId, 'unfollow');
         }
       })
       .then(() => {
         //then change the state of follow
-        this.props.checkFollow(this.props.user.id, this.props.userId);
+        this.props.checkFollow(this.props.userConnected.id, this.props.userId);
       });
   };
 
@@ -74,9 +44,9 @@ class Profile extends Component {
     //when component mount, get the data and check if it is the route with the profile of the user logged
 
     this.props.getUserData(this.props.userId);
-    this.props.checkFollow(this.props.user.id, this.props.userId);
+    this.props.checkFollow(this.props.userConnected.id, this.props.userId);
 
-    if (this.props.userId === this.props.user.id) {
+    if (this.props.userId === this.props.userConnected.id) {
       this.setState({ userLogged: true });
     } else {
       this.setState({ userLogged: false });
@@ -149,7 +119,7 @@ class Profile extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user,
+  userConnected: state.userConnected,
   userData: state.userData,
   userPosts: state.userPosts,
   follow: state.checkFollow

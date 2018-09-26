@@ -29,9 +29,6 @@ class Home extends Component {
             </header>
             <main>
               <Switch>
-                <Route exact path="/" render={props => {
-                  return <Feed userId={this.props.user.id}/>
-                }} />
                 <Route
                   path="/search"
                   render={() => {
@@ -41,7 +38,7 @@ class Home extends Component {
                 <Route
                   path="/add"
                   render={() => {
-                    return <AddPage userId={this.props.user.id} />;
+                    return <AddPage userId={this.props.userConnected.id} />;
                   }}
                 />
                 <Route
@@ -65,7 +62,7 @@ class Home extends Component {
               <NavLink to="/activity" activeClassName="activeStyle">
                 <MdFavoriteBorder />
               </NavLink>
-              <NavLink to={`/${this.props.user.id}`} activeClassName="activeStyle">
+              <NavLink to={`/${this.props.userConnected.id}`} activeClassName="activeStyle">
                 <MdPersonOutline />
               </NavLink>
             </footer>
@@ -77,7 +74,7 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user
+  userConnected: state.userConnected
 });
 
 export default connect(mapStateToProps)(Home);
