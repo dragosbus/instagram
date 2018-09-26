@@ -4,30 +4,19 @@ import { connect } from 'react-redux';
 import { loginMiddleware } from '../../actionCreators/actions';
 import './Login.css';
 
+import Input from '../Input/Input';
+
 class LoginModal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: ''
-    };
-  }
-
-  onPasswordChange = e => {
-    this.setState({ password: e.target.value });
-  };
-
-  onEmailChange = e => {
-    this.setState({ email: e.target.value });
-  };
-
   submitLogin = e => {
     e.preventDefault();
-    this.props.logIn(this.state);
+    this.props.logIn({
+      email: this._email.state.value,
+      password: this._pass.state.value
+    });
   };
 
   render() {
-    const {userConnected} = this.props;
+    const { userConnected } = this.props;
     let errorSpan = userConnected.error ? <span className="error-login">{userConnected.error}</span> : '';
     return (
       <div
@@ -41,8 +30,8 @@ class LoginModal extends Component {
       >
         <form onSubmit={this.submitLogin}>
           {errorSpan}
-          <input type="email" placeholder="Email" value={this.state.email} onChange={this.onEmailChange} />
-          <input type="password" placeholder="Password" value={this.state.password} onChange={this.onPasswordChange} />
+          <Input type="email" placeHolder="Email" ref={email => (this._email = email)} />
+          <Input type="password" placeHolder="Password" ref={pass => (this._pass = pass)} />
           <button type="submit">Login</button>
         </form>
       </div>
