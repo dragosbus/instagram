@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { db } from '../../firebase/firebase';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getUserDataMiddleware, isFollowMiddleware } from '../../actionCreators/actions';
