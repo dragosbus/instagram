@@ -1,7 +1,11 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
 import {
-  firebase
+  db,
+  auth
 } from '../firebase/firebase';
+import {
+  getDataFromFirebase
+} from '../utils/firebaseHandlers';
 
 const loginSuccess = (user) => ({
   type: ActionTypes.LOG_IN_SUCCESS,
@@ -41,17 +45,17 @@ export const loginMiddleware = ({
   email,
   password
 }) => dispatch => {
-  firebase.auth().signInWithEmailAndPassword(email, password)
+  auth.signInWithEmailAndPassword(email, password)
     .then(() => {
-      firebase.auth().onAuthStateChanged(function (user) {
+      auth.onAuthStateChanged(function (user) {
         if (user) {
           //login user
           dispatch(loginSuccess({
             id: user.uid
           }));
           //get user data
-          firebase.database().ref(`users/${user.uid}`).once('value', s => {
-            dispatch(getUserData(s.val()));
+          getDataFromFirebase(`users/${user.uid}`, (data) => {
+            dispatch(getUserData(data.val()));
           });
         } else {
           // User is signed out.
@@ -63,14 +67,14 @@ export const loginMiddleware = ({
 };
 
 export const getUserDataMiddleware = userId => dispatch => {
-  firebase.database().ref(`users/${userId}`).on('value', s => {
-    dispatch(getUserData(s.val()));
+  getDataFromFirebase(`users/${userId}`, data => {
+    dispatch(getUserData(data.val()));
   });
 };
 
 export const getUsersSearchedMiddleware = query => dispatch => {
-  firebase.database().ref(`users`).on('value', s => {
-    const usersList = Object.values(s.val())
+  getDataFromFirebase(`users`, data => {
+    const usersList = Object.values(data.val())
       .map(user => user)
       .filter(user => user.username.includes(query));
 
@@ -80,7 +84,7 @@ export const getUsersSearchedMiddleware = query => dispatch => {
 
 export const isFollowMiddleware = (userId, userIdToFollow) => dispatch => {
   //check if the user logged follow the user seen
-  firebase.database().ref(`users/${userId}/following`).on('value', s => {
+  db.ref(`users/${userId}/following`).on('value', s => {
     if (s.val()) {
       let followingList = Object.values(s.val()).map(user => {
         return user.id;
@@ -102,7 +106,7 @@ export const getPostsMiddleware = userId => dispatch => {
   //is called every time the user route is changing to other user
   //so it need to be empty, not to contain the posts of the previous user
   let userPosts = [];
-  firebase.database().ref(`posts/${userId}`).on('value', s => {
+  db.ref(`posts/${userId}`).on('value', s => {
     if (s.val()) {
       //if the selected user dosnt have posts, it return an error
       //thats why we need to check

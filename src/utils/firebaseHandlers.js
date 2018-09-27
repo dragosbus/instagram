@@ -33,3 +33,9 @@ export const followHandlerDb = (userId, userIdToFollow, action) => {
     });
   }
 };
+
+export const getDataFromFirebase = (ref, cb) => {
+  db.ref(ref).once('value', s => {
+    cb(s);
+  });
+};
