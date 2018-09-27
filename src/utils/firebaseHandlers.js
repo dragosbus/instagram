@@ -2,6 +2,12 @@ import {
   db
 } from '../firebase/firebase';
 
+export const getDataFromFirebase = (ref, cb) => {
+  db.ref(ref).once('value', s => {
+    cb(s);
+  });
+};
+
 export const followHandlerDb = (userId, userIdToFollow, action) => {
   if (action === 'follow') {
     db.ref(`users/${userId}/following`)
@@ -16,26 +22,20 @@ export const followHandlerDb = (userId, userIdToFollow, action) => {
         id: userId
       });
   } else if (action === 'unfollow') {
-    db.ref(`users/${userId}/following`).once('value', s => {
-      for (let follow in s.val()) {
-        if (s.val()[follow].id === userIdToFollow) {
+    getDataFromFirebase(`users/${userId}/following`, data => {
+      for (let follow in data.val()) {
+        if (data.val()[follow].id === userIdToFollow) {
           db.ref(`users/${userId}/following/${follow}`).remove();
         }
       }
     });
 
-    db.ref(`users/${userIdToFollow}/followers`).once('value', s => {
-      for (let follow in s.val()) {
-        if (s.val()[follow].id === userId) {
+    getDataFromFirebase(`users/${userIdToFollow}/followers`, data => {
+      for (let follow in data.val()) {
+        if (data.val()[follow].id === userId) {
           db.ref(`users/${userIdToFollow}/followers/${follow}`).remove();
         }
       }
     });
   }
-};
-
-export const getDataFromFirebase = (ref, cb) => {
-  db.ref(ref).once('value', s => {
-    cb(s);
-  });
 };
