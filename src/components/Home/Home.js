@@ -29,6 +29,12 @@ class Home extends Component {
             </header>
             <main>
               <Switch>
+              <Route
+                  exact path="/"
+                  render={() => {
+                    return <Feed userId={this.props.userConnected.id} />;
+                  }}
+                />
                 <Route
                   path="/search"
                   render={() => {

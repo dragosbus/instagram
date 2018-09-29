@@ -96,7 +96,7 @@ class Profile extends Component {
 
     let totalFollowers = this.props.userData.followers ? Object.keys(this.props.userData.followers).length : 0;
     let totalFollowing = this.props.userData.following ? Object.keys(this.props.userData.following).length : 0;
-
+      
     return (
       <div className="profile">
         <div className="profile-header">
