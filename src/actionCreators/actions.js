@@ -76,7 +76,7 @@ export const getUsersSearchedMiddleware = query => dispatch => {
   getDataFromFirebase(`users`, data => {
     const usersList = Object.values(data.val())
       .map(user => user)
-      .filter(user => user.username.includes(query));
+      .filter(user => user.username.startsWith(query));
 
     dispatch(getUsersSearched(usersList));
   });
