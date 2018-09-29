@@ -8,13 +8,21 @@ import { MdFavoriteBorder, MdChatBubbleOutline } from 'react-icons/md';
 import './Feed.css';
 
 class Feed extends Component {
-
+  state = {
+    posts: []
+  }
   handleScroll = (e) => {
-    console.log(e);
+    let id = Math.floor(e.target.scrollingElement.scrollTop / 487);
+    console.log(e.target.scrollingElement.scrollTop);
+    this.setState(prevState=>({
+      posts: prevState.posts.concat(this.props.followingPosts[id])
+    }),()=>console.log(this.state.posts));
   };
 
   componentDidMount() {
     this.props.getPosts(this.props.userId);
+    console.log(this.props.followingPosts)
+    
     window.addEventListener('scroll', this.handleScroll);
   }
   
@@ -23,11 +31,11 @@ class Feed extends Component {
   };
 
   render() {
-    console.log(this.props.followingPosts);
+   
     return (
       <div className="feed">
-        <ul>
-          {this.props.followingPosts.map((post, i) => {
+        {/* <ul>
+          {this.state.posts.map((post, i) => {
             return (
               <li key={`${post.username}-${post.userId}-${i}`}>
                 <div className="header-post">
@@ -56,7 +64,7 @@ class Feed extends Component {
               </li>
             );
           })}
-        </ul>
+        </ul> */}
       </div>
     );
   }
