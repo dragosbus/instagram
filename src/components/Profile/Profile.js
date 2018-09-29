@@ -78,6 +78,9 @@ class Profile extends Component {
       <FollowBtn follow={this.followHandler} isFollower={this.props.follow} />
     );
 
+    let totalFollowers = this.props.userData.followers ? Object.keys(this.props.userData.followers).length : 0;
+    let totalFollowing = this.props.userData.following ? Object.keys(this.props.userData.following).length : 0;
+
     return (
       <div className="profile">
         <div className="profile-header">
@@ -88,8 +91,8 @@ class Profile extends Component {
         </div>
         <div className="profile-data">
           <p>{this.props.userPosts.length} posts</p>
-          <p>0 followers</p>
-          <p>0 following</p>
+          <p>{totalFollowers} followers</p>
+          <p>{totalFollowing} following</p>
         </div>
         <div className="profile-posts">
           {this.props.userPosts.map((post, i) => {
