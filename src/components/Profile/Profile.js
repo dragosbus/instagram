@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getUserDataMiddleware, isFollowMiddleware } from '../../actionCreators/actions';
+import { getUserDataMiddleware,getPostsMiddleware, isFollowMiddleware } from '../../actionCreators/actions';
 import './Profile.css';
 
 import PostCard from '../PostCard/PostCard';
@@ -44,6 +44,7 @@ class Profile extends Component {
 
     this.props.getUserData(this.props.userId);
     this.props.checkFollow(this.props.userConnected.id, this.props.userId);
+    this.props.getPosts(this.props.userId);
 
     if (this.props.userId === this.props.userConnected.id) {
       this.setState({ userLogged: true });
@@ -64,6 +65,7 @@ class Profile extends Component {
         }),
         () => {
           this.props.getUserData(this.props.userId);
+          this.props.getPosts(this.props.userId);
         }
       );
     }
@@ -128,7 +130,8 @@ const mapDisptachToProps = dispatch =>
   bindActionCreators(
     {
       getUserData: getUserDataMiddleware,
-      checkFollow: isFollowMiddleware
+      checkFollow: isFollowMiddleware,
+      getPosts: getPostsMiddleware
     },
     dispatch
   );
