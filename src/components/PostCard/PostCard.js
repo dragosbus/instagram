@@ -1,7 +1,7 @@
 import React from 'react';
 import { MdFavoriteBorder, MdChatBubbleOutline } from 'react-icons/md';
 
-const PostCard = props => {
+const PostElementList = props => {
   return (
     <div className="card" onClick={props.showDetails}>
       <img src={props.image} />
@@ -19,4 +19,4 @@ const PostCard = props => {
   );
 };
 
-export default PostCard;
+export default PostElementList;

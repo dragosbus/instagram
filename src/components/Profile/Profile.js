@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getUserDataMiddleware,getPostsMiddleware, isFollowMiddleware } from '../../actionCreators/actions';
+import { getUserDataMiddleware, getPostsMiddleware, isFollowMiddleware } from '../../actionCreators/actions';
 import './Profile.css';
 
-import PostCard from '../PostCard/PostCard';
+import PostElementList from '../PostCard/PostCard';
 import PostDetails from '../PostDetails/Post';
 import FollowBtn from '../FollowBtn/Follow';
 
-import {followHandlerDb} from '../../utils/firebaseHandlers';
-
+import { followHandlerDb } from '../../utils/firebaseHandlers';
 
 class Profile extends Component {
   state = {
@@ -71,6 +70,23 @@ class Profile extends Component {
     }
   }
 
+  showDetails = post => {
+    this.setState(
+      () => ({
+        currentPost: post
+      }),
+      this.toggleModal
+    );
+  };
+
+  toggleModal = () => {
+    this.setState({ showDetailsPost: !this.state.showDetailsPost });
+  };
+
+  hideModal = () => {
+    this.setState({ showDetailsPost: false });
+  };
+
   render() {
     let btnProfile = this.state.userLogged ? (
       <button className="edit-profile">Edit Profile</button>
@@ -97,8 +113,8 @@ class Profile extends Component {
         <div className="profile-posts">
           {this.props.userPosts.map((post, i) => {
             return (
-              <PostCard
-                key={i}
+              <PostElementList
+                key={`${this.props.userData.id}-post-${i}`}
                 showDetails={() => this.showDetails(this.props.userPosts[i])}
                 image={post.photo}
                 likes={post.likes}
@@ -113,9 +129,9 @@ class Profile extends Component {
           likes={this.state.currentPost.likes}
           createdAt={0}
           showDetailsPost={this.state.showDetailsPost}
-          toggleModal={this.toggleDetailsPost}
+          toggleModal={this.toggleModal}
           userId={this.state.currentPost.userId}
-          hideModal={this.toggleDetailsPost}
+          hideModal={this.hideModal}
         />
       </div>
     );
