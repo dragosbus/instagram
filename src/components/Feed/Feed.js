@@ -21,7 +21,6 @@ class Feed extends Component {
 
   componentDidMount() {
     this.props.getPosts(this.props.userId);
-    console.log(this.props.followingPosts)
     
     window.addEventListener('scroll', this.handleScroll);
   }
@@ -31,7 +30,7 @@ class Feed extends Component {
   };
 
   render() {
-   
+    console.log(this.props.followingPosts)
     return (
       <div className="feed">
         {/* <ul>

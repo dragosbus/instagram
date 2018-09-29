@@ -126,30 +126,41 @@ export const getFollowingPostsMiddleware = userId => dispatch => {
   //find the userid for the every post found
   //get the user data for the user found
   //push to the empty array created in the begining, an object and then dispatch the getFollowingPosts action creator with the array with all data
-
-  db.ref(`users/${userId}/following`).on('value', s => {
-    for (let userFollowed in s.val()) {
-      let userIdFollowed = s.val()[userFollowed].id;
-      db.ref(`posts/${userIdFollowed}`).on('value', p => {
-        if (p.val()) {
-          for (let postId in p.val()) {
-            db.ref(`users/${p.val()[postId].userId}`).on('value', user => {
-              if (user.val()) {
-                posts.push({
-                  description: p.val()[postId].description,
-                  likes: p.val()[postId].likes,
-                  photo: p.val()[postId].photo,
-                  userId: p.val()[postId].userId,
-                  username: user.val().username,
-                  profile_photo: user.val().profile_picture
-                });
-              }
-              dispatch(getFollowingPosts([...posts]));
-            });
-
-          }
-        }
+  getDataFromFirebase(`users/${userId}/following`, data => {
+    let followingUsers = Object.values(data.val())
+      .map(user => user.id);
+    Promise.resolve(followingUsers).then(res => {
+      res.map(id => {
+        getDataFromFirebase(`posts/${id}`, post => {
+          dispatch(getFollowingPosts(post.val()));
+        });
       });
-    }
+    });
   });
+
+  // db.ref(`users/${userId}/following`).on('value', s => {
+  //   for (let userFollowed in s.val()) {
+  //     let userIdFollowed = s.val()[userFollowed].id;
+  //     db.ref(`posts/${userIdFollowed}`).on('value', p => {
+  //       if (p.val()) {
+  //         for (let postId in p.val()) {
+  //           db.ref(`users/${p.val()[postId].userId}`).on('value', user => {
+  //             if (user.val()) {
+  //               posts.push({
+  //                 description: p.val()[postId].description,
+  //                 likes: p.val()[postId].likes,
+  //                 photo: p.val()[postId].photo,
+  //                 userId: p.val()[postId].userId,
+  //                 username: user.val().username,
+  //                 profile_photo: user.val().profile_picture
+  //               });
+  //             }
+  //             dispatch(getFollowingPosts([...posts]));
+  //           });
+
+  //         }
+  //       }
+  //     });
+  //   }
+  // });
 };
