@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getFollowingPostsMiddleware} from '../../actionCreators/actions';
+import { getFollowingUsers } from '../../actionCreators/actions';
+import { getDataFromFirebase } from '../../utils/firebaseHandlers';
 import { Link } from 'react-router-dom';
 import { MdFavoriteBorder, MdChatBubbleOutline } from 'react-icons/md';
 
@@ -10,36 +11,50 @@ import './Feed.css';
 class Feed extends Component {
   state = {
     posts: []
-  }
-  handleScroll = (e) => {
+  };
+  handleScroll = e => {
     let id = Math.floor(e.target.scrollingElement.scrollTop / 487);
     console.log(e.target.scrollingElement.scrollTop);
-    this.setState(prevState=>({
-      posts: prevState.posts.concat(this.props.followingPosts[id])
-    }),()=>console.log(this.state.posts));
+    this.setState(
+      prevState => ({
+        posts: prevState.posts.concat(this.props.followingPosts[id])
+      }),
+      () => console.log(this.state.posts)
+    );
   };
 
-  getPosts = async (id) => {
-    await this.props.getPosts(id);
-    return await this.props.followingPosts;
+  getPosts = async () => {
+    await getDataFromFirebase(`users/${this.props.userId}/following`)
+      .then(res => Object.values(res).map(id => id.id))
+      .then(res => {
+        this.props.getFollowingUsers(res);
+      });
+    return this.props.followingUsers;
   };
 
   componentDidMount() {
-    console.log('mounted');
-    this.getPosts(this.props.userId).then(res=>console.log(res));
-    
-    window.addEventListener('scroll', this.handleScroll);
+    //should be refactored.set state is called for every following user
+    this.getPosts().then(res => {
+      res.forEach(id => {
+        getDataFromFirebase(`posts/${id}`).then(post => {
+          this.setState(prevState=>({
+            posts: prevState.posts.concat(Object.values(post))
+          }));
+        });
+      });
+    });
+
+    // window.addEventListener('scroll', this.handleScroll);
   }
-  
+
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
-  };
+  }
 
   render() {
-    // console.log(this.props.followingPosts)
     return (
       <div className="feed">
-        {/* <ul>
+        <ul>
           {this.state.posts.map((post, i) => {
             return (
               <li key={`${post.username}-${post.userId}-${i}`}>
@@ -69,20 +84,20 @@ class Feed extends Component {
               </li>
             );
           })}
-        </ul> */}
+        </ul>
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  followingPosts: state.followingPosts
+  followingUsers: state.followingUsers
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      getPosts: getFollowingPostsMiddleware
+      getFollowingUsers: getFollowingUsers
     },
     dispatch
   );

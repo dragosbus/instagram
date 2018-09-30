@@ -36,7 +36,7 @@ const isFollower = (data) => ({
   payload: data
 });
 
-const getFollowingPosts = (data) => ({
+export const getFollowingUsers = (data) => ({
   type: ActionTypes.GET_FOLLOWING_POSTS,
   payload: data
 });
@@ -113,54 +113,4 @@ export const getPostsMiddleware = userId => dispatch => {
     }
     dispatch(getPosts(userPosts));
   });
-};
-
-
-
-//get last post from the following
-export const getFollowingPostsMiddleware = userId => dispatch => {
-  let posts = [];
-  //get the users who the current user follow
-  //iterate throught returned users
-  //get the posts from i'th user found
-  //find the userid for the every post found
-  //get the user data for the user found
-  //push to the empty array created in the begining, an object and then dispatch the getFollowingPosts action creator with the array with all data
-  getDataFromFirebase(`users/${userId}/following`, data => {
-    let followingUsers = Object.values(data.val())
-      .map(user => user.id);
-    Promise.resolve(followingUsers).then(res => {
-      res.map(id => {
-        getDataFromFirebase(`posts/${id}`, post=>{
-          posts.push(post.val());
-        }).then(()=>console.log(posts));
-      });
-    });
-  });
-
-  // db.ref(`users/${userId}/following`).on('value', s => {
-  //   for (let userFollowed in s.val()) {
-  //     let userIdFollowed = s.val()[userFollowed].id;
-  //     db.ref(`posts/${userIdFollowed}`).on('value', p => {
-  //       if (p.val()) {
-  //         for (let postId in p.val()) {
-  //           db.ref(`users/${p.val()[postId].userId}`).on('value', user => {
-  //             if (user.val()) {
-  //               posts.push({
-  //                 description: p.val()[postId].description,
-  //                 likes: p.val()[postId].likes,
-  //                 photo: p.val()[postId].photo,
-  //                 userId: p.val()[postId].userId,
-  //                 username: user.val().username,
-  //                 profile_photo: user.val().profile_picture
-  //               });
-  //             }
-  //             dispatch(getFollowingPosts([...posts]));
-  //           });
-
-  //         }
-  //       }
-  //     });
-  //   }
-  // });
 };

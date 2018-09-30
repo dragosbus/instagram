@@ -3,9 +3,16 @@ import {
 } from '../firebase/firebase';
 
 export const getDataFromFirebase = async (ref, cb) => {
+  let data;
   await db.ref(ref).once('value', s => {
-    cb(s);
+    if(cb) {
+      cb(s);
+    } else {
+      data = s.val();
+    }
   });
+
+  if(data) return data;
 };
 
 export const followHandlerDb = (userId, userIdToFollow, action) => {
