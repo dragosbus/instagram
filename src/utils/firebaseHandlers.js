@@ -2,8 +2,8 @@ import {
   db
 } from '../firebase/firebase';
 
-export const getDataFromFirebase = (ref, cb) => {
-  db.ref(ref).once('value', s => {
+export const getDataFromFirebase = async (ref, cb) => {
+  await db.ref(ref).once('value', s => {
     cb(s);
   });
 };

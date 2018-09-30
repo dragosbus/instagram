@@ -131,9 +131,9 @@ export const getFollowingPostsMiddleware = userId => dispatch => {
       .map(user => user.id);
     Promise.resolve(followingUsers).then(res => {
       res.map(id => {
-        getDataFromFirebase(`posts/${id}`, post => {
-          dispatch(getFollowingPosts(post.val()));
-        });
+        getDataFromFirebase(`posts/${id}`, post=>{
+          posts.push(post.val());
+        }).then(()=>console.log(posts));
       });
     });
   });

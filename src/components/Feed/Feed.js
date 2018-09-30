@@ -19,8 +19,14 @@ class Feed extends Component {
     }),()=>console.log(this.state.posts));
   };
 
+  getPosts = async (id) => {
+    await this.props.getPosts(id);
+    return await this.props.followingPosts;
+  };
+
   componentDidMount() {
-    this.props.getPosts(this.props.userId);
+    console.log('mounted');
+    this.getPosts(this.props.userId).then(res=>console.log(res));
     
     window.addEventListener('scroll', this.handleScroll);
   }
@@ -30,7 +36,7 @@ class Feed extends Component {
   };
 
   render() {
-    console.log(this.props.followingPosts)
+    // console.log(this.props.followingPosts)
     return (
       <div className="feed">
         {/* <ul>
