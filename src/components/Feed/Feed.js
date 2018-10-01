@@ -10,6 +10,7 @@ import './Feed.css';
 
 class Feed extends Component {
   state = {
+    users: [],
     posts: []
   };
   // handleScroll = e => {
@@ -24,26 +25,59 @@ class Feed extends Component {
   // };
 
   getFivePosts = () => {
+    //counter which stop fetching users when is 5
+    let currentId = 0;
     getDataFromFirebase(`users/${this.props.userId}/following`)
       .then(res => Object.values(res).map(id => id.id))
       .then(res => {
+        //get the id's of all users from following
+        //iterate throught all users from following
+        //and get data asked, and setState to users.Stop iterating when the currentId is 5
         res.map(user => {
-          getDataFromFirebase(`users/${user}`).then(res => {
-            this.setState(prevState => ({
-              posts: prevState.posts.concat(
-                {
-                  id: res.id,
-                  profile_picture: res.profile_picture,
-                  username: res.username,
-                }
-              )
-            }));
-          });
+          getDataFromFirebase(`users/${user}`)
+            .then(res => {
+              if (currentId < 1) {
+                this.setState(
+                  prevState => ({
+                    users: prevState.posts.concat({
+                      id: res.id,
+                      profile_picture: res.profile_picture,
+                      username: res.username
+                    })
+                  }),
+                  () => {
+                    //after the new state is updated, increment the currentId and pass to the next user if is less than 5, otherwise return false
+                    currentId += 1;
+                    console.log(this.state.users, currentId);
+                  }
+                );
+              } else {
+                return false;
+              }
+            })
+            .then(res => {
+              //when the currentId is 5 the prev callback return false
+              if (res !== false) {
+                console.log('users gets', currentId);
+                //map through users fetched and get the last post
+                this.state.users.map(user => {
+                  getDataFromFirebase(`posts/${user.id}`).then(res => {
+                    this.setState(
+                      prevState => ({
+                        posts: prevState.posts.concat(Object.assign({}, user, ...Object.values(res)))
+                      }),
+                      () => console.log(this.state.posts)
+                    );
+                  });
+                });
+              }
+            });
         });
       });
   };
 
   componentDidMount() {
+    //after the component mount, get the last post from 5 users like default data.The rest of the feed is populate on scroll event
     this.getFivePosts();
     // this.props.getPostsForFeed(this.props.userId);
     // if(typeof this.props.feedPosts === 'function') {
