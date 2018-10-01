@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getFollowingUsers } from '../../actionCreators/actions';
+import { getPostsForFeed } from '../../actionCreators/actions';
 import { getDataFromFirebase } from '../../utils/firebaseHandlers';
 import { Link } from 'react-router-dom';
 import { MdFavoriteBorder, MdChatBubbleOutline } from 'react-icons/md';
@@ -12,47 +12,51 @@ class Feed extends Component {
   state = {
     posts: []
   };
-  handleScroll = (e, post) => {
-    let id = Math.floor(e.target.scrollingElement.scrollTop / 487);
-    console.log(e.target.scrollingElement.scrollTop);
-    this.setState(
-      prevState => ({
-        posts: prevState.posts.concat(post[id])
-      }),
-      () => console.log(post)
-    );
-  };
+  // handleScroll = e => {
+  //   let id = Math.floor(e.target.scrollingElement.scrollTop / 487);
+  //   console.log(e.target.scrollingElement.scrollTop);
+  //   this.setState(
+  //     prevState => ({
+  //       posts: prevState.posts.concat(post[id])
+  //     }),
+  //     () => console.log(post)
+  //   );
+  // };
 
-  getPosts = async () => {
-    await getDataFromFirebase(`users/${this.props.userId}/following`)
+  getFivePosts = () => {
+    getDataFromFirebase(`users/${this.props.userId}/following`)
       .then(res => Object.values(res).map(id => id.id))
       .then(res => {
-        this.props.getFollowingUsers(res);
-      });
-    return this.props.followingUsers;
-  };
-
-  componentDidMount() {
-    //should be refactored.set state is called for every following user
-    this.getPosts().then(res => {
-      res.forEach(id => {
-        getDataFromFirebase(`posts/${id}`).then(post => {
-          console.log(Object.values(post))
-          this.setState(prevState=>({
-            posts: prevState.posts.concat(Object.values(post)[Object.values(post).length - 1])
-          }), ()=>{
-            window.addEventListener('scroll', e=>{
-              let id = Math.floor(e.target.scrollingElement.scrollTop / 487);
-              if(!this.state.posts.includes(Object.values(post)[id])) {
-                this.setState(prevState=>({
-                  posts: prevState.posts.concat(Object.values(post)[id])
-                }));
-              }
-            });
+        res.map(user => {
+          getDataFromFirebase(`users/${user}`).then(res => {
+            this.setState(prevState => ({
+              posts: prevState.posts.concat(
+                {
+                  id: res.id,
+                  profile_picture: res.profile_picture,
+                  username: res.username,
+                }
+              )
+            }));
           });
         });
       });
-    });
+  };
+
+  componentDidMount() {
+    this.getFivePosts();
+    // this.props.getPostsForFeed(this.props.userId);
+    // if(typeof this.props.feedPosts === 'function') {
+    //   this.setState({currentPost: this.props.feedPosts().next()})
+    // }
+    // window.addEventListener('scroll', e=>{
+    //   console.log(this.props.feedPosts);
+    // });
+    // window.addEventListener('click', e=> {
+    //   if(typeof this.props.feedPosts === 'function') {
+    //     console.log();
+    //   }
+    // });
   }
 
   componentWillUnmount() {
@@ -62,10 +66,10 @@ class Feed extends Component {
   render() {
     return (
       <div className="feed">
-        <ul>
+        {/* <ul>
           {this.state.posts.map((post, i) => {
             return (
-              <li key={`${post.userId}-${i}`}>
+              <li key={`${post.username}-${post.userId}-${i}`}>
                 <div className="header-post">
                   <Link to={`/${post.userId}`}>
                     <img src={post.profile_photo} />
@@ -92,20 +96,20 @@ class Feed extends Component {
               </li>
             );
           })}
-        </ul>
+        </ul> */}
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  followingUsers: state.followingUsers
+  feedPosts: state.feedPosts
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      getFollowingUsers: getFollowingUsers
+      getPostsForFeed: getPostsForFeed
     },
     dispatch
   );

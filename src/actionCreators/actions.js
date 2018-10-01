@@ -36,7 +36,7 @@ const isFollower = (data) => ({
   payload: data
 });
 
-export const getFollowingUsers = (data) => ({
+export const getFeed = (data) => ({
   type: ActionTypes.GET_FOLLOWING_POSTS,
   payload: data
 });
@@ -113,4 +113,16 @@ export const getPostsMiddleware = userId => dispatch => {
     }
     dispatch(getPosts(userPosts));
   });
+};
+
+export const getPostsForFeed = userId => dispatch => {
+  getDataFromFirebase(`users/${userId}/following`)
+    .then(res => Object.values(res).map(id => id.id))
+    .then(res => {
+      return function* getUserPosts() {
+        for(let i=0;i<res.length;i++) {
+          yield res[i];
+        }
+      }
+    }).then(res=>dispatch(getFeed(res)));
 };
