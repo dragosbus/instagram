@@ -12,14 +12,14 @@ class Feed extends Component {
   state = {
     posts: []
   };
-  handleScroll = e => {
+  handleScroll = (e, post) => {
     let id = Math.floor(e.target.scrollingElement.scrollTop / 487);
     console.log(e.target.scrollingElement.scrollTop);
     this.setState(
       prevState => ({
-        posts: prevState.posts.concat(this.props.followingPosts[id])
+        posts: prevState.posts.concat(post[id])
       }),
-      () => console.log(this.state.posts)
+      () => console.log(post)
     );
   };
 
@@ -37,14 +37,22 @@ class Feed extends Component {
     this.getPosts().then(res => {
       res.forEach(id => {
         getDataFromFirebase(`posts/${id}`).then(post => {
+          console.log(Object.values(post))
           this.setState(prevState=>({
-            posts: prevState.posts.concat(Object.values(post))
-          }));
+            posts: prevState.posts.concat(Object.values(post)[Object.values(post).length - 1])
+          }), ()=>{
+            window.addEventListener('scroll', e=>{
+              let id = Math.floor(e.target.scrollingElement.scrollTop / 487);
+              if(!this.state.posts.includes(Object.values(post)[id])) {
+                this.setState(prevState=>({
+                  posts: prevState.posts.concat(Object.values(post)[id])
+                }));
+              }
+            });
+          });
         });
       });
     });
-
-    // window.addEventListener('scroll', this.handleScroll);
   }
 
   componentWillUnmount() {
@@ -57,7 +65,7 @@ class Feed extends Component {
         <ul>
           {this.state.posts.map((post, i) => {
             return (
-              <li key={`${post.username}-${post.userId}-${i}`}>
+              <li key={`${post.userId}-${i}`}>
                 <div className="header-post">
                   <Link to={`/${post.userId}`}>
                     <img src={post.profile_photo} />
