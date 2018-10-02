@@ -10,7 +10,6 @@ import './Feed.css';
 
 class Feed extends Component {
   state = {
-    users: [],
     posts: []
   };
   // handleScroll = e => {
@@ -25,20 +24,7 @@ class Feed extends Component {
   // };
 
   componentDidMount() {
-    //after the component mount, get the last post from 5 users like default data.The rest of the feed is populate on scroll event
     this.props.getPostsForFeed(this.props.userId)().then(()=>console.log(this.props.feedPosts))
-    // this.props.getPostsForFeed(this.props.userId);
-    // if(typeof this.props.feedPosts === 'function') {
-    //   this.setState({currentPost: this.props.feedPosts().next()})
-    // }
-    // window.addEventListener('scroll', e=>{
-    //   console.log(this.props.feedPosts);
-    // });
-    // window.addEventListener('click', e=> {
-    //   if(typeof this.props.feedPosts === 'function') {
-    //     console.log();
-    //   }
-    // });
   }
 
   componentWillUnmount() {
