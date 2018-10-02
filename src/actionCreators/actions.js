@@ -124,7 +124,7 @@ export const getPostsForFeed = userId => dispatch => {
     let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
 
     let followingUsers = Object.values(followingUsersFetched).map(id => id.id);
-    
+    //TODO:get the first 10 posts, then get next 10 posts on scroll event
     for (let id in postsFetched) {
       if (followingUsers.includes(id)) {
         dispatch(getFeed((postsFetched[id])));
