@@ -6,6 +6,9 @@ import {
 import {
   getDataFromFirebase
 } from '../utils/firebaseHandlers';
+import {
+  get
+} from 'https';
 
 const loginSuccess = (user) => ({
   type: ActionTypes.LOG_IN_SUCCESS,
@@ -116,13 +119,16 @@ export const getPostsMiddleware = userId => dispatch => {
 };
 
 export const getPostsForFeed = userId => dispatch => {
-  getDataFromFirebase(`users/${userId}/following`)
-    .then(res => Object.values(res).map(id => id.id))
-    .then(res => {
-      return function* getUserPosts() {
-        for(let i=0;i<res.length;i++) {
-          yield res[i];
-        }
+  return async function () {
+    let postsFetched = await getDataFromFirebase('posts/');
+    let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
+
+    let followingUsers = Object.values(followingUsersFetched).map(id => id.id);
+    
+    for (let id in postsFetched) {
+      if (followingUsers.includes(id)) {
+        dispatch(getFeed((postsFetched[id])));
       }
-    }).then(res=>dispatch(getFeed(res)));
+    }
+  }
 };
