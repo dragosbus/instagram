@@ -8,7 +8,7 @@ import Home from './components/Home/Home';
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
+      <BrowserRouter basename='/static'>
         <div className="app">{this.props.userConnected.isSignedIn ? <Home /> : <LoginPage />}</div>
       </BrowserRouter>
     );
