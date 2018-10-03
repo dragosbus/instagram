@@ -14,7 +14,7 @@ class Home extends Component {
   render() {
     return (
       <div className="home">
-        <BrowserRouter>
+        <BrowserRouter basename='/instagram/build'>
           <div>
             <header>
               <NavLink to="/add" activeClassName="activeStyle">
