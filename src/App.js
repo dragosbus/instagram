@@ -8,7 +8,7 @@ import Home from './components/Home/Home';
 class App extends Component {
   render() {
     return (
-      <BrowserRouter basename='/static'>
+      <BrowserRouter basename='/instagram/build'>
         <div className="app">{this.props.userConnected.isSignedIn ? <Home /> : <LoginPage />}</div>
       </BrowserRouter>
     );
