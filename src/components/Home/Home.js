@@ -12,7 +12,9 @@ import Feed from '../Feed/Feed';
 
 class Home extends Component {
   render() {
-    return (
+    return !this.props.userConnected.id ? (
+      '404'
+    ) : (
       <div className="home">
         <BrowserRouter>
           <div>
@@ -29,8 +31,9 @@ class Home extends Component {
             </header>
             <main>
               <Switch>
-              <Route
-                  exact path="/"
+                <Route
+                  exact
+                  path="/"
                   render={() => {
                     return <Feed userId={this.props.userConnected.id} />;
                   }}
