@@ -58,7 +58,7 @@ class LoginPage extends Component {
       });
     }
   };
-
+  
   onEmailChange = e => {
     this.changeInputHandler(e, 'email');
   };

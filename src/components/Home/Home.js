@@ -12,6 +12,7 @@ import Feed from '../Feed/Feed';
 
 class Home extends Component {
   render() {
+    //for security reasons, because userConnected from redux can be changed from react panel and get the home page
     return !this.props.userConnected.id ? (
       '404'
     ) : (

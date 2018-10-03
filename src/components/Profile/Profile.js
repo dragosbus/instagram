@@ -9,16 +9,42 @@ import PostDetails from '../PostDetails/Post';
 import FollowBtn from '../FollowBtn/Follow';
 
 import { followHandlerDb } from '../../utils/firebaseHandlers';
+import { db } from '../../firebase/firebase';
 
 class Profile extends Component {
   state = {
     currentPost: {},
     showDetailsPost: false,
-    userLogged: false
+    userLogged: false,
+    followers: this.props.userData.followers ? Object.keys(this.props.userData.followers).length : 0
   };
 
   followUser = async () => {
     return await this.props.follow;
+  };
+
+  onAddFollow = () => {
+    db.ref(`users/${this.props.userId}/followers`).once('child_added', data => {
+      db.ref(`users/${this.props.userId}/followers`).once('value', snap => {
+        this.setState({
+          followers: Object.values(snap.val()).length
+        });
+      });
+    });
+  };
+  //TODO:change the numbers(following, followers, posts) depended of the state of data
+  onRemoveFollow = () => {
+    db.ref(`users/${this.props.userId}/followers`).once('child_removed', data => {
+      db.ref(`users/${this.props.userId}/followers`).once('value', snap => {
+        if (snap.val()) {
+          this.setState({
+            followers: Object.values(snap.val()).length
+          });
+        } else {
+          this.setState({ followers: 0 });
+        }
+      });
+    });
   };
 
   followHandler = () => {
@@ -28,8 +54,10 @@ class Profile extends Component {
       .then(res => {
         if (!res) {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'follow');
+          this.onAddFollow();
         } else {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'unfollow');
+          this.onRemoveFollow();
         }
       })
       .then(() => {
@@ -57,6 +85,7 @@ class Profile extends Component {
     -when change route from the profile of an user to the own profile, we should check if are not the same for get the data of the own user.
     -I did this in componentdidupdate and not in componentdidmount, because when the route is changed, the old component is not unmounting, just the data, and we want the component updated with the new data
     */
+    this.props.getUserData(this.props.userId);
     if (prevProps.userId !== this.props.userId) {
       this.setState(
         prevState => ({
@@ -94,9 +123,9 @@ class Profile extends Component {
       <FollowBtn follow={this.followHandler} isFollower={this.props.follow} />
     );
 
-    let totalFollowers = this.props.userData.followers ? Object.keys(this.props.userData.followers).length : 0;
-    let totalFollowing = this.props.userData.following ? Object.keys(this.props.userData.following).length : 0;
-      
+    // let totalFollowers = this.props.userData.followers ? Object.keys(this.props.userData.followers).length : 0;
+    // let totalFollowing = this.props.userData.following ? Object.keys(this.props.userData.following).length : 0;
+
     return (
       <div className="profile">
         <div className="profile-header">
@@ -107,8 +136,8 @@ class Profile extends Component {
         </div>
         <div className="profile-data">
           <p>{this.props.userPosts.length} posts</p>
-          <p>{totalFollowers} followers</p>
-          <p>{totalFollowing} following</p>
+          <p>{this.state.followers} followers</p>
+          <p>{0} following</p>
         </div>
         <div className="profile-posts">
           {this.props.userPosts.map((post, i) => {
