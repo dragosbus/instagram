@@ -17,8 +17,7 @@ class Profile extends Component {
     currentPost: {},
     showDetailsPost: false,
     userLogged: false,
-    followers: this.props.userData.followers ? Object.keys(this.props.userData.followers).length : 0,
-    following: this.props.userData.following ? Object.keys(this.props.userData.following).length : 0
+    
   };
 
   followUser = async () => {
@@ -55,6 +54,7 @@ class Profile extends Component {
 
   componentDidMount() {
     //when component mount, get the data and check if it is the route with the profile of the user logged
+    this.props.history.push(`/${this.props.userId}`)
     this.props.getUserData(this.props.userId);
     this.props.checkFollow(this.props.userConnected.id, this.props.userId);
     this.props.getPosts(this.props.userId);
@@ -107,6 +107,9 @@ class Profile extends Component {
     ) : (
       <FollowBtn follow={this.followHandler} isFollower={this.props.follow} />
     );
+
+    let followers = this.props.userData.followers ? Object.keys(this.props.userData.followers).length : 0;
+    let following = this.props.userData.following ? Object.keys(this.props.userData.following).length : 0;
       
     return (
       <div className="profile">
@@ -118,8 +121,8 @@ class Profile extends Component {
         </div>
         <div className="profile-data">
           <p>{this.props.userPosts.length} posts</p>
-          <p>{this.state.followers} followers</p>
-          <p>{0} following</p>
+          <p>{followers} followers</p>
+          <p>{following} following</p>
         </div>
         <div className="profile-posts">
           {this.props.userPosts.map((post, i) => {
