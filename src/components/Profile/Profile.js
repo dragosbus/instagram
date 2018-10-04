@@ -16,8 +16,7 @@ class Profile extends Component {
   state = {
     currentPost: {},
     showDetailsPost: false,
-    userLogged: false,
-    
+    userLogged: false
   };
 
   followUser = async () => {
@@ -54,7 +53,7 @@ class Profile extends Component {
 
   componentDidMount() {
     //when component mount, get the data and check if it is the route with the profile of the user logged
-    this.props.history.push(`/${this.props.userId}`)
+    this.props.history.push(`/${this.props.userId}`);
     this.props.getUserData(this.props.userId);
     this.props.checkFollow(this.props.userConnected.id, this.props.userId);
     this.props.getPosts(this.props.userId);
@@ -71,6 +70,10 @@ class Profile extends Component {
     -I did this in componentdidupdate and not in componentdidmount, because when the route is changed, the old component is not unmounting, just the data, and we want the component updated with the new data
     */
 
+    //if the user is not logged in and the route is another user, after log in redirect to feed route
+    if (!this.props.userData.id) {
+      this.props.history.push(`/`);
+    }
     if (prevProps.userId !== this.props.userId) {
       this.setState(
         prevState => ({
@@ -107,10 +110,10 @@ class Profile extends Component {
     ) : (
       <FollowBtn follow={this.followHandler} isFollower={this.props.follow} />
     );
-
     let followers = this.props.userData.followers ? Object.keys(this.props.userData.followers).length : 0;
+
     let following = this.props.userData.following ? Object.keys(this.props.userData.following).length : 0;
-      
+
     return (
       <div className="profile">
         <div className="profile-header">
