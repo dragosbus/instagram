@@ -16,6 +16,7 @@ class LoginModal extends Component {
   };
   
   render() {
+    
     const { userConnected } = this.props;
     let errorSpan = userConnected.error ? <span className="error-login">{userConnected.error}</span> : '';
     return (

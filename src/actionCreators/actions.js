@@ -71,6 +71,7 @@ export const loginMiddleware = ({
 
 export const getUserDataMiddleware = userId => dispatch => {
   getDataFromFirebase(`users/${userId}`, data => {
+    console.log('dispatched:get user data')
     dispatch(getUserData(data.val()));
   });
 };
@@ -123,8 +124,8 @@ export const getPostsForFeed = userId => dispatch => {
     let postsFetched = await getDataFromFirebase('posts/');
     let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
 
-    let followingUsers = Object.values(followingUsersFetched).map(id => id.id);
-    //TODO:get the first 10 posts, then get next 10 posts on scroll event
+    let followingUsers = followingUsersFetched ? Object.values(followingUsersFetched).map(id => id.id) : [];
+    
     for (let id in postsFetched) {
       if (followingUsers.includes(id)) {
         dispatch(getFeed((postsFetched[id])));

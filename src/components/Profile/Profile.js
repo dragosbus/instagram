@@ -10,41 +10,28 @@ import FollowBtn from '../FollowBtn/Follow';
 
 import { followHandlerDb } from '../../utils/firebaseHandlers';
 import { db } from '../../firebase/firebase';
+import { Object } from 'core-js';
 
 class Profile extends Component {
   state = {
     currentPost: {},
     showDetailsPost: false,
     userLogged: false,
-    followers: this.props.userData.followers ? Object.keys(this.props.userData.followers).length : 0
+    followers: this.props.userData.followers ? Object.keys(this.props.userData.followers).length : 0,
+    following: this.props.userData.following ? Object.keys(this.props.userData.following).length : 0
   };
 
   followUser = async () => {
     return await this.props.follow;
   };
 
-  onAddFollow = () => {
-    db.ref(`users/${this.props.userId}/followers`).once('child_added', data => {
-      db.ref(`users/${this.props.userId}/followers`).once('value', snap => {
-        this.setState({
-          followers: Object.values(snap.val()).length
-        });
+  onFollowChange = event => {
+    db.ref(`users/${this.props.userId}/followers`)
+      .once(event)
+      .then(() => {
+        console.log(event);
+        this.props.getUserData(this.props.userId);
       });
-    });
-  };
-  //TODO:change the numbers(following, followers, posts) depended of the state of data
-  onRemoveFollow = () => {
-    db.ref(`users/${this.props.userId}/followers`).once('child_removed', data => {
-      db.ref(`users/${this.props.userId}/followers`).once('value', snap => {
-        if (snap.val()) {
-          this.setState({
-            followers: Object.values(snap.val()).length
-          });
-        } else {
-          this.setState({ followers: 0 });
-        }
-      });
-    });
   };
 
   followHandler = () => {
@@ -54,10 +41,10 @@ class Profile extends Component {
       .then(res => {
         if (!res) {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'follow');
-          this.onAddFollow();
+          this.onFollowChange('child_added');
         } else {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'unfollow');
-          this.onRemoveFollow();
+          this.onFollowChange('child_removed');
         }
       })
       .then(() => {
@@ -68,11 +55,9 @@ class Profile extends Component {
 
   componentDidMount() {
     //when component mount, get the data and check if it is the route with the profile of the user logged
-
     this.props.getUserData(this.props.userId);
     this.props.checkFollow(this.props.userConnected.id, this.props.userId);
     this.props.getPosts(this.props.userId);
-
     if (this.props.userId === this.props.userConnected.id) {
       this.setState({ userLogged: true });
     } else {
@@ -85,7 +70,7 @@ class Profile extends Component {
     -when change route from the profile of an user to the own profile, we should check if are not the same for get the data of the own user.
     -I did this in componentdidupdate and not in componentdidmount, because when the route is changed, the old component is not unmounting, just the data, and we want the component updated with the new data
     */
-    this.props.getUserData(this.props.userId);
+
     if (prevProps.userId !== this.props.userId) {
       this.setState(
         prevState => ({
@@ -122,10 +107,7 @@ class Profile extends Component {
     ) : (
       <FollowBtn follow={this.followHandler} isFollower={this.props.follow} />
     );
-
-    // let totalFollowers = this.props.userData.followers ? Object.keys(this.props.userData.followers).length : 0;
-    // let totalFollowing = this.props.userData.following ? Object.keys(this.props.userData.following).length : 0;
-
+      
     return (
       <div className="profile">
         <div className="profile-header">

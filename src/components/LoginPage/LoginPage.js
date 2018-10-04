@@ -158,7 +158,6 @@ class LoginPage extends Component {
 
   render() {
     let { email, fullName, username, pass, repeatPass, errorMessage, formIsValid } = this.state;
-
     let messageSpan = !formIsValid ? (
       <MessageSpan message={errorMessage} formIsValid={formIsValid} />
     ) : (
