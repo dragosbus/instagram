@@ -27,7 +27,8 @@
 
 .home footer {
   bottom: 0;
-  border-top: 1px solid rgba(2, 2, 2, 0.2);
+  border-top: 1px solid rgba(4, 4, 4, 0.15);
+  padding: 0;
 }
 
 .home header {
@@ -41,33 +42,41 @@
 
 .home footer a,
 .home header a {
-  color: rgb(8, 8, 8);
+  color: rgb(2, 2, 2);
   width: 20%;
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   text-align: center;
+  padding: 0;
 }
 
-.activeStyle {
-  transform: scale(1.5);
-  font-size: 3rem;
+.activeStyle .icon {
+  fill:black;
+  transform: scale(1.14);
+  stroke-width: 2px;
 }
 
 .icon{
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3rem;
+  height: 3rem;
   fill: #000;
 }
 
-/* .icon-camera {
-  width: 3rem;
-  height: 3rem;
+.icon-plus {
+  width: 5.5rem;
+  height: 5.5rem;
+  stroke: #000;
+  stroke-width:0.5;
 }
 
-.icon-home {
-
+.icon-notification{
+  width: 5rem;
+  height: 5rem;
 }
 
-.icon-heart {
-  width: 2.5rem;
-  height: 2.5rem;
-} */
+.st0{display:none;}
+.st1{fill:none;stroke:#000;stroke-width:0.7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+.st2{fill:#000;}
+
+.plus-st0{display:none;}
+	.plus-st1{fill:none;stroke:#303030;stroke-width:0.7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.plus-st2{fill:#303030;}
