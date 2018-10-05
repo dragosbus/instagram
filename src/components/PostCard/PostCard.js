@@ -4,7 +4,7 @@ import { MdFavoriteBorder, MdChatBubbleOutline } from 'react-icons/md';
 const PostElementList = props => {
   return (
     <div className="card" onClick={props.showDetails}>
-      <img src={props.image} />
+      <img src={props.image} alt="Post card"/>
       <div className="hovered">
         <div>
           <p>{props.likes}</p>

@@ -81,7 +81,7 @@ class LoginPage extends Component {
 
   submitRegister = e => {
     e.preventDefault();
-    let { email, fullName, username, pass, repeatPass } = this.state;
+    let { email, fullName, pass, repeatPass } = this.state;
 
     if (!email.value || !fullName.value || !pass.value || !repeatPass.value) {
       this.setState({

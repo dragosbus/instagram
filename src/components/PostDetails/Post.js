@@ -14,12 +14,12 @@ class PostDetails extends React.Component {
             <Link to={`/${this.props.userId}`} onClick={()=>{
               this.props.hideModal();
             }}>
-              <img src={data.profile_picture} />
+              <img src={data.profile_picture} alt='profile user'/>
               <p>{data.username}</p>
             </Link>
           </div>
           <div className="post-image">
-            <img src={this.props.postImg} />
+            <img src={this.props.postImg} alt="post detail"/>
           </div>
           <div className="detail">
             {/* <ul>

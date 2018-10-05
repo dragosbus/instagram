@@ -117,7 +117,7 @@ class Profile extends Component {
     return (
       <div className="profile">
         <div className="profile-header">
-          <img src="https://www.sgbt.lu/uploads/tx_bisgbio/default-profile_01.png" />
+          <img src="https://www.sgbt.lu/uploads/tx_bisgbio/default-profile_01.png" alt="profile user"/>
           <p>{this.props.userData.username}</p>
           {btnProfile}
           <h4>{this.props.userData.fullName}</h4>
