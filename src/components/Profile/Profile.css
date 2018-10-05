@@ -92,6 +92,7 @@
   opacity: 0;
   transition: opacity 0.4s ease-in;
   cursor: pointer;
+  text-align: center;
 }
 
 .profile-posts .hovered:hover {
@@ -102,6 +103,9 @@
   width: 50%;
   margin: 0 2rem;
   font-size: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-posts .hovered div p {
