@@ -74,8 +74,12 @@ class Profile extends Component {
     */
    if(this.props.userId === this.props.userConnected.id) {
      console.log('connected');
-    //  this.onFollowChange('child_added');
-    //  this.onFollowChange('child_removed');
+     this.onFollowChange('child_added').then(()=>{
+      console.log('child_added');
+     });
+     this.onFollowChange('child_removed').then(()=>{
+      console.log('child_removed');
+     });  
    }
     //if the user is not logged in and the route is another user, after log in redirect to feed route
     if (!this.props.userData.id) {
