@@ -69,7 +69,8 @@ class Profile extends Component {
     -when change route from the profile of an user to the own profile, we should check if are not the same for get the data of the own user.
     -I did this in componentdidupdate and not in componentdidmount, because when the route is changed, the old component is not unmounting, just the data, and we want the component updated with the new data
     */
-
+   this.onFollowChange('child_removed');
+   this.onFollowChange('child_added');
     //if the user is not logged in and the route is another user, after log in redirect to feed route
     if (!this.props.userData.id) {
       this.props.history.push(`/`);
