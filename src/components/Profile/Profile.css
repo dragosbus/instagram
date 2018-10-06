@@ -16,19 +16,19 @@
 }
 
 .profile-header img {
-  width: 8rem;
-  height: 8rem;
+  width: 7rem;
+  height: 7rem;
   border-radius: 50%;
 }
 
 .profile-header p {
   width: 50%;
-  font-size: 2rem;
+  font-size: 1.75rem;
 }
 
 .edit-profile {
   display: block;
-  width: 75%;
+  width: 55%;
   margin: 1rem auto;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: #fff;
