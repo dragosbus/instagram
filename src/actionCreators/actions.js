@@ -6,9 +6,6 @@ import {
 import {
   getDataFromFirebase
 } from '../utils/firebaseHandlers';
-import {
-  get
-} from 'https';
 
 const loginSuccess = (user) => ({
   type: ActionTypes.LOG_IN_SUCCESS,
