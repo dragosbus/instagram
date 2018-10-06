@@ -24,47 +24,66 @@ class Feed extends Component {
   // };
 
   componentDidMount() {
-    this.props.getPostsForFeed(this.props.userId)().then(()=>console.log(this.props.feedPosts))
+    this.props
+      .getPostsForFeed(this.props.userId)()
+      .then(() => {
+        this.loadPost();
+      });
   }
+
+  loadPost = () => {
+    //TODO:make it work
+    let posts = Object.values(this.props.feedPosts).map(post => Object.values(post)[0]);
+    this.setState(prevState => ({
+      posts: prevState.posts.concat(it.next())
+    }), ()=>console.log(this.state));
+  };
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
   render() {
+    console.log(this.state.posts)
+    let rendered = this.state.posts.length ? (
+      <ul>
+        {this.state.posts.map((post, i) => {
+          return (
+            <li key={`${post.username}-${post.userId}-${i}`}>
+              <div className="header-post">
+                <Link to={`/${post.userId}`}>
+                  <img src={post.profile_photo} />
+                  <h4>{post.username}</h4>
+                </Link>
+              </div>
+              <div className="main-post">
+                <img src={post.photo} />
+                <div className="actions">
+                  <button>
+                    <MdFavoriteBorder />
+                  </button>
+                  <button>
+                    <MdChatBubbleOutline />
+                  </button>
+                </div>
+                <p>{post.likes} Likes</p>
+                <p>
+                  <span>{post.username}:</span>
+                  {post.description}
+                </p>
+                <p>Created at time ago</p>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    ) : (
+      ''
+    );
     return (
       <div className="feed">
-        {/* <ul>
-          {this.state.posts.map((post, i) => {
-            return (
-              <li key={`${post.username}-${post.userId}-${i}`}>
-                <div className="header-post">
-                  <Link to={`/${post.userId}`}>
-                    <img src={post.profile_photo} />
-                    <h4>{post.username}</h4>
-                  </Link>
-                </div>
-                <div className="main-post">
-                  <img src={post.photo} />
-                  <div className="actions">
-                    <button>
-                      <MdFavoriteBorder />
-                    </button>
-                    <button>
-                      <MdChatBubbleOutline />
-                    </button>
-                  </div>
-                  <p>{post.likes} Likes</p>
-                  <p>
-                    <span>{post.username}:</span>
-                    {post.description}
-                  </p>
-                  <p>Created at time ago</p>
-                </div>
-              </li>
-            );
-          })}
-        </ul> */}
+        {rendered}
+        <button onClick={this.loadPost}>Load</button>
       </div>
     );
   }
