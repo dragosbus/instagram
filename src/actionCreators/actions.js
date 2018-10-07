@@ -121,14 +121,21 @@ export const getPostsForFeed = userId => dispatch => {
   return async function (index) {
     let postsFetched = await getDataFromFirebase('posts/');
     let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
+    let users = await getDataFromFirebase(`users/`);
 
     let followingUsers = followingUsersFetched ? Object.values(followingUsersFetched).map(id => id.id) : [];
     
     for (let id in postsFetched) {
       if (followingUsers.includes(id)) {
-        posts.push(...Object.values(postsFetched[id]));
+        posts.push(
+          Object.assign({}, ...Object.values(postsFetched[id]), {
+            username: users[id].username,
+            profile_photo: users[id].profile_picture
+          })
+        );
       }
     }
+    console.log(users);
     dispatch(getFeed(posts.slice(index, index+1)));
   }
 };

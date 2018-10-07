@@ -87,7 +87,7 @@ class Feed extends Component {
                   <span>{post.username}:</span>
                   {post.description}
                 </p>
-                <p>{this.calcTimePostCreated(post.createdAt)}</p>
+                <p>Created:{this.calcTimePostCreated(post.createdAt)}</p>
               </div>
             </li>
           );
