@@ -71,6 +71,12 @@
   padding: 1rem 2.5rem;
 }
 
+.actions button svg.icon {
+  font-size: 2rem;
+  width: 4rem;
+  height: 4rem;
+}
+
 @media (min-width: 660px) {
   .feed {
     width: 70%;

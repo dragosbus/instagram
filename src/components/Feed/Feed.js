@@ -33,6 +33,7 @@ class Feed extends Component {
   }
 
   loadMorePosts = () => {
+    //TODO:stop dispatching if there are not more posts avaible
     this.props
       .getPostsForFeed(this.props.userId)(this.props.feedPosts.index)
       .then(() => {
