@@ -26,21 +26,29 @@ class Feed extends Component {
   componentDidMount() {
     if (!this.props.feedPosts.posts.length) {
       this.props
-        .getPostsForFeed(this.props.userId)()
+        .getPostsForFeed(this.props.userId)(this.props.feedPosts.index)
         .then(() => {
           console.log(this.props.feedPosts);
         });
     }
   }
 
+  loadMorePosts = () => {
+    this.props
+        .getPostsForFeed(this.props.userId)(this.props.feedPosts.index)
+        .then(() => {
+          console.log(this.props.feedPosts);
+        });
+    }
+
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
   render() {
-    let rendered = this.state.posts.length ? (
+    let rendered = this.props.feedPosts.posts ? (
       <ul>
-        {this.state.posts.map((post, i) => {
+        {this.props.feedPosts.posts.map((post, i) => {
           return (
             <li key={`${post.username}-${post.userId}-${i}`}>
               <div className="header-post">
@@ -76,7 +84,7 @@ class Feed extends Component {
     return (
       <div className="feed">
         {rendered}
-        <button onClick={this.loadPost}>Load</button>
+        <button onClick={this.loadMorePosts}>Load</button>
       </div>
     );
   }

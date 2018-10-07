@@ -118,7 +118,7 @@ export const getPostsMiddleware = userId => dispatch => {
 
 export const getPostsForFeed = userId => dispatch => {
   const posts = [];
-  return async function () {
+  return async function (index) {
     let postsFetched = await getDataFromFirebase('posts/');
     let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
 
@@ -126,10 +126,9 @@ export const getPostsForFeed = userId => dispatch => {
     
     for (let id in postsFetched) {
       if (followingUsers.includes(id)) {
-        console.log(postsFetched[id])
         posts.push(...Object.values(postsFetched[id]));
       }
     }
-    dispatch(getFeed(posts));
+    dispatch(getFeed(posts.slice(index, index+1)));
   }
 };
