@@ -124,7 +124,7 @@ export const getPostsForFeed = userId => dispatch => {
     let users = await getDataFromFirebase(`users/`);
 
     let followingUsers = followingUsersFetched ? Object.values(followingUsersFetched).map(id => id.id) : [];
-    
+
     for (let id in postsFetched) {
       if (followingUsers.includes(id)) {
         posts.push(
@@ -135,7 +135,7 @@ export const getPostsForFeed = userId => dispatch => {
         );
       }
     }
-    console.log(users);
-    dispatch(getFeed(posts.slice(index, index+1)));
+
+    dispatch(getFeed(posts.slice(index, index + 1)));
   }
 };

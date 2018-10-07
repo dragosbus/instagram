@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getPostsForFeed } from '../../actionCreators/actions';
-import { getDataFromFirebase } from '../../utils/firebaseHandlers';
 import { Link } from 'react-router-dom';
-import { MdFavoriteBorder, MdChatBubbleOutline } from 'react-icons/md';
+import {Comment, HeartIcon} from '../Home/Icons';
 
 import './Feed.css';
 
@@ -61,7 +60,7 @@ class Feed extends Component {
   }
 
   render() {
-    let rendered = this.props.feedPosts.posts ? (
+    let postList = this.props.feedPosts.posts ? (
       <ul>
         {this.props.feedPosts.posts.map((post, i) => {
           return (
@@ -76,10 +75,10 @@ class Feed extends Component {
                 <img src={post.photo} />
                 <div className="actions">
                   <button>
-                    <MdFavoriteBorder />
+                    <HeartIcon />
                   </button>
                   <button>
-                    <MdChatBubbleOutline />
+                    <Comment />
                   </button>
                 </div>
                 <p>{post.likes} Likes</p>
@@ -98,8 +97,8 @@ class Feed extends Component {
     );
     return (
       <div className="feed">
-        {rendered}
-        <button onClick={this.loadMorePosts}>Load</button>
+        {postList}
+        <button className="btn-load" onClick={this.loadMorePosts}>Load</button>
       </div>
     );
   }

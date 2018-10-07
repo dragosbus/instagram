@@ -61,6 +61,16 @@
   font-size: 1.5rem;
 }
 
+.btn-load {
+  margin: 1rem auto;
+  border: none;
+  background: rgb(25, 124, 182);
+  color: #fff;
+  border-radius: 3px;
+  display: block;
+  padding: 1rem 2.5rem;
+}
+
 @media (min-width: 660px) {
   .feed {
     width: 70%;
