@@ -58,7 +58,7 @@ class LoginPage extends Component {
       });
     }
   };
-
+  
   onEmailChange = e => {
     this.changeInputHandler(e, 'email');
   };
@@ -81,7 +81,7 @@ class LoginPage extends Component {
 
   submitRegister = e => {
     e.preventDefault();
-    let { email, fullName, username, pass, repeatPass } = this.state;
+    let { email, fullName, pass, repeatPass } = this.state;
 
     if (!email.value || !fullName.value || !pass.value || !repeatPass.value) {
       this.setState({
@@ -158,7 +158,6 @@ class LoginPage extends Component {
 
   render() {
     let { email, fullName, username, pass, repeatPass, errorMessage, formIsValid } = this.state;
-
     let messageSpan = !formIsValid ? (
       <MessageSpan message={errorMessage} formIsValid={formIsValid} />
     ) : (

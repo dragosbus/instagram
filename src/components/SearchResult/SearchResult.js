@@ -10,7 +10,7 @@ export const SearchResult = props => {
           return (
             <li key={user.id}>
               <Link to={`/${user.id}`}>
-                <img src={user.profile_picture} />
+                <img src={user.profile_picture} alt="profile user"/>
                 <p>{user.username}</p>
               </Link>
             </li>

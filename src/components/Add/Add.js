@@ -26,32 +26,34 @@ class AddPage extends Component {
       userId: this.props.userId,
       photo: this.state.photo,
       description: this.state.description,
-      likes: 0
+      likes: 0,
+      createdAt: this.state.createdAt
     });
   };
 
-  handleFile = e => {
-    let url = window.URL.createObjectURL(e.target.files[0])
-    this.setState({photo: url});
-  };
+  // handleFile = e => {
+  //   let url = window.URL.createObjectURL(e.target.files[0])
+  //   this.setState({photo: url});
+  // };
 
   render() {
     return (
       <div className="add">
         <form onSubmit={this.onAddPost}>
-          <input
+          {/* <input
             type="file"
             id="photo"
             onChange={e => {
               this.handleFile(e);
             }}
-          />
+          /> */}
           <input type="text" value={this.state.description} onChange={this.onChangeDescription} />
+          <input type="text" value={this.state.photo} onChange={this.onChangePhoto} />
           <button type="submit">Add Post</button>
         </form>
-        <div id="fileList">
+        {/* <div id="fileList">
           <p>{this.state.photo}</p>
-        </div>
+        </div> */}
       </div>
     );
   }

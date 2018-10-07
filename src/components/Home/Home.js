@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, NavLink, Switch } from 'react-router-dom';
-import { FaCamera, FaUserPlus } from 'react-icons/fa';
 import './Home.css';
-import { MdFavoriteBorder, MdHome, MdSearch, MdPersonOutline, MdAddCircleOutline } from 'react-icons/md';
+import {CameraIcon, HomeIcon, SearchIcon, PlusIcon, HeartIcon, ProfileIcon, UserPlusIcon} from './Icons';
 
 import Profile from '../Profile/Profile';
 import AddPage from '../Add/Add';
@@ -12,25 +11,29 @@ import Feed from '../Feed/Feed';
 
 class Home extends Component {
   render() {
-    return (
+    //for security reasons, because userConnected from redux can be changed from react panel and get the home page
+    return !this.props.userConnected.id ? (
+      '404'
+    ) : (
       <div className="home">
         <BrowserRouter basename='/instagram/build'>
           <div>
             <header>
               <NavLink to="/add" activeClassName="activeStyle">
-                <FaCamera />
+                <CameraIcon/>
               </NavLink>
               <NavLink to="/" className="logo">
                 Instagram
               </NavLink>
               <NavLink to="/recomandations" activeClassName="activeStyle">
-                <FaUserPlus />
+                <UserPlusIcon />
               </NavLink>
             </header>
             <main>
               <Switch>
-              <Route
-                  exact path="/"
+                <Route
+                  exact
+                  path="/"
                   render={() => {
                     return <Feed userId={this.props.userConnected.id} />;
                   }}
@@ -56,20 +59,20 @@ class Home extends Component {
               </Switch>
             </main>
             <footer>
-              <NavLink to="/" activeClassName="activeStyle">
-                <MdHome />
+              <NavLink exact to="/"  activeClassName="activeStyle">
+                  <HomeIcon/>
               </NavLink>
               <NavLink to="/search" activeClassName="activeStyle">
-                <MdSearch />
+                  <SearchIcon/>
               </NavLink>
               <NavLink to="/add" activeClassName="activeStyle">
-                <MdAddCircleOutline />
+                  <PlusIcon/>
               </NavLink>
               <NavLink to="/activity" activeClassName="activeStyle">
-                <MdFavoriteBorder />
+                  <HeartIcon/>
               </NavLink>
               <NavLink to={`/${this.props.userConnected.id}`} activeClassName="activeStyle">
-                <MdPersonOutline />
+                  <ProfileIcon/>
               </NavLink>
             </footer>
           </div>

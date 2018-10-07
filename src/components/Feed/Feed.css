@@ -14,6 +14,7 @@
   width: 100%;
   margin: 0 auto;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  animation: fade-in 0.8s linear;
 }
 
 .header-post {
@@ -42,7 +43,7 @@
   height: 30rem;
 }
 
-.main-post p{
+.main-post p {
   margin: 0.5rem 0;
   font-size: 1.5rem;
   margin-left: 1rem;
@@ -60,6 +61,22 @@
   font-size: 1.5rem;
 }
 
+.btn-load {
+  margin: 1rem auto;
+  border: none;
+  background: rgb(25, 124, 182);
+  color: #fff;
+  border-radius: 3px;
+  display: block;
+  padding: 1rem 2.5rem;
+}
+
+.actions button svg.icon {
+  font-size: 2rem;
+  width: 4rem;
+  height: 4rem;
+}
+
 @media (min-width: 660px) {
   .feed {
     width: 70%;
@@ -69,5 +86,15 @@
 @media (min-width: 960px) {
   .feed {
     width: 50%;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
   }
 }

@@ -6,9 +6,6 @@ import {
 import {
   getDataFromFirebase
 } from '../utils/firebaseHandlers';
-import {
-  get
-} from 'https';
 
 const loginSuccess = (user) => ({
   type: ActionTypes.LOG_IN_SUCCESS,
@@ -71,6 +68,7 @@ export const loginMiddleware = ({
 
 export const getUserDataMiddleware = userId => dispatch => {
   getDataFromFirebase(`users/${userId}`, data => {
+    console.log('dispatched:get user data')
     dispatch(getUserData(data.val()));
   });
 };
@@ -119,16 +117,25 @@ export const getPostsMiddleware = userId => dispatch => {
 };
 
 export const getPostsForFeed = userId => dispatch => {
-  return async function () {
+  const posts = [];
+  return async function (index) {
     let postsFetched = await getDataFromFirebase('posts/');
     let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
+    let users = await getDataFromFirebase(`users/`);
 
-    let followingUsers = Object.values(followingUsersFetched).map(id => id.id);
-    //TODO:get the first 10 posts, then get next 10 posts on scroll event
+    let followingUsers = followingUsersFetched ? Object.values(followingUsersFetched).map(id => id.id) : [];
+
     for (let id in postsFetched) {
       if (followingUsers.includes(id)) {
-        dispatch(getFeed((postsFetched[id])));
+        posts.push(
+          Object.assign({}, ...Object.values(postsFetched[id]), {
+            username: users[id].username,
+            profile_photo: users[id].profile_picture
+          })
+        );
       }
     }
+
+    dispatch(getFeed(posts.slice(index, index + 1)));
   }
 };
