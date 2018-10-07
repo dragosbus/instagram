@@ -1,9 +1,17 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
 
-export const feedPosts = (state=[], action) => {
+const initialState = {
+  posts: [],
+  index: 0
+}
+
+export const feedPosts = (state = initialState, action) => {
   switch (action.type) {
     case ActionTypes.GET_FOLLOWING_POSTS:
-      return [...state, action.payload];
+      return Object.assign({}, state, {
+        posts: [...state.posts, ...action.payload],
+        index: state.index + 1
+      });
     default:
       return state;
   }

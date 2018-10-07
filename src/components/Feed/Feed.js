@@ -24,27 +24,20 @@ class Feed extends Component {
   // };
 
   componentDidMount() {
-    this.props
-      .getPostsForFeed(this.props.userId)()
-      .then(() => {
-        this.loadPost();
-      });
+    if (!this.props.feedPosts.posts.length) {
+      this.props
+        .getPostsForFeed(this.props.userId)()
+        .then(() => {
+          console.log(this.props.feedPosts);
+        });
+    }
   }
-
-  loadPost = () => {
-    //TODO:make it work
-    let posts = Object.values(this.props.feedPosts).map(post => Object.values(post)[0]);
-    this.setState(prevState => ({
-      posts: prevState.posts.concat(it.next())
-    }), ()=>console.log(this.state));
-  };
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
   render() {
-    console.log(this.state.posts)
     let rendered = this.state.posts.length ? (
       <ul>
         {this.state.posts.map((post, i) => {
