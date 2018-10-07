@@ -48,8 +48,16 @@ class Feed extends Component {
   calcTimePostCreated = (createdAt) => {
     let timeMili = Date.now() - createdAt;
     let seconds = Math.floor(timeMili / 1000);
+    let minutes = Math.floor(seconds / 60);
+    let hours = Math.floor(minutes / 60);
     
-    return seconds;
+    if(seconds < 60) {
+      return `${seconds} seconds ago`;
+    } else if(seconds >= 60 && minutes < 60) {
+      return `${minutes} minutes ago`;
+    } else if(minutes >=60 && hours < 24) {
+      return `${hours} hours ago`;
+    }
   }
 
   render() {
@@ -79,7 +87,7 @@ class Feed extends Component {
                   <span>{post.username}:</span>
                   {post.description}
                 </p>
-                <p>{(Date.now() - post.createdAt) / 1000} seconds ago</p>
+                <p>{this.calcTimePostCreated(post.createdAt)}</p>
               </div>
             </li>
           );
