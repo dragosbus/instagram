@@ -35,14 +35,21 @@ class Feed extends Component {
 
   loadMorePosts = () => {
     this.props
-        .getPostsForFeed(this.props.userId)(this.props.feedPosts.index)
-        .then(() => {
-          console.log(this.props.feedPosts);
-        });
-    }
+      .getPostsForFeed(this.props.userId)(this.props.feedPosts.index)
+      .then(() => {
+        console.log(this.props.feedPosts);
+      });
+  };
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  calcTimePostCreated = (createdAt) => {
+    let timeMili = Date.now() - createdAt;
+    let seconds = Math.floor(timeMili / 1000);
+    
+    return seconds;
   }
 
   render() {
@@ -50,7 +57,7 @@ class Feed extends Component {
       <ul>
         {this.props.feedPosts.posts.map((post, i) => {
           return (
-            <li key={`${post.username}-${post.userId}-${i}`}>
+            <li className="element-post" key={`${post.username}-${post.userId}-${i}`}>
               <div className="header-post">
                 <Link to={`/${post.userId}`}>
                   <img src={post.profile_photo} />
@@ -72,7 +79,7 @@ class Feed extends Component {
                   <span>{post.username}:</span>
                   {post.description}
                 </p>
-                <p>Created at time ago</p>
+                <p>{(Date.now() - post.createdAt) / 1000} seconds ago</p>
               </div>
             </li>
           );
