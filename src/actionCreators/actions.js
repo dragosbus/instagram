@@ -119,27 +119,29 @@ export const getPostsMiddleware = userId => dispatch => {
 export const getPostsForFeed = userId => dispatch => {
   const posts = [];
   return async function (index) {
-    //TODO:Need to be refactored;Every time the load button is clicked the all process take place and is slow.
-    let postsFetched = await getDataFromFirebase('posts/');
+    //get following users
     let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
-    let users = await getDataFromFirebase(`users/`);
-    console.log(postsFetched)
+    //make from the object with users followed and array with the id's
     let followingUsers = followingUsersFetched ? Object.values(followingUsersFetched).map(id => id.id) : [];
+    console.log(followingUsers)
+    //fetch the posts of the user from current index
+    let postsFetched = await getDataFromFirebase(`posts/${followingUsers[index]}`);
+    //if there are more posts avaible
+    if (postsFetched) {
+      //make an array with the posts and get the last post
+      const postsFetchedArr = Object.values(postsFetched);
+      let currentPost = postsFetchedArr[postsFetchedArr.length - 1];
+      console.log(currentPost)
+      //get the user of the currentPost
+      let user = await getDataFromFirebase(`users/${currentPost.userId}`);
 
-    for (let id in postsFetched) {
-      if (followingUsers.includes(id)) {
-        console.log(postsFetched[id])
-        posts.push(
-          Object.assign({}, ...Object.values(postsFetched[id]), {
-            username: users[id].username,
-            profile_photo: users[id].profile_picture
-          })
-        );
-      }
-    }
-    if(posts.slice(index,index+1).length) {
-      //dispatch just if a new post is avaible
-      dispatch(getFeed(posts.slice(index, index + 1)));
+      posts.push(
+        Object.assign({}, currentPost, {
+          username: user.username,
+          profile_photo: user.profile_picture
+        })
+      );
+      dispatch(getFeed(posts));
     }
   }
 };
