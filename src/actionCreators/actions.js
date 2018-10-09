@@ -119,14 +119,16 @@ export const getPostsMiddleware = userId => dispatch => {
 export const getPostsForFeed = userId => dispatch => {
   const posts = [];
   return async function (index) {
+    //TODO:Need to be refactored;Every time the load button is clicked the all process take place and is slow.
     let postsFetched = await getDataFromFirebase('posts/');
     let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
     let users = await getDataFromFirebase(`users/`);
-
+    console.log(postsFetched)
     let followingUsers = followingUsersFetched ? Object.values(followingUsersFetched).map(id => id.id) : [];
 
     for (let id in postsFetched) {
       if (followingUsers.includes(id)) {
+        console.log(postsFetched[id])
         posts.push(
           Object.assign({}, ...Object.values(postsFetched[id]), {
             username: users[id].username,

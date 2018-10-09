@@ -8,9 +8,6 @@ import {Comment, HeartIcon} from '../Home/Icons';
 import './Feed.css';
 
 class Feed extends Component {
-  state = {
-    posts: []
-  };
   // handleScroll = e => {
   //   let id = Math.floor(e.target.scrollingElement.scrollTop / 487);
   //   console.log(e.target.scrollingElement.scrollTop);
@@ -24,16 +21,11 @@ class Feed extends Component {
 
   componentDidMount() {
     if (!this.props.feedPosts.posts.length) {
-      this.props
-        .getPostsForFeed(this.props.userId)(this.props.feedPosts.index)
-        .then(() => {
-          console.log(this.props.feedPosts);
-        });
+      this.loadPost();
     }
   }
 
-  loadMorePosts = () => {
-    //TODO:stop dispatching if there are not more posts avaible
+  loadPost = () => {
     this.props
       .getPostsForFeed(this.props.userId)(this.props.feedPosts.index)
       .then(() => {
@@ -102,7 +94,7 @@ class Feed extends Component {
     return (
       <div className="feed">
         {postList}
-        <button className="btn-load" onClick={this.loadMorePosts}>Load</button>
+        <button className="btn-load" onClick={this.loadPost}>Load</button>
       </div>
     );
   }
