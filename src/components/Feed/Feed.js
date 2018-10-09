@@ -50,6 +50,7 @@ class Feed extends Component {
     let seconds = Math.floor(timeMili / 1000);
     let minutes = Math.floor(seconds / 60);
     let hours = Math.floor(minutes / 60);
+    let days = Math.floor(hours / 24);
     
     if(seconds < 60) {
       return `${seconds} seconds ago`;
@@ -57,6 +58,8 @@ class Feed extends Component {
       return `${minutes} minutes ago`;
     } else if(minutes >=60 && hours < 24) {
       return `${hours} hours ago`;
+    } else {
+      return `${days} days ago`;
     }
   }
 
