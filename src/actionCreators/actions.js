@@ -135,7 +135,9 @@ export const getPostsForFeed = userId => dispatch => {
         );
       }
     }
-
-    dispatch(getFeed(posts.slice(index, index + 1)));
+    if(posts.slice(index,index+1).length) {
+      //dispatch just if a new post is avaible
+      dispatch(getFeed(posts.slice(index, index + 1)));
+    }
   }
 };
