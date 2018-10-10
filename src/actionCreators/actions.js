@@ -118,6 +118,7 @@ export const getPostsMiddleware = userId => dispatch => {
 
 export const getPostsForFeed = userId => dispatch => {
   const posts = [];
+  //TODO:fetch the following users once, when the user log in
   return async function (index) {
     //get following users
     let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
