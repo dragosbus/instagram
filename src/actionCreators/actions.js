@@ -117,7 +117,6 @@ export const getPostsMiddleware = userId => dispatch => {
 };
 
 export const getPostsForFeed = userId => dispatch => {
-  //TODO:fetch the following users once, when the user log in
   return async function (index) {
     //get following users
     let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
@@ -131,7 +130,7 @@ export const getPostsForFeed = userId => dispatch => {
       //make an array with the posts and get the last post
       const postsFetchedArr = Object.values(postsFetched);
       let currentPost = postsFetchedArr[postsFetchedArr.length - 1];
-      console.log(currentPost)
+
       //get the user of the currentPost
       let user = await getDataFromFirebase(`users/${currentPost.userId}`);
 
