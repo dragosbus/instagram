@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getPostsForFeed } from '../../actionCreators/actions';
 import { Link } from 'react-router-dom';
-import {Comment, HeartIcon} from '../Home/Icons';
+import { Comment, HeartIcon } from '../Home/Icons';
 
 import './Feed.css';
 
@@ -19,47 +19,45 @@ class Feed extends Component {
   //   );
   // };
 
+  state = {
+    loadPost: this.props.getPostsForFeed(this.props.userId)
+  };
+
   componentDidMount() {
-    if (!this.props.feedPosts.posts.length) {
-      this.loadPost();
-    }
+    this.state.loadPost(this.props.feedPosts.index);
   }
 
   loadPost = () => {
-    this.props
-      .getPostsForFeed(this.props.userId)(this.props.feedPosts.index)
-      .then(() => {
-        console.log(this.props.feedPosts);
-      });
+    this.state.loadPost(this.props.feedPosts.index);
   };
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
-  calcTimePostCreated = (createdAt) => {
+  calcTimePostCreated = createdAt => {
     let timeMili = Date.now() - createdAt;
     let seconds = Math.floor(timeMili / 1000);
     let minutes = Math.floor(seconds / 60);
     let hours = Math.floor(minutes / 60);
     let days = Math.floor(hours / 24);
-    
-    if(seconds < 60) {
+
+    if (seconds < 60) {
       return `${seconds} seconds ago`;
-    } else if(seconds >= 60 && minutes < 60) {
+    } else if (seconds >= 60 && minutes < 60) {
       return `${minutes} minutes ago`;
-    } else if(minutes >=60 && hours < 24) {
+    } else if (minutes >= 60 && hours < 24) {
       return `${hours} hours ago`;
     } else {
       return `${days} days ago`;
     }
-  }
+  };
 
   render() {
     let postList = this.props.feedPosts.posts ? (
       <ul>
         {this.props.feedPosts.posts.map((post, i) => {
-          return (
+          return post !== null ? (
             <li className="element-post" key={`${post.username}-${post.userId}-${i}`}>
               <div className="header-post">
                 <Link to={`/${post.userId}`}>
@@ -82,9 +80,14 @@ class Feed extends Component {
                   <span>{post.username}:</span>
                   {post.description}
                 </p>
-                <p>Created:{this.calcTimePostCreated(post.createdAt)}</p>
+                <p>
+                  Created:
+                  {this.calcTimePostCreated(post.createdAt)}
+                </p>
               </div>
             </li>
+          ) : (
+            ''
           );
         })}
       </ul>
@@ -94,7 +97,9 @@ class Feed extends Component {
     return (
       <div className="feed">
         {postList}
-        <button className="btn-load" onClick={this.loadPost}>Load</button>
+        <button className="btn-load" onClick={this.loadPost}>
+          Load
+        </button>
       </div>
     );
   }

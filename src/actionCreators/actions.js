@@ -37,8 +37,14 @@ const isFollower = (data) => ({
 });
 
 export const getFeed = (data) => ({
-  type: ActionTypes.GET_FOLLOWING_POSTS,
+  type: ActionTypes.GET_FOLLOWING_POSTS_SUCCESS,
   payload: data
+});
+
+//action creator when the currentUser dosn't have posts
+//return the previous posts fetched with the index incremented
+export const getFeedError = () => ({
+  type: ActionTypes.GET_FOLLOWING_POSTS_ERROR,
 });
 
 export const loginMiddleware = ({
@@ -117,29 +123,39 @@ export const getPostsMiddleware = userId => dispatch => {
 };
 
 export const getPostsForFeed = userId => dispatch => {
-  return async function (index) {
-    //get following users
-    let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
-    //make from the object with users followed and array with the id's
-    let followingUsers = followingUsersFetched ? Object.values(followingUsersFetched).map(id => id.id) : [];
-    console.log(followingUsers)
-    //fetch the posts of the user from current index
-    let postsFetched = await getDataFromFirebase(`posts/${followingUsers[index]}`);
-    //if there are more posts avaible
-    if (postsFetched) {
-      //make an array with the posts and get the last post
-      const postsFetchedArr = Object.values(postsFetched);
-      let currentPost = postsFetchedArr[postsFetchedArr.length - 1];
+  console.log('dispatch')
+  function* nextUser() {
+    yield getDataFromFirebase(`users/${userId}/following`);
+  }
+  return function getPost(index) {
+    let it = nextUser();
+    it.next().value.then(res => {
+      let currentUser = res && index <= Object.values(res).length - 1 ? Object.values(res)[index].id : null;
+      
+      if (currentUser) {
+        getDataFromFirebase(`posts/${currentUser}`)
+          .then((res) => {
+            if (!res) {
+              dispatch(getFeedError());
+              //if the current user dosnt have posts, we should get the next user by call recursive getPost function
+              getPost(index+1)
+            } else {
+              //create the post and dispatch it if the current user has posts
+              const postsFetchedArr = Object.values(res);
+              let currentPost = postsFetchedArr[postsFetchedArr.length - 1];
 
-      //get the user of the currentPost
-      let user = await getDataFromFirebase(`users/${currentPost.userId}`);
-
-      dispatch(getFeed(
-        Object.assign({}, currentPost, {
-          username: user.username,
-          profile_photo: user.profile_picture
-        })
-      ));
-    }
+              getDataFromFirebase(`users/${currentPost.userId}`)
+                .then(user => {
+                  dispatch(getFeed(
+                    Object.assign({}, currentPost, {
+                      username: user.username,
+                      profile_photo: user.profile_picture
+                    })
+                  ));
+                })
+            }
+          });
+      }
+    });
   }
 };
