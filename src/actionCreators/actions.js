@@ -117,29 +117,36 @@ export const getPostsMiddleware = userId => dispatch => {
 };
 
 export const getPostsForFeed = userId => dispatch => {
-  return async function (index) {
-    //get following users
-    let followingUsersFetched = await getDataFromFirebase(`users/${userId}/following`);
-    //make from the object with users followed and array with the id's
-    let followingUsers = followingUsersFetched ? Object.values(followingUsersFetched).map(id => id.id) : [];
-    console.log(followingUsers)
-    //fetch the posts of the user from current index
-    let postsFetched = await getDataFromFirebase(`posts/${followingUsers[index]}`);
-    //if there are more posts avaible
-    if (postsFetched) {
-      //make an array with the posts and get the last post
-      const postsFetchedArr = Object.values(postsFetched);
-      let currentPost = postsFetchedArr[postsFetchedArr.length - 1];
+  console.log('dispatch')
+  function* nextUser() {
+    yield getDataFromFirebase(`users/${userId}/following`);
+  }
+  return function (index) {
+    let it = nextUser();
+    it.next().value.then(res => {
+      let currentUser = res && index <= Object.values(res).length - 1 ? Object.values(res)[index].id : null;
+      console.log(currentUser)
+      if (currentUser) {
+        getDataFromFirebase(`posts/${currentUser}`)
+          .then((res) => {
+            if (!res) {
+              dispatch(getFeed(currentUser))
+            } else {
+              const postsFetchedArr = Object.values(res);
+              let currentPost = postsFetchedArr[postsFetchedArr.length - 1];
 
-      //get the user of the currentPost
-      let user = await getDataFromFirebase(`users/${currentPost.userId}`);
-
-      dispatch(getFeed(
-        Object.assign({}, currentPost, {
-          username: user.username,
-          profile_photo: user.profile_picture
-        })
-      ));
-    }
+              getDataFromFirebase(`users/${currentPost.userId}`)
+                .then(user => {
+                  dispatch(getFeed(
+                    Object.assign({}, currentPost, {
+                      username: user.username,
+                      profile_photo: user.profile_picture
+                    })
+                  ));
+                })
+            }
+          });
+      }
+    });
   }
 };
