@@ -37,8 +37,14 @@ const isFollower = (data) => ({
 });
 
 export const getFeed = (data) => ({
-  type: ActionTypes.GET_FOLLOWING_POSTS,
+  type: ActionTypes.GET_FOLLOWING_POSTS_SUCCESS,
   payload: data
+});
+
+//action creator when the currentUser dosn't have posts
+//return the previous posts fetched with the index incremented
+export const getFeedError = () => ({
+  type: ActionTypes.GET_FOLLOWING_POSTS_ERROR,
 });
 
 export const loginMiddleware = ({
@@ -121,7 +127,7 @@ export const getPostsForFeed = userId => dispatch => {
   function* nextUser() {
     yield getDataFromFirebase(`users/${userId}/following`);
   }
-  return function (index) {
+  return function getPost(index) {
     let it = nextUser();
     it.next().value.then(res => {
       let currentUser = res && index <= Object.values(res).length - 1 ? Object.values(res)[index].id : null;
@@ -130,7 +136,9 @@ export const getPostsForFeed = userId => dispatch => {
         getDataFromFirebase(`posts/${currentUser}`)
           .then((res) => {
             if (!res) {
-              dispatch(getFeed(null))
+              dispatch(getFeedError());
+              //if the current user dosnt have posts, we should get the next user by call recursive getPost function
+              getPost(index+1)
             } else {
               //create the post and dispatch it if the current user has posts
               const postsFetchedArr = Object.values(res);
