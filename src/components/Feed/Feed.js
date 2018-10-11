@@ -57,7 +57,7 @@ class Feed extends Component {
     let postList = this.props.feedPosts.posts ? (
       <ul>
         {this.props.feedPosts.posts.map((post, i) => {
-          return typeof post === 'object' ? (
+          return post !== null ? (
             <li className="element-post" key={`${post.username}-${post.userId}-${i}`}>
               <div className="header-post">
                 <Link to={`/${post.userId}`}>

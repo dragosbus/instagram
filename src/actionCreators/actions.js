@@ -125,13 +125,14 @@ export const getPostsForFeed = userId => dispatch => {
     let it = nextUser();
     it.next().value.then(res => {
       let currentUser = res && index <= Object.values(res).length - 1 ? Object.values(res)[index].id : null;
-      console.log(currentUser)
+      
       if (currentUser) {
         getDataFromFirebase(`posts/${currentUser}`)
           .then((res) => {
             if (!res) {
-              dispatch(getFeed(currentUser))
+              dispatch(getFeed(null))
             } else {
+              //create the post and dispatch it if the current user has posts
               const postsFetchedArr = Object.values(res);
               let currentPost = postsFetchedArr[postsFetchedArr.length - 1];
 
