@@ -15,7 +15,6 @@ const getFeedError = () => ({
 });
 
 export const getPostsForFeed = userId => dispatch => {
-  console.log('dispatch');
   async function nextUser() {
     let users = getDataFromFirebase(`users/${userId}/following`);
     return users;

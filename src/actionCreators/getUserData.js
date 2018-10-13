@@ -1,9 +1,5 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
 import {
-  db,
-  auth
-} from '../firebase/firebase';
-import {
   getDataFromFirebase
 } from '../utils/firebaseHandlers';
 
