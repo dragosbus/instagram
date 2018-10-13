@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, NavLink, Switch } from 'react-router-dom';
 import './Home.css';
-import {CameraIcon, HomeIcon, SearchIcon, PlusIcon, HeartIcon, ProfileIcon, UserPlusIcon} from './Icons';
+import { CameraIcon, HomeIcon, SearchIcon, PlusIcon, HeartIcon, ProfileIcon, UserPlusIcon } from './Icons';
 
 import Profile from '../Profile/Profile';
 import AddPage from '../Add/Add';
@@ -10,9 +10,25 @@ import Search from '../Search/Search';
 import Feed from '../Feed/Feed';
 
 class Home extends Component {
+  state = {
+    left: 0
+  };
+
+  changeActiveBar = e => {
+    e.stopPropagation();
+    const links = document.querySelectorAll('footer a');
+    let index = 0;
+    if(e.target.tagName === 'A') {
+      index = [...links].indexOf(e.target);
+    } else {
+      index = [...links].indexOf(e.target.parentNode)
+    }
+    this.setState({left: `${index * 20}%`})
+  };
+
   render() {
     //for security reasons, because userConnected from redux can be changed from react panel and get the home page
-    return !this.props.userConnected.id ? (
+    return this.props.userConnected.id ? (
       '404'
     ) : (
       <div className="home">
@@ -20,7 +36,7 @@ class Home extends Component {
           <div>
             <header>
               <NavLink to="/add" activeClassName="activeStyle">
-                <CameraIcon/>
+                <CameraIcon />
               </NavLink>
               <NavLink to="/" className="logo">
                 Instagram
@@ -59,21 +75,26 @@ class Home extends Component {
               </Switch>
             </main>
             <footer>
-              <NavLink exact to="/"  activeClassName="activeStyle">
-                  <HomeIcon/>
+              <NavLink exact to="/" activeClassName="activeStyle" onClick={this.changeActiveBar}>
+                <HomeIcon />
               </NavLink>
-              <NavLink to="/search" activeClassName="activeStyle">
-                  <SearchIcon/>
+              <NavLink to="/search" activeClassName="activeStyle" onClick={this.changeActiveBar}>
+                <SearchIcon />
               </NavLink>
-              <NavLink to="/add" activeClassName="activeStyle">
-                  <PlusIcon/>
+              <NavLink to="/add" activeClassName="activeStyle" onClick={this.changeActiveBar}>
+                <PlusIcon />
               </NavLink>
-              <NavLink to="/activity" activeClassName="activeStyle">
-                  <HeartIcon/>
+              <NavLink to="/activity" activeClassName="activeStyle" onClick={this.changeActiveBar}>
+                <HeartIcon />
               </NavLink>
-              <NavLink to={`/${this.props.userConnected.id}`} activeClassName="activeStyle">
-                  <ProfileIcon/>
+              <NavLink
+                to={`/${this.props.userConnected.id}`}
+                activeClassName="activeStyle"
+                onClick={this.changeActiveBar}
+              >
+                <ProfileIcon />
               </NavLink>
+              <div style={{ left: this.state.left }} className="active-bar" />
             </footer>
           </div>
         </BrowserRouter>

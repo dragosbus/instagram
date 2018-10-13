@@ -49,8 +49,19 @@
   padding: 0;
 }
 
-.activeStyle {
-  background: rgba(5, 5, 5, 0.1);
+/* .activeStyle {
+  border-bottom: 2px solid rgb(228, 30, 113);
+} */
+
+.active-bar {
+  position: absolute;
+  height: 1.5px;
+  width: 20%;
+  margin: 0 auto;
+  background: rgb(179, 5, 170);
+  bottom: 2px;
+  left: 0;
+  transition: left 0.45s ease-in;
 }
 
 .icon {
