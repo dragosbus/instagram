@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, NavLink, Switch } from 'react-router-dom';
 import './Home.css';
-import {CameraIcon, HomeIcon, SearchIcon, PlusIcon, HeartIcon, ProfileIcon, UserPlusIcon} from './Icons';
+import { CameraIcon, HomeIcon, SearchIcon, PlusIcon, HeartIcon, ProfileIcon, UserPlusIcon } from './Icons';
 
 import Profile from '../Profile/Profile';
 import AddPage from '../Add/Add';
@@ -10,6 +10,7 @@ import Search from '../Search/Search';
 import Feed from '../Feed/Feed';
 
 class Home extends Component {
+
   render() {
     //for security reasons, because userConnected from redux can be changed from react panel and get the home page
     return !this.props.userConnected.id ? (
@@ -20,7 +21,7 @@ class Home extends Component {
           <div>
             <header>
               <NavLink to="/add" activeClassName="activeStyle">
-                <CameraIcon/>
+                <CameraIcon />
               </NavLink>
               <NavLink to="/" className="logo">
                 Instagram
@@ -59,20 +60,20 @@ class Home extends Component {
               </Switch>
             </main>
             <footer>
-              <NavLink exact to="/"  activeClassName="activeStyle">
-                  <HomeIcon/>
+              <NavLink exact to="/" activeClassName="activeStyle">
+                <HomeIcon />
               </NavLink>
               <NavLink to="/search" activeClassName="activeStyle">
-                  <SearchIcon/>
+                <SearchIcon />
               </NavLink>
               <NavLink to="/add" activeClassName="activeStyle">
-                  <PlusIcon/>
+                <PlusIcon />
               </NavLink>
               <NavLink to="/activity" activeClassName="activeStyle">
-                  <HeartIcon/>
+                <HeartIcon />
               </NavLink>
               <NavLink to={`/${this.props.userConnected.id}`} activeClassName="activeStyle">
-                  <ProfileIcon/>
+                <ProfileIcon />
               </NavLink>
             </footer>
           </div>

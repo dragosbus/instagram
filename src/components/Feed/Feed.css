@@ -13,8 +13,7 @@
 .feed ul li {
   width: 100%;
   margin: 0 auto;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  animation: fade-in 0.8s linear;
+  animation: fade-in 0.45s linear;
 }
 
 .header-post {
@@ -23,7 +22,6 @@
   justify-content: flex-start;
   align-items: center;
   padding: 1rem;
-  background: rgba(248, 248, 248, 0.534);
   border-radius: 0.5rem 0.5rem 0 0;
 }
 
@@ -91,10 +89,11 @@
 
 @keyframes fade-in {
   0% {
+    transform: translate3d(0, -15px, 0);
     opacity: 0;
   }
-
   100% {
+    transform: translate3d(0, 0, 0);
     opacity: 1;
   }
 }

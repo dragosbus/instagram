@@ -1,18 +1,13 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
-import {
-  db,
-  auth
-} from '../firebase/firebase';
-import {
-  getDataFromFirebase
-} from '../utils/firebaseHandlers';
+import { db, auth } from '../firebase/firebase';
+import { getDataFromFirebase } from '../utils/firebaseHandlers';
 
-const loginSuccess = (user) => ({
+const loginSuccess = user => ({
   type: ActionTypes.LOG_IN_SUCCESS,
   payload: user
 });
 
-const getUserData = (data) => ({
+const getUserData = data => ({
   type: ActionTypes.GET_USER_DATA,
   payload: data
 });
@@ -21,22 +16,22 @@ const loginError = () => ({
   type: ActionTypes.LOG_IN_ERROR
 });
 
-const getPosts = (posts) => ({
+const getPosts = posts => ({
   type: ActionTypes.GET_USER_POSTS,
   payload: posts
 });
 
-const getUsersSearched = (users) => ({
+const getUsersSearched = users => ({
   type: ActionTypes.GET_USER_SEARCHED,
   payload: users
 });
 
-const isFollower = (data) => ({
+const isFollower = data => ({
   type: ActionTypes.IS_FOLLOW,
   payload: data
 });
 
-export const getFeed = (data) => ({
+export const getFeed = data => ({
   type: ActionTypes.GET_FOLLOWING_POSTS_SUCCESS,
   payload: data
 });
@@ -44,37 +39,37 @@ export const getFeed = (data) => ({
 //action creator when the currentUser dosn't have posts
 //return the previous posts fetched with the index incremented
 export const getFeedError = () => ({
-  type: ActionTypes.GET_FOLLOWING_POSTS_ERROR,
+  type: ActionTypes.GET_FOLLOWING_POSTS_ERROR
 });
 
-export const loginMiddleware = ({
-  email,
-  password
-}) => dispatch => {
-  auth.signInWithEmailAndPassword(email, password)
+export const loginMiddleware = ({ email, password }) => dispatch => {
+  auth
+    .signInWithEmailAndPassword(email, password)
     .then(() => {
-      auth.onAuthStateChanged(function (user) {
+      auth.onAuthStateChanged(function(user) {
         if (user) {
           //login user
-          dispatch(loginSuccess({
-            id: user.uid
-          }));
+          dispatch(
+            loginSuccess({
+              id: user.uid
+            })
+          );
           //get user data
-          getDataFromFirebase(`users/${user.uid}`, (data) => {
+          getDataFromFirebase(`users/${user.uid}`, data => {
             dispatch(getUserData(data.val()));
           });
         } else {
           // User is signed out.
           // ...
         }
-      })
+      });
     })
     .catch(err => dispatch(loginError()));
 };
 
 export const getUserDataMiddleware = userId => dispatch => {
   getDataFromFirebase(`users/${userId}`, data => {
-    console.log('dispatched:get user data')
+    console.log('dispatched:get user data');
     dispatch(getUserData(data.val()));
   });
 };
@@ -106,7 +101,7 @@ export const isFollowMiddleware = (userId, userIdToFollow) => dispatch => {
       dispatch(isFollower(false));
     }
   });
-}
+};
 
 export const getPostsMiddleware = userId => dispatch => {
   //is called every time the user route is changing to other user
@@ -123,39 +118,39 @@ export const getPostsMiddleware = userId => dispatch => {
 };
 
 export const getPostsForFeed = userId => dispatch => {
-  console.log('dispatch')
-  function* nextUser() {
-    yield getDataFromFirebase(`users/${userId}/following`);
+  console.log('dispatch');
+  async function nextUser() {
+    let users = getDataFromFirebase(`users/${userId}/following`);
+    return users;
   }
   return function getPost(index) {
-    let it = nextUser();
-    it.next().value.then(res => {
+    nextUser().then(res => {
       let currentUser = res && index <= Object.values(res).length - 1 ? Object.values(res)[index].id : null;
-      
-      if (currentUser) {
-        getDataFromFirebase(`posts/${currentUser}`)
-          .then((res) => {
-            if (!res) {
-              dispatch(getFeedError());
-              //if the current user dosnt have posts, we should get the next user by call recursive getPost function
-              getPost(index+1)
-            } else {
-              //create the post and dispatch it if the current user has posts
-              const postsFetchedArr = Object.values(res);
-              let currentPost = postsFetchedArr[postsFetchedArr.length - 1];
 
-              getDataFromFirebase(`users/${currentPost.userId}`)
-                .then(user => {
-                  dispatch(getFeed(
-                    Object.assign({}, currentPost, {
-                      username: user.username,
-                      profile_photo: user.profile_picture
-                    })
-                  ));
-                })
-            }
-          });
+      if (currentUser) {
+        getDataFromFirebase(`posts/${currentUser}`).then(post => {
+          if (!post) {
+            dispatch(getFeedError());
+            //if the current user dosnt have posts, we should get the next user by call recursive getPost function
+            getPost(index + 1);
+          } else {
+            //create the post and dispatch it if the current user has posts
+            const postsFetchedArr = Object.values(post);
+            let currentPost = postsFetchedArr[postsFetchedArr.length - 1];
+
+            getDataFromFirebase(`users/${currentPost.userId}`).then(user => {
+              dispatch(
+                getFeed(
+                  Object.assign({}, currentPost, {
+                    username: user.username,
+                    profile_photo: user.profile_picture
+                  })
+                )
+              );
+            });
+          }
+        });
       }
     });
-  }
+  };
 };
