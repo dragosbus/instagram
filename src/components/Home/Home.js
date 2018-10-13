@@ -10,25 +10,10 @@ import Search from '../Search/Search';
 import Feed from '../Feed/Feed';
 
 class Home extends Component {
-  state = {
-    left: 0
-  };
-
-  changeActiveBar = e => {
-    e.stopPropagation();
-    const links = document.querySelectorAll('footer a');
-    let index = 0;
-    if(e.target.tagName === 'A') {
-      index = [...links].indexOf(e.target);
-    } else {
-      index = [...links].indexOf(e.target.parentNode)
-    }
-    this.setState({left: `${index * 20}%`})
-  };
 
   render() {
     //for security reasons, because userConnected from redux can be changed from react panel and get the home page
-    return this.props.userConnected.id ? (
+    return !this.props.userConnected.id ? (
       '404'
     ) : (
       <div className="home">
@@ -75,26 +60,21 @@ class Home extends Component {
               </Switch>
             </main>
             <footer>
-              <NavLink exact to="/" activeClassName="activeStyle" onClick={this.changeActiveBar}>
+              <NavLink exact to="/" activeClassName="activeStyle">
                 <HomeIcon />
               </NavLink>
-              <NavLink to="/search" activeClassName="activeStyle" onClick={this.changeActiveBar}>
+              <NavLink to="/search" activeClassName="activeStyle">
                 <SearchIcon />
               </NavLink>
-              <NavLink to="/add" activeClassName="activeStyle" onClick={this.changeActiveBar}>
+              <NavLink to="/add" activeClassName="activeStyle">
                 <PlusIcon />
               </NavLink>
-              <NavLink to="/activity" activeClassName="activeStyle" onClick={this.changeActiveBar}>
+              <NavLink to="/activity" activeClassName="activeStyle">
                 <HeartIcon />
               </NavLink>
-              <NavLink
-                to={`/${this.props.userConnected.id}`}
-                activeClassName="activeStyle"
-                onClick={this.changeActiveBar}
-              >
+              <NavLink to={`/${this.props.userConnected.id}`} activeClassName="activeStyle">
                 <ProfileIcon />
               </NavLink>
-              <div style={{ left: this.state.left }} className="active-bar" />
             </footer>
           </div>
         </BrowserRouter>

@@ -49,16 +49,16 @@
   padding: 0;
 }
 
-/* .activeStyle {
-  border-bottom: 2px solid rgb(228, 30, 113);
-} */
+svg {
+  transition: all 0.45s ease-in;
+}
 
 .active-bar {
   position: absolute;
   height: 1.5px;
   width: 20%;
   margin: 0 auto;
-  background: rgb(179, 5, 170);
+  background: rgb(13, 221, 117);
   bottom: 2px;
   left: 0;
   transition: left 0.45s ease-in;
@@ -221,3 +221,15 @@
 .comment-st2 {
   fill: #303030;
 }
+
+.activeStyle svg {
+  transform: scale(1.15,1.15);
+}
+
+.activeStyle svg.icon g path,
+.activeStyle svg.icon g line,
+.activeStyle svg.icon g circle,
+.activeStyle svg.icon g polygon {
+  stroke-width: 2;
+  transition: all 0.45s ease-in;
+ }

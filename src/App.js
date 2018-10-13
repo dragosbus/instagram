@@ -9,7 +9,7 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div className="app">{!this.props.userConnected.isSignedIn ? <Home /> : <LoginPage />}</div>
+        <div className="app">{this.props.userConnected.isSignedIn ? <Home /> : <LoginPage />}</div>
       </BrowserRouter>
     );
   }
