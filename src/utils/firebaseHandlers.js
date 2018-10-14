@@ -47,8 +47,8 @@ export const followHandlerDb = (userId, userIdToFollow, action) => {
   }
 };
 
-export const likePostHandler = (postId, owner, userId) => {
-  db.ref(`posts/${owner}/${postId}`).push().set({
+export const likePostHandler = async (postId, owner, userId) => {
+  await db.ref(`posts/${owner}/${postId}`).push().set({
     time: Date.now(),
     userId
   });

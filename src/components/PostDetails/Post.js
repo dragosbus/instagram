@@ -26,7 +26,7 @@ class PostDetails extends React.Component {
               {data.comments.map(comment=>)}
             </ul> */}
             <div className="actions">
-              <button onClick={this.props.likePost}>
+              <button onClick={this.props.likePost} style={{background: this.props.isLiked ? 'red' : 'none'}}>
                 <MdFavoriteBorder />
               </button>
               <button>

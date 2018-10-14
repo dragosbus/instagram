@@ -1,11 +1,27 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
-import { db, auth } from '../firebase/firebase';
-import { getDataFromFirebase } from '../utils/firebaseHandlers';
+import {
+  db,
+  auth
+} from '../firebase/firebase';
+import {
+  getDataFromFirebase
+} from '../utils/firebaseHandlers';
 
-export const likePost = () => ({
-  type: ActionTypes.LIKE_POST
+export const likePost = (value) => ({
+  type: ActionTypes.LIKE_POST,
+  payload: value
 });
 
-export const likePostMiddleware = (post, userId) => dispatch => {
+export const likePostMiddleware = (postId, owner, userId) => dispatch => {
+  getDataFromFirebase(`posts/${owner}/${postId}`).then(res => {
+    const props = Object.values(res).filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop));
 
+    props.forEach(user => {
+      if (userId === user.userId) {
+        dispatch(likePost(true))
+      } else {
+        dispatch(likePost(false));
+      }
+    });
+  });
 };

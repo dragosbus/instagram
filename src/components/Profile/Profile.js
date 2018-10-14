@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getUserDataMiddleware, getPostsMiddleware, isFollowMiddleware } from '../../actionCreators/actions';
+import {
+  getUserDataMiddleware,
+  getPostsMiddleware,
+  isFollowMiddleware,
+  likePostMiddleware
+} from '../../actionCreators/actions';
 import './Profile.css';
 
 import PostElementList from '../PostCard/PostCard';
@@ -27,7 +32,16 @@ class Profile extends Component {
   };
 
   likePost = () => {
-    likePostHandler(this.state.currentPost.postId, this.state.currentPost.userId, this.props.userConnected.id);
+    likePostHandler(this.state.currentPost.postId, this.state.currentPost.userId, this.props.userConnected.id).then(
+      () => {
+        console.log('liked');
+        this.props.checkLikePost(
+          this.state.currentPost.postId,
+          this.state.currentPost.userId,
+          this.props.userConnected.id
+        );
+      }
+    );
   };
 
   followHandler = () => {
@@ -162,6 +176,7 @@ class Profile extends Component {
           userId={this.state.currentPost.userId}
           hideModal={this.hideModal}
           likePost={this.likePost}
+          isLiked={this.props.isLiked}
         />
       </div>
     );
@@ -172,7 +187,8 @@ const mapStateToProps = state => ({
   userConnected: state.userConnected,
   userData: state.userData,
   userPosts: state.userPosts,
-  follow: state.checkFollow
+  follow: state.checkFollow,
+  isLiked: state.isLiked
 });
 
 const mapDisptachToProps = dispatch =>
@@ -180,7 +196,8 @@ const mapDisptachToProps = dispatch =>
     {
       getUserData: getUserDataMiddleware,
       checkFollow: isFollowMiddleware,
-      getPosts: getPostsMiddleware
+      getPosts: getPostsMiddleware,
+      checkLikePost: likePostMiddleware
     },
     dispatch
   );
