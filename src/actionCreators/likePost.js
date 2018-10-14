@@ -5,3 +5,7 @@ import { getDataFromFirebase } from '../utils/firebaseHandlers';
 export const likePost = () => ({
   type: ActionTypes.LIKE_POST
 });
+
+export const likePostMiddleware = (post, userId) => dispatch => {
+
+};

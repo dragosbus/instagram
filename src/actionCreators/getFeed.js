@@ -31,6 +31,7 @@ export const getPostsForFeed = userId => dispatch => {
             getPost(index + 1);
           } else {
             //create the post and dispatch it if the current user has posts
+            
             const postsFetchedArr = Object.values(post);
             let currentPost = postsFetchedArr[postsFetchedArr.length - 1];
 
@@ -39,7 +40,8 @@ export const getPostsForFeed = userId => dispatch => {
                 getFeed(
                   Object.assign({}, currentPost, {
                     username: user.username,
-                    profile_photo: user.profile_picture
+                    profile_photo: user.profile_picture,
+                    postId: Object.keys(post)[0]
                   })
                 )
               );
