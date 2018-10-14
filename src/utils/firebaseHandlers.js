@@ -5,14 +5,14 @@ import {
 export const getDataFromFirebase = async (ref, cb) => {
   let data;
   await db.ref(ref).once('value', s => {
-    if(cb) {
+    if (cb) {
       cb(s);
     } else {
       data = s.val();
     }
   });
 
-  if(data) return data;
+  if (data) return data;
 };
 
 export const followHandlerDb = (userId, userIdToFollow, action) => {
@@ -45,4 +45,11 @@ export const followHandlerDb = (userId, userIdToFollow, action) => {
       }
     });
   }
+};
+
+export const likePostHandler = (postId, owner, userId) => {
+  db.ref(`posts/${owner}/${postId}`).push().set({
+    time: Date.now(),
+    userId
+  });
 };

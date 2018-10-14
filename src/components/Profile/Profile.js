@@ -8,9 +8,8 @@ import PostElementList from '../PostCard/PostCard';
 import PostDetails from '../PostDetails/Post';
 import FollowBtn from '../FollowBtn/Follow';
 
-import { followHandlerDb } from '../../utils/firebaseHandlers';
+import { followHandlerDb, likePostHandler } from '../../utils/firebaseHandlers';
 import { db } from '../../firebase/firebase';
-import { Object } from 'core-js';
 
 class Profile extends Component {
   state = {
@@ -24,9 +23,11 @@ class Profile extends Component {
   };
 
   onFollowChange = async event => {
-    await db.ref(`users/${this.props.userId}/followers`)
-      .once(event)
-      
+    await db.ref(`users/${this.props.userId}/followers`).once(event);
+  };
+
+  likePost = () => {
+    likePostHandler(this.state.currentPost.postId, this.state.currentPost.userId, this.props.userConnected.id);
   };
 
   followHandler = () => {
@@ -36,13 +37,13 @@ class Profile extends Component {
       .then(res => {
         if (!res) {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'follow');
-          this.onFollowChange('child_added').then(()=>{
+          this.onFollowChange('child_added').then(() => {
             console.log('child_added');
             this.props.getUserData(this.props.userId);
           });
         } else {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'unfollow');
-          this.onFollowChange('child_removed').then(()=>{
+          this.onFollowChange('child_removed').then(() => {
             console.log('child_removed');
             this.props.getUserData(this.props.userId);
           });
@@ -72,15 +73,15 @@ class Profile extends Component {
     -when change route from the profile of an user to the own profile, we should check if are not the same for get the data of the own user.
     -I did this in componentdidupdate and not in componentdidmount, because when the route is changed, the old component is not unmounting, just the data, and we want the component updated with the new data
     */
-   if(this.props.userId === this.props.userConnected.id) {
-     console.log('connected');
-     this.onFollowChange('child_added').then(()=>{
-      console.log('child_added');
-     });
-     this.onFollowChange('child_removed').then(()=>{
-      console.log('child_removed');
-     });  
-   }
+    if (this.props.userId === this.props.userConnected.id) {
+      console.log('connected');
+      this.onFollowChange('child_added').then(() => {
+        console.log('child_added');
+      });
+      this.onFollowChange('child_removed').then(() => {
+        console.log('child_removed');
+      });
+    }
     //if the user is not logged in and the route is another user, after log in redirect to feed route
     if (!this.props.userData.id) {
       this.props.history.push(`/`);
@@ -128,7 +129,7 @@ class Profile extends Component {
     return (
       <div className="profile">
         <div className="profile-header">
-          <img src="https://www.sgbt.lu/uploads/tx_bisgbio/default-profile_01.png" alt="profile user"/>
+          <img src="https://www.sgbt.lu/uploads/tx_bisgbio/default-profile_01.png" alt="profile user" />
           <p>{this.props.userData.username}</p>
           {btnProfile}
           <h4>{this.props.userData.fullName}</h4>
@@ -160,6 +161,7 @@ class Profile extends Component {
           toggleModal={this.toggleModal}
           userId={this.state.currentPost.userId}
           hideModal={this.hideModal}
+          likePost={this.likePost}
         />
       </div>
     );
