@@ -4,6 +4,14 @@ import { MdFavoriteBorder, MdChatBubbleOutline } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 class PostDetails extends React.Component {
+  componentDidUpdate() {
+    //this is bad.It block the page
+    this.props.checkLikePost(
+      this.props.postId,
+      this.props.userId,
+      this.props.userConnected
+    );
+  }
   render() {
     let data = this.props.data;
     return (

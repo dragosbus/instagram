@@ -1,9 +1,5 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
 import {
-  db,
-  auth
-} from '../firebase/firebase';
-import {
   getDataFromFirebase
 } from '../utils/firebaseHandlers';
 
@@ -14,7 +10,7 @@ export const likePost = (value) => ({
 
 export const likePostMiddleware = (postId, owner, userId) => dispatch => {
   getDataFromFirebase(`posts/${owner}/${postId}`).then(res => {
-    const props = Object.values(res).filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop));
+    const props = res ? Object.values(res).filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop)) : [];
 
     props.forEach(user => {
       if (userId === user.userId) {

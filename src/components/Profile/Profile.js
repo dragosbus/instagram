@@ -177,6 +177,9 @@ class Profile extends Component {
           hideModal={this.hideModal}
           likePost={this.likePost}
           isLiked={this.props.isLiked}
+          postId={this.state.currentPost.postId}
+          userConnected={this.props.userConnected.id}
+          checkLikePost={this.props.checkLikePost}
         />
       </div>
     );
