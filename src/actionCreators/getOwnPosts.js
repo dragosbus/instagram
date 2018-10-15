@@ -19,6 +19,15 @@ export const getPostsMiddleware = userId => dispatch => {
   dispatch(getPosts([]));
   getDataFromFirebase(`posts/${userId}`).then(res => {
     userPosts = res ? [...Object.values(res)] : [];
+    if(userPosts.length) {
+      //check first if exist posts, then get each post and return a new object with the data from the post and a new prop which is the key of the post in firebase
+      userPosts =  userPosts.map((post, i)=>{
+        return Object.assign({}, post, {
+          postId: Object.keys(res)[i]
+        });
+      });
+    }
+    
     userPosts.length ? dispatch(getPosts(userPosts)) : dispatch(getPosts([]));
   });
 };

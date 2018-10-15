@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getPostsForFeed } from '../../actionCreators/actions';
+import { getPostsForFeed, likePostMiddleware } from '../../actionCreators/actions';
 import { Link } from 'react-router-dom';
 import { Comment, HeartIcon } from '../Home/Icons';
+import {likePostHandler } from '../../utils/firebaseHandlers';
 
 import './Feed.css';
 
@@ -53,6 +54,14 @@ class Feed extends Component {
     }
   };
 
+  likePost = index => {
+    let currentPost = this.props.feedPosts.posts[index];
+    likePostHandler(currentPost.postId, currentPost.userId, this.props.userId).then(() => {
+      console.log('liked');
+      this.props.checkLikePost(currentPost.postId, currentPost.userId, this.props.userId);
+    });
+  };
+
   render() {
     let postList = this.props.feedPosts.posts ? (
       <ul>
@@ -68,7 +77,7 @@ class Feed extends Component {
               <div className="main-post">
                 <img src={post.photo} />
                 <div className="actions">
-                  <button>
+                  <button onClick={() => this.likePost(i)} className={this.props.isLiked || post.isLiked ? 'liked-icon-active' : ''}>
                     <HeartIcon />
                   </button>
                   <button>
@@ -106,13 +115,15 @@ class Feed extends Component {
 }
 
 const mapStateToProps = state => ({
-  feedPosts: state.feedPosts
+  feedPosts: state.feedPosts,
+  isLiked: state.isLiked
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      getPostsForFeed: getPostsForFeed
+      getPostsForFeed: getPostsForFeed,
+      checkLikePost: likePostMiddleware
     },
     dispatch
   );
