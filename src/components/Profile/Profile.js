@@ -114,11 +114,19 @@ class Profile extends Component {
   }
 
   showDetails = post => {
+    let likedByUserConnected = Object.values(post)
+      .filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop))
+      .find(user => this.props.userConnected.id === user.userId);
+    
     this.setState(
       () => ({
-        currentPost: post
+        currentPost: Object.assign({}, post, {
+          isLiked: likedByUserConnected ? true : false
+        })
       }),
-      this.toggleModal
+      () => {
+        this.toggleModal();
+      }
     );
   };
 
@@ -176,7 +184,7 @@ class Profile extends Component {
           userId={this.state.currentPost.userId}
           hideModal={this.hideModal}
           likePost={this.likePost}
-          isLiked={this.props.isLiked}
+          isLiked={this.props.isLiked || this.state.currentPost.isLiked}
           postId={this.state.currentPost.postId}
           userConnected={this.props.userConnected.id}
           checkLikePost={this.props.checkLikePost}

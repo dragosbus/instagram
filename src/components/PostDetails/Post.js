@@ -1,14 +1,9 @@
 import React from 'react';
 import './Post.css';
-import { MdFavoriteBorder, MdChatBubbleOutline } from 'react-icons/md';
+import { Comment, HeartIcon } from '../Home/Icons';
 import { Link } from 'react-router-dom';
 
 class PostDetails extends React.Component {
-  componentWillReceiveProps(props) {
-    if (props.showDetailsPost) {
-      this.props.checkLikePost(this.props.postId, this.props.userId, this.props.userConnected);
-    }
-  }
   render() {
     let data = this.props.data;
     return (
@@ -36,11 +31,11 @@ class PostDetails extends React.Component {
               {data.comments.map(comment=>)}
             </ul> */}
             <div className="actions">
-              <button onClick={this.props.likePost} style={{ background: this.props.isLiked ? 'red' : 'none' }}>
-                <MdFavoriteBorder />
+              <button onClick={this.props.likePost} className={this.props.isLiked ? 'liked-icon-active' : ''}>
+                <HeartIcon />
               </button>
               <button>
-                <MdChatBubbleOutline />
+                <Comment />
               </button>
             </div>
             <div className="info-post">
