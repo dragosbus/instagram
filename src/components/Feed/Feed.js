@@ -53,6 +53,20 @@ class Feed extends Component {
     }
   };
 
+  likePost = (e) => {
+    // likePostHandler(this.state.currentPost.postId, this.state.currentPost.userId, this.props.userConnected.id).then(
+    //   () => {
+    //     console.log('liked');
+    //     this.props.checkLikePost(
+    //       this.state.currentPost.postId,
+    //       this.state.currentPost.userId,
+    //       this.props.userConnected.id
+    //     );
+    //   }
+    // );
+    console.log('liked', e.target);
+  };
+
   render() {
     let postList = this.props.feedPosts.posts ? (
       <ul>
@@ -68,7 +82,7 @@ class Feed extends Component {
               <div className="main-post">
                 <img src={post.photo} />
                 <div className="actions">
-                  <button style={{background: post.isLiked ? 'red' : 'none'}}>
+                  <button onClick={this.likePost} style={{ background: post.isLiked ? 'red' : 'none' }}>
                     <HeartIcon />
                   </button>
                   <button>

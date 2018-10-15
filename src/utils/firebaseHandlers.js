@@ -48,8 +48,16 @@ export const followHandlerDb = (userId, userIdToFollow, action) => {
 };
 
 export const likePostHandler = async (postId, owner, userId) => {
-  await db.ref(`posts/${owner}/${postId}`).push().set({
-    time: Date.now(),
-    userId
+  //first check if is not liked
+  let isChecked;
+  await db.ref(`posts/${owner}/${postId}`).once('value', s => {
+    isChecked = Object.values(s.val()).filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop)).find(user => user.userId === userId)
   });
+
+  if (!isChecked) {
+    await db.ref(`posts/${owner}/${postId}`).push().set({
+      time: Date.now(),
+      userId
+    });
+  }
 };
