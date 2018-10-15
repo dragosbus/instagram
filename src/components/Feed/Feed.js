@@ -68,7 +68,7 @@ class Feed extends Component {
               <div className="main-post">
                 <img src={post.photo} />
                 <div className="actions">
-                  <button>
+                  <button style={{background: post.isLiked ? 'red' : 'none'}}>
                     <HeartIcon />
                   </button>
                   <button>
