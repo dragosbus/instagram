@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getPostsForFeed, likePostMiddleware } from '../../actionCreators/actions';
-import { Link } from 'react-router-dom';
-import { Comment, HeartIcon } from '../Home/Icons';
-import {likePostHandler } from '../../utils/firebaseHandlers';
+import { getPostsForFeed } from '../../actionCreators/actions';
+import Posts from './PostsList';
+
+import { likePostHandler } from '../../utils/firebaseHandlers';
 
 import './Feed.css';
 
@@ -57,55 +57,19 @@ class Feed extends Component {
   likePost = index => {
     let currentPost = this.props.feedPosts.posts[index];
     likePostHandler(currentPost.postId, currentPost.userId, this.props.userId).then(() => {
-      console.log('liked');
-      this.props.checkLikePost(currentPost.postId, currentPost.userId, this.props.userId);
+      console.log('liked', currentPost);
     });
   };
 
   render() {
-    let postList = this.props.feedPosts.posts ? (
-      <ul>
-        {this.props.feedPosts.posts.map((post, i) => {
-          return post !== null ? (
-            <li className="element-post" key={`${post.username}-${post.userId}-${i}`}>
-              <div className="header-post">
-                <Link to={`/${post.userId}`}>
-                  <img src={post.profile_photo} />
-                  <h4>{post.username}</h4>
-                </Link>
-              </div>
-              <div className="main-post">
-                <img src={post.photo} />
-                <div className="actions">
-                  <button onClick={() => this.likePost(i)} className={this.props.isLiked || post.isLiked ? 'liked-icon-active' : ''}>
-                    <HeartIcon />
-                  </button>
-                  <button>
-                    <Comment />
-                  </button>
-                </div>
-                <p>{post.likes} Likes</p>
-                <p>
-                  <span>{post.username}:</span>
-                  {post.description}
-                </p>
-                <p>
-                  Created:
-                  {this.calcTimePostCreated(post.createdAt)}
-                </p>
-              </div>
-            </li>
-          ) : (
-            ''
-          );
-        })}
-      </ul>
-    ) : (
-      ''
-    );
     return (
       <div className="feed">
-        {postList}
+        <Posts
+          feedPosts={this.props.feedPosts.posts}
+          likePost={this.likePost}
+          calcTimePostCreated={this.calcTimePostCreated}
+          userConnected={this.props.userId}
+        />
         <button className="btn-load" onClick={this.loadPost}>
           Load
         </button>
@@ -115,15 +79,13 @@ class Feed extends Component {
 }
 
 const mapStateToProps = state => ({
-  feedPosts: state.feedPosts,
-  isLiked: state.isLiked
+  feedPosts: state.feedPosts
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      getPostsForFeed: getPostsForFeed,
-      checkLikePost: likePostMiddleware
+      getPostsForFeed: getPostsForFeed
     },
     dispatch
   );

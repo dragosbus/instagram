@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {
-  getUserDataMiddleware,
-  getPostsMiddleware,
-  isFollowMiddleware,
-  likePostMiddleware
-} from '../../actionCreators/actions';
+import { getUserDataMiddleware, getPostsMiddleware, isFollowMiddleware } from '../../actionCreators/actions';
 import './Profile.css';
 
 import PostElementList from '../PostCard/PostCard';
@@ -117,7 +112,7 @@ class Profile extends Component {
     let likedByUserConnected = Object.values(post)
       .filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop))
       .find(user => this.props.userConnected.id === user.userId);
-    
+
     this.setState(
       () => ({
         currentPost: Object.assign({}, post, {
@@ -184,7 +179,7 @@ class Profile extends Component {
           userId={this.state.currentPost.userId}
           hideModal={this.hideModal}
           likePost={this.likePost}
-          isLiked={this.props.isLiked || this.state.currentPost.isLiked}
+          isLiked={this.state.currentPost.isLiked}
           postId={this.state.currentPost.postId}
           userConnected={this.props.userConnected.id}
           checkLikePost={this.props.checkLikePost}
@@ -198,8 +193,7 @@ const mapStateToProps = state => ({
   userConnected: state.userConnected,
   userData: state.userData,
   userPosts: state.userPosts,
-  follow: state.checkFollow,
-  isLiked: state.isLiked
+  follow: state.checkFollow
 });
 
 const mapDisptachToProps = dispatch =>
@@ -207,8 +201,7 @@ const mapDisptachToProps = dispatch =>
     {
       getUserData: getUserDataMiddleware,
       checkFollow: isFollowMiddleware,
-      getPosts: getPostsMiddleware,
-      checkLikePost: likePostMiddleware
+      getPosts: getPostsMiddleware
     },
     dispatch
   );
