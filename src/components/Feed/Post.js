@@ -5,7 +5,8 @@ import { getDataFromFirebase } from '../../utils/firebaseHandlers';
 
 class Post extends Component {
   state = {
-    isLiked: false
+    isLiked: false,
+    totalLikes: 0
   };
 
   componentDidMount() {
@@ -27,13 +28,14 @@ class Post extends Component {
           return false;
         }
       });
+      this.setState({ totalLikes: props.length });
     });
   };
 
   wasLikedHandler = () => {
     //how the like button is cliked, change the classname sync
-    this.setState({isLiked:true})
-  }
+    this.setState({ isLiked: true, totalLikes: this.state.totalLikes + 1 });
+  };
 
   render() {
     return (
@@ -60,7 +62,7 @@ class Post extends Component {
               <Comment />
             </button>
           </div>
-          <p>{this.props.post.likes} Likes</p>
+          <p>{this.state.totalLikes} Likes</p>
           <p>
             <span>{this.props.post.username}:</span>
             {this.props.post.description}
