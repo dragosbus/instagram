@@ -47,6 +47,11 @@
   margin-left: 1rem;
 }
 
+.main-post .created-at{
+  color: rgba(0, 0, 0, 0.678);
+  font-size: 1.25rem;
+}
+
 .main-post p span {
   font-weight: 700;
 }

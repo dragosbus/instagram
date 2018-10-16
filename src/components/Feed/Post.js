@@ -67,8 +67,7 @@ class Post extends Component {
             <span>{this.props.post.username}:</span>
             {this.props.post.description}
           </p>
-          <p>
-            Created:
+          <p className="created-at">
             {this.props.calcTimePostCreated(this.props.post.createdAt)}
           </p>
         </div>
