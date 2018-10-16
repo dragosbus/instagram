@@ -30,11 +30,6 @@ class Profile extends Component {
     likePostHandler(this.state.currentPost.postId, this.state.currentPost.userId, this.props.userConnected.id).then(
       () => {
         console.log('liked');
-        this.props.checkLikePost(
-          this.state.currentPost.postId,
-          this.state.currentPost.userId,
-          this.props.userConnected.id
-        );
       }
     );
   };

@@ -4,6 +4,15 @@ import { Comment, HeartIcon } from '../Home/Icons';
 import { Link } from 'react-router-dom';
 
 class PostDetails extends React.Component {
+  state = {
+    isLiked: false
+  };
+
+  wasLikedHandler = () => {
+    //how the like button is cliked, change the classname sync
+    this.setState({ isLiked: true });
+  };
+
   render() {
     let data = this.props.data;
     return (
@@ -31,7 +40,13 @@ class PostDetails extends React.Component {
               {data.comments.map(comment=>)}
             </ul> */}
             <div className="actions">
-              <button onClick={this.props.likePost} className={this.props.isLiked ? 'liked-icon-active' : ''}>
+              <button
+                onClick={() => {
+                  this.wasLikedHandler();
+                  this.props.likePost();
+                }}
+                className={this.state.isLiked || this.props.isLiked ? 'liked-icon-active' : ''}
+              >
                 <HeartIcon />
               </button>
               <button>
