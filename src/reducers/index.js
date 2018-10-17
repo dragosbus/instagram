@@ -5,6 +5,7 @@ import {userPosts} from './userPosts';
 import {usersSearched} from './usersSearched';
 import {checkFollow} from './follow';
 import {feedPosts} from './followingPosts';
+import {currentPostIndex} from './currentPostIndex';
 
 const rootReducer = combineReducers({
   userConnected,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   userPosts: userPosts,
   usersSearched: usersSearched,
   checkFollow: checkFollow,
-  feedPosts: feedPosts
+  feedPosts: feedPosts,
+  currentPostIndex: currentPostIndex
 });
 
 export default rootReducer;

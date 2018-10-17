@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getUserDataMiddleware, getPostsMiddleware, isFollowMiddleware } from '../../actionCreators/actions';
+import { getUserDataMiddleware, getPostsMiddleware, isFollowMiddleware, getCurrentPostIndex } from '../../actionCreators/actions';
 import './Profile.css';
 
 import PostElementList from '../PostCard/PostCard';
@@ -13,7 +13,6 @@ import { db } from '../../firebase/firebase';
 
 class Profile extends Component {
   state = {
-    currentPost: {},
     showDetailsPost: false,
     userLogged: false
   };
@@ -103,21 +102,9 @@ class Profile extends Component {
     }
   }
 
-  showDetails = post => {
-    let likedByUserConnected = Object.values(post)
-      .filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop))
-      .find(user => this.props.userConnected.id === user.userId);
-
-    this.setState(
-      () => ({
-        currentPost: Object.assign({}, post, {
-          isLiked: likedByUserConnected ? true : false
-        })
-      }),
-      () => {
-        this.toggleModal();
-      }
-    );
+  showDetails = index => {
+    this.props.getCurrentPostIndex(index);
+    this.toggleModal();
   };
 
   toggleModal = () => {
@@ -129,6 +116,8 @@ class Profile extends Component {
   };
 
   render() {
+    let {currentPost} = this.props;
+    console.log(this.props)
     let btnProfile = this.state.userLogged ? (
       <button className="edit-profile">Edit Profile</button>
     ) : (
@@ -156,7 +145,9 @@ class Profile extends Component {
             return (
               <PostElementList
                 key={`${this.props.userData.id}-post-${i}`}
-                showDetails={() => this.showDetails(this.props.userPosts[i])}
+                showDetails={() => {
+                  this.showDetails(i);
+                }}
                 image={post.photo}
                 likes={post.likes}
                 comments={0}
@@ -166,16 +157,16 @@ class Profile extends Component {
         </div>
         <PostDetails
           data={this.props.userData}
-          postImg={this.state.currentPost.photo}
-          likes={this.state.currentPost.likes}
+          postImg={currentPost.photo}
+          likes={currentPost.likes}
           createdAt={0}
           showDetailsPost={this.state.showDetailsPost}
           toggleModal={this.toggleModal}
-          userId={this.state.currentPost.userId}
+          userId={currentPost.userId}
           hideModal={this.hideModal}
           likePost={this.likePost}
-          isLiked={this.state.currentPost.isLiked}
-          postId={this.state.currentPost.postId}
+          isLiked={currentPost.isLiked}
+          postId={currentPost.postId}
           userConnected={this.props.userConnected.id}
           checkLikePost={this.props.checkLikePost}
         />
@@ -188,7 +179,8 @@ const mapStateToProps = state => ({
   userConnected: state.userConnected,
   userData: state.userData,
   userPosts: state.userPosts,
-  follow: state.checkFollow
+  follow: state.checkFollow,
+  currentPost: state.userPosts[state.currentPostIndex] || {}
 });
 
 const mapDisptachToProps = dispatch =>
@@ -196,7 +188,8 @@ const mapDisptachToProps = dispatch =>
     {
       getUserData: getUserDataMiddleware,
       checkFollow: isFollowMiddleware,
-      getPosts: getPostsMiddleware
+      getPosts: getPostsMiddleware,
+      getCurrentPostIndex: getCurrentPostIndex
     },
     dispatch
   );
