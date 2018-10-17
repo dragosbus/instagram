@@ -29,14 +29,15 @@ export const loginMiddleware = ({
       auth.onAuthStateChanged(function (user) {
         if (user) {
           //login user
-          dispatch(
-            loginSuccess({
-              id: user.uid
-            })
-          );
           //get user data
           getDataFromFirebase(`users/${user.uid}`, data => {
             dispatch(getUserData(data.val()));
+            dispatch(
+              loginSuccess({
+                id: user.uid,
+                username: data.val().username
+              })
+            );
           });
         } else {
           // User is signed out.

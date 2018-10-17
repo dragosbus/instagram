@@ -48,7 +48,7 @@ class Profile extends Component {
           this.onFollowChange('child_added').then(() => {
             console.log('child_added');
             this.props.getUserData(this.props.userId);
-            createActivity(this.props.userConnected.id, this.props.userId, 'follow');
+            createActivity(this.props.userConnected.username, this.props.userId, 'follow');
           });
         } else {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'unfollow');

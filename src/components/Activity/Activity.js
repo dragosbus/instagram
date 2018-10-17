@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {fetchActivity} from '../../actionCreators/getActivity';
 
+import './Activity.css';
+
 class Activity extends Component {
   componentDidMount() {
     this.props.fetchActivity(this.props.userId);
@@ -16,8 +18,8 @@ class Activity extends Component {
           activity.length > 0 ?
           <ul>
             {
-              activity.map(el=>{
-                return <li></li>
+              activity.map((el, i)=>{
+                return <li key={i}>{el.activity}</li>
               })
             }
           </ul> : 'no'
