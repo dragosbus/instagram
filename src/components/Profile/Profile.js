@@ -115,6 +115,11 @@ class Profile extends Component {
     this.setState({ showDetailsPost: false });
   };
 
+  convertToDateString = milis => {
+    let date = new Date(milis);
+    return date.toDateString();
+  };
+
   render() {
     let {currentPost} = this.props;
     console.log(this.props)
@@ -159,7 +164,7 @@ class Profile extends Component {
           data={this.props.userData}
           postImg={currentPost.photo}
           likes={currentPost.likes}
-          createdAt={0}
+          createdAt={currentPost.createdAt ? this.convertToDateString(currentPost.createdAt) : 0}
           showDetailsPost={this.state.showDetailsPost}
           toggleModal={this.toggleModal}
           userId={currentPost.userId}
