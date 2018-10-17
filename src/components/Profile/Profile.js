@@ -5,7 +5,7 @@ import {
   getUserDataMiddleware,
   getPostsMiddleware,
   isFollowMiddleware,
-  likePostMiddleware
+  getCurrentPostIndex
 } from '../../actionCreators/actions';
 import './Profile.css';
 
@@ -13,12 +13,11 @@ import PostElementList from '../PostCard/PostCard';
 import PostDetails from '../PostDetails/Post';
 import FollowBtn from '../FollowBtn/Follow';
 
-import { followHandlerDb, likePostHandler } from '../../utils/firebaseHandlers';
+import { followHandlerDb, likePostHandler, createActivity } from '../../utils/firebaseHandlers';
 import { db } from '../../firebase/firebase';
 
 class Profile extends Component {
   state = {
-    currentPost: {},
     showDetailsPost: false,
     userLogged: false
   };
@@ -35,11 +34,6 @@ class Profile extends Component {
     likePostHandler(this.state.currentPost.postId, this.state.currentPost.userId, this.props.userConnected.id).then(
       () => {
         console.log('liked');
-        this.props.checkLikePost(
-          this.state.currentPost.postId,
-          this.state.currentPost.userId,
-          this.props.userConnected.id
-        );
       }
     );
   };
@@ -54,6 +48,7 @@ class Profile extends Component {
           this.onFollowChange('child_added').then(() => {
             console.log('child_added');
             this.props.getUserData(this.props.userId);
+            createActivity(this.props.userConnected.username, this.props.userId, 'follow');
           });
         } else {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'unfollow');
@@ -113,21 +108,9 @@ class Profile extends Component {
     }
   }
 
-  showDetails = post => {
-    let likedByUserConnected = Object.values(post)
-      .filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop))
-      .find(user => this.props.userConnected.id === user.userId);
-    
-    this.setState(
-      () => ({
-        currentPost: Object.assign({}, post, {
-          isLiked: likedByUserConnected ? true : false
-        })
-      }),
-      () => {
-        this.toggleModal();
-      }
-    );
+  showDetails = index => {
+    this.props.getCurrentPostIndex(index);
+    this.toggleModal();
   };
 
   toggleModal = () => {
@@ -138,7 +121,14 @@ class Profile extends Component {
     this.setState({ showDetailsPost: false });
   };
 
+  convertToDateString = milis => {
+    let date = new Date(milis);
+    return date.toDateString();
+  };
+
   render() {
+    let { currentPost } = this.props;
+    console.log(this.props);
     let btnProfile = this.state.userLogged ? (
       <button className="edit-profile">Edit Profile</button>
     ) : (
@@ -166,7 +156,9 @@ class Profile extends Component {
             return (
               <PostElementList
                 key={`${this.props.userData.id}-post-${i}`}
-                showDetails={() => this.showDetails(this.props.userPosts[i])}
+                showDetails={() => {
+                  this.showDetails(i);
+                }}
                 image={post.photo}
                 likes={post.likes}
                 comments={0}
@@ -176,16 +168,16 @@ class Profile extends Component {
         </div>
         <PostDetails
           data={this.props.userData}
-          postImg={this.state.currentPost.photo}
-          likes={this.state.currentPost.likes}
-          createdAt={0}
+          postImg={currentPost.photo}
+          likes={currentPost.likes}
+          createdAt={currentPost.createdAt ? this.convertToDateString(currentPost.createdAt) : 0}
           showDetailsPost={this.state.showDetailsPost}
           toggleModal={this.toggleModal}
-          userId={this.state.currentPost.userId}
+          userId={currentPost.userId}
           hideModal={this.hideModal}
           likePost={this.likePost}
-          isLiked={this.props.isLiked || this.state.currentPost.isLiked}
-          postId={this.state.currentPost.postId}
+          isLiked={currentPost.isLiked}
+          postId={currentPost.postId}
           userConnected={this.props.userConnected.id}
           checkLikePost={this.props.checkLikePost}
         />
@@ -199,7 +191,7 @@ const mapStateToProps = state => ({
   userData: state.userData,
   userPosts: state.userPosts,
   follow: state.checkFollow,
-  isLiked: state.isLiked
+  currentPost: state.userPosts[state.currentPostIndex] || {}
 });
 
 const mapDisptachToProps = dispatch =>
@@ -208,7 +200,7 @@ const mapDisptachToProps = dispatch =>
       getUserData: getUserDataMiddleware,
       checkFollow: isFollowMiddleware,
       getPosts: getPostsMiddleware,
-      checkLikePost: likePostMiddleware
+      getCurrentPostIndex: getCurrentPostIndex
     },
     dispatch
   );

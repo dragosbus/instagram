@@ -61,3 +61,13 @@ export const likePostHandler = async (postId, owner, userId) => {
     });
   }
 };
+
+export const createActivity = (user, ownerId, type) => {
+  let activity;
+  if(type === 'follow') activity = 'started following you';
+  else if(type === 'post_liked') activity = 'liked your photo';
+  else if(type==='post_comment') activity = 'commented your post';
+  db.ref(`users/${ownerId}/activity`).push().set({
+    activity: `${user} ${activity}`
+  });
+};

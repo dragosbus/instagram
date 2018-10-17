@@ -235,6 +235,7 @@ svg {
  }
 
  .actions button.liked-icon-active svg g path {
+   transition: all 0.45s ease-in;
    fill: rgb(223, 28, 54);
    stroke: #fff;
  }

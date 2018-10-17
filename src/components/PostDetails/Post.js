@@ -2,8 +2,42 @@ import React from 'react';
 import './Post.css';
 import { Comment, HeartIcon } from '../Home/Icons';
 import { Link } from 'react-router-dom';
+import {getDataFromFirebase} from '../../utils/firebaseHandlers';
 
 class PostDetails extends React.Component {
+  state = {
+    isLiked: false,
+    totalLikes: 0
+  };
+
+  wasLikedHandler = () => {
+    //how the like button is cliked, change the classname sync
+    this.setState({ isLiked: true });
+  };
+
+  componentDidMount() {
+    //when the post mount, if is liked add the classname
+    this.checkLike(this.props.postId, this.props.userId, this.props.userConnected);
+  }
+
+  checkLike = (postId, owner, userId) => {
+    //check if is liked handler
+    getDataFromFirebase(`posts/${owner}/${postId}`).then(res => {
+      const props = res
+        ? Object.values(res).filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop))
+        : [];
+
+      props.forEach(user => {
+        if (userId === user.userId) {
+          this.setState({ isLiked: true });
+        } else {
+          return false;
+        }
+      });
+      this.setState({ totalLikes: props.length });
+    });
+  };
+
   render() {
     let data = this.props.data;
     return (
@@ -31,7 +65,13 @@ class PostDetails extends React.Component {
               {data.comments.map(comment=>)}
             </ul> */}
             <div className="actions">
-              <button onClick={this.props.likePost} className={this.props.isLiked ? 'liked-icon-active' : ''}>
+              <button
+                onClick={() => {
+                  this.wasLikedHandler();
+                  this.props.likePost();
+                }}
+                className={this.state.isLiked || this.props.isLiked ? 'liked-icon-active' : ''}
+              >
                 <HeartIcon />
               </button>
               <button>
@@ -39,7 +79,7 @@ class PostDetails extends React.Component {
               </button>
             </div>
             <div className="info-post">
-              <h4>{this.props.likes} likes</h4>
+              <h4>{this.state.totalLikes} likes</h4>
               <p>{this.props.createdAt}</p>
             </div>
             <form className="add-comment">
