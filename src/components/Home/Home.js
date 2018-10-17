@@ -8,9 +8,8 @@ import Profile from '../Profile/Profile';
 import AddPage from '../Add/Add';
 import Search from '../Search/Search';
 import Feed from '../Feed/Feed';
-
+import Activity from '../Activity/Activity';
 class Home extends Component {
-
   render() {
     //for security reasons, because userConnected from redux can be changed from react panel and get the home page
     return !this.props.userConnected.id ? (
@@ -51,6 +50,7 @@ class Home extends Component {
                     return <AddPage userId={this.props.userConnected.id} />;
                   }}
                 />
+                <Route path="/activity" render={props => <Activity userId={this.props.userConnected.id} />} />
                 <Route
                   path="/:userId"
                   render={props => {

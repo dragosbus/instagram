@@ -19,6 +19,9 @@ import {
 import {
   getCurrentPostIndex
 } from './getCurrentPostIndex';
+import {
+  fetchActivity
+} from './getActivity';
 
 export {
   getUserDataMiddleware,
@@ -27,5 +30,6 @@ export {
   getUsersSearchedMiddleware,
   isFollowMiddleware,
   loginMiddleware,
-  getCurrentPostIndex
+  getCurrentPostIndex,
+  fetchActivity
 }
