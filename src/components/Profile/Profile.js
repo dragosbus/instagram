@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getUserDataMiddleware, getPostsMiddleware, isFollowMiddleware, getCurrentPostIndex } from '../../actionCreators/actions';
+import {
+  getUserDataMiddleware,
+  getPostsMiddleware,
+  isFollowMiddleware,
+  getCurrentPostIndex
+} from '../../actionCreators/actions';
 import './Profile.css';
 
 import PostElementList from '../PostCard/PostCard';
 import PostDetails from '../PostDetails/Post';
 import FollowBtn from '../FollowBtn/Follow';
 
-import { followHandlerDb, likePostHandler } from '../../utils/firebaseHandlers';
+import { followHandlerDb, likePostHandler, createActivity } from '../../utils/firebaseHandlers';
 import { db } from '../../firebase/firebase';
 
 class Profile extends Component {
@@ -43,6 +48,7 @@ class Profile extends Component {
           this.onFollowChange('child_added').then(() => {
             console.log('child_added');
             this.props.getUserData(this.props.userId);
+            createActivity(this.props.userConnected.id, this.props.userId, 'follow');
           });
         } else {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'unfollow');
@@ -121,8 +127,8 @@ class Profile extends Component {
   };
 
   render() {
-    let {currentPost} = this.props;
-    console.log(this.props)
+    let { currentPost } = this.props;
+    console.log(this.props);
     let btnProfile = this.state.userLogged ? (
       <button className="edit-profile">Edit Profile</button>
     ) : (

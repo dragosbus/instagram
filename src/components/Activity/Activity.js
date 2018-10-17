@@ -8,9 +8,20 @@ class Activity extends Component {
     this.props.fetchActivity(this.props.userId);
   }
   render() {
+    let {activity} = this.props;
+    
     return(
       <div className="activity">
-        activity
+        {
+          activity.length > 0 ?
+          <ul>
+            {
+              activity.map(el=>{
+                return <li></li>
+              })
+            }
+          </ul> : 'no'
+        }
       </div>
     );
   }

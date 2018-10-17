@@ -4,7 +4,7 @@ import {
   auth
 } from '../firebase/firebase';
 import {
-  getDataFromFirebase
+  createActivity
 } from '../utils/firebaseHandlers';
 
 
