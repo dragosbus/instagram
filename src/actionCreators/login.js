@@ -35,7 +35,8 @@ export const loginMiddleware = ({
             dispatch(
               loginSuccess({
                 id: user.uid,
-                username: data.val().username
+                username: data.val().username,
+                profile_picture: data.val().profile_picture
               })
             );
           });
