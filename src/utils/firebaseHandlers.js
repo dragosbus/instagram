@@ -68,6 +68,11 @@ export const createActivity = (user, ownerId, type) => {
   else if(type === 'post_liked') activity = 'liked your photo';
   else if(type==='post_comment') activity = 'commented your post';
   db.ref(`users/${ownerId}/activity`).push().set({
-    activity: `${user} ${activity}`
+    activity: {
+      profile_picture: user.profile_picture,
+      username: user.username,
+      activity,
+      type
+    }
   });
 };

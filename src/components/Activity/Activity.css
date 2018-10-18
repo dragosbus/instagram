@@ -9,6 +9,14 @@
   transition: background 0.45s ease-in;
   cursor: pointer;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.activity ul li img {
+  width: 3rem;
+  height: 3rem;
 }
 
 .activity ul li:hover {

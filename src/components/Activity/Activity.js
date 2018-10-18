@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {fetchActivity} from '../../actionCreators/getActivity';
+import {ActivityElement} from './ActivityElement';
 
 import './Activity.css';
 
@@ -11,7 +12,6 @@ class Activity extends Component {
   }
   render() {
     let {activity} = this.props;
-    
     return(
       <div className="activity">
         {
@@ -19,7 +19,7 @@ class Activity extends Component {
           <ul>
             {
               activity.map((el, i)=>{
-                return <li key={i}>{el.activity}</li>
+                return <ActivityElement key={i} {...el.activity}/>
               })
             }
           </ul> : 'no'
