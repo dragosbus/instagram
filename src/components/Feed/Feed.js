@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { getPostsForFeed } from '../../actionCreators/actions';
 import Posts from './PostsList';
 
-import { likePostHandler } from '../../utils/firebaseHandlers';
+import { likePostHandler, createActivity } from '../../utils/firebaseHandlers';
 
 import './Feed.css';
 
@@ -57,7 +57,8 @@ class Feed extends Component {
   likePost = index => {
     let currentPost = this.props.feedPosts.posts[index];
     likePostHandler(currentPost.postId, currentPost.userId, this.props.userId).then(() => {
-      console.log('liked', currentPost);
+      console.log('liked', currentPost,this.props.userId);
+      createActivity(this.props.userConnected, currentPost.userId, 'post_liked');
     });
   };
 

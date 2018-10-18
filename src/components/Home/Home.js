@@ -35,7 +35,7 @@ class Home extends Component {
                   exact
                   path="/"
                   render={() => {
-                    return <Feed userId={this.props.userConnected.id} />;
+                    return <Feed userConnected={this.props.userConnected} userId={this.props.userConnected.id} />;
                   }}
                 />
                 <Route
