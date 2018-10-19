@@ -13,7 +13,7 @@ import PostElementList from '../PostCard/PostCard';
 import PostDetails from '../PostDetails/Post';
 import FollowBtn from '../FollowBtn/Follow';
 
-import { followHandlerDb, likePostHandler, createActivity } from '../../utils/firebaseHandlers';
+import { followHandlerDb, likePostHandler, createActivity, totalLikes } from '../../utils/firebaseHandlers';
 import { db } from '../../firebase/firebase';
 
 class Profile extends Component {
@@ -154,6 +154,12 @@ class Profile extends Component {
         </div>
         <div className="profile-posts">
           {this.props.userPosts.map((post, i) => {
+            //because is getted async, the dom element is returned first, so when total number of likes is returned change the dom
+            totalLikes(post.postId, post.userId).then(res => {
+              if (document.querySelector('.card p')) {
+                document.querySelector('.card p').textContent = res;
+              }
+            });
             return (
               <PostElementList
                 key={`${this.props.userData.id}-post-${i}`}
@@ -161,7 +167,7 @@ class Profile extends Component {
                   this.showDetails(i);
                 }}
                 image={post.photo}
-                likes={post.likes}
+                totalLikes={0}
                 comments={0}
               />
             );
@@ -170,7 +176,6 @@ class Profile extends Component {
         <PostDetails
           data={this.props.userData}
           postImg={currentPost.photo}
-          likes={currentPost.likes}
           createdAt={currentPost.createdAt ? this.convertToDateString(currentPost.createdAt) : 0}
           showDetailsPost={this.state.showDetailsPost}
           toggleModal={this.toggleModal}

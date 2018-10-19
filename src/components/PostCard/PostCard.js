@@ -7,7 +7,7 @@ const PostElementList = props => {
       <img src={props.image} alt="Post card"/>
       <div className="hovered">
         <div>
-          <p>{props.likes}</p>
+          <p>{props.totalLikes}</p>
           <MdFavoriteBorder />
         </div>
         <div>

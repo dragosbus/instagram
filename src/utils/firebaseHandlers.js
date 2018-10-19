@@ -64,9 +64,9 @@ export const likePostHandler = async (postId, owner, userId) => {
 
 export const createActivity = (user, ownerId, type) => {
   let activity;
-  if(type === 'follow') activity = 'started following you';
-  else if(type === 'post_liked') activity = 'liked your photo';
-  else if(type==='post_comment') activity = 'commented your post';
+  if (type === 'follow') activity = 'started following you';
+  else if (type === 'post_liked') activity = 'liked your photo';
+  else if (type === 'post_comment') activity = 'commented your post';
   db.ref(`users/${ownerId}/activity`).push().set({
     activity: {
       profile_picture: user.profile_picture,
@@ -76,3 +76,10 @@ export const createActivity = (user, ownerId, type) => {
     }
   });
 };
+
+export const totalLikes = (postId, owner) => {
+  return getDataFromFirebase(`posts/${owner}/${postId}`).then(res => {
+    return res ?
+      Object.values(res).filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop)) : [];
+  }).then(res => res.length);
+}
