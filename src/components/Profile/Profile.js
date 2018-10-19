@@ -31,7 +31,7 @@ class Profile extends Component {
   };
 
   likePost = () => {
-    likePostHandler(this.state.currentPost.postId, this.state.currentPost.userId, this.props.userConnected.id).then(
+    likePostHandler(this.props.currentPost.postId, this.props.currentPost.userId, this.props.userConnected.id).then(
       () => {
         console.log('liked');
         createActivity(this.props.userConnected, this.props.userId, 'post_liked');
