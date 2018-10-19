@@ -13,7 +13,7 @@ import PostElementList from '../PostCard/PostCard';
 import PostDetails from '../PostDetails/Post';
 import FollowBtn from '../FollowBtn/Follow';
 
-import { followHandlerDb, likePostHandler, createActivity, totalLikes } from '../../utils/firebaseHandlers';
+import { followHandlerDb, likePostHandler, createActivity } from '../../utils/firebaseHandlers';
 import { db } from '../../firebase/firebase';
 
 class Profile extends Component {
@@ -154,20 +154,15 @@ class Profile extends Component {
         </div>
         <div className="profile-posts">
           {this.props.userPosts.map((post, i) => {
-            //because is getted async, the dom element is returned first, so when total number of likes is returned change the dom
-            totalLikes(post.postId, post.userId).then(res => {
-              if (document.querySelector('.card p')) {
-                document.querySelector('.card p').textContent = res;
-              }
-            });
             return (
               <PostElementList
                 key={`${this.props.userData.id}-post-${i}`}
                 showDetails={() => {
                   this.showDetails(i);
                 }}
+                postId={post.postId}
+                userId={post.userId}
                 image={post.photo}
-                totalLikes={0}
                 comments={0}
               />
             );

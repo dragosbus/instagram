@@ -10,11 +10,6 @@ class PostDetails extends React.Component {
     totalLikes: 0
   };
 
-  wasLikedHandler = () => {
-    //how the like button is cliked, change the classname sync
-    this.setState({ isLiked: true });
-  };
-
   componentWillUpdate(props) {
     if (props.showDetailsPost) {
       this.checkLike(this.props.postId, this.props.userId, this.props.userConnected)
@@ -71,7 +66,6 @@ class PostDetails extends React.Component {
             <div className="actions">
               <button
                 onClick={() => {
-                  this.wasLikedHandler();
                   this.props.likePost();
                 }}
                 className={this.state.isLiked || this.props.isLiked ? 'liked-icon-active' : ''}
