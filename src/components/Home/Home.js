@@ -9,6 +9,7 @@ import AddPage from '../Add/Add';
 import Search from '../Search/Search';
 import Feed from '../Feed/Feed';
 import Activity from '../Activity/Activity';
+import EditProfile from '../EditProfile/EditProfile';
 class Home extends Component {
   render() {
     //for security reasons, because userConnected from redux can be changed from react panel and get the home page
@@ -38,23 +39,24 @@ class Home extends Component {
                     return <Feed userConnected={this.props.userConnected} userId={this.props.userConnected.id} />;
                   }}
                 />
-                <Route
-                  path="/search"
-                  render={() => {
-                    return <Search />;
-                  }}
-                />
+                <Route path="/search" component={Search} />
                 <Route
                   path="/add"
                   render={() => {
                     return <AddPage userId={this.props.userConnected.id} />;
                   }}
                 />
-                <Route path="/activity" render={props => <Activity userId={this.props.userConnected.id} />} />
+                <Route path="/activity" render={() => <Activity userId={this.props.userConnected.id} />} />
                 <Route
-                  path="/:userId"
+                  exact path="/:userId"
                   render={props => {
                     return <Profile history={props.history} userId={props.match.params.userId} />;
+                  }}
+                />
+                <Route
+                  path="/:userId/editprofile"
+                  render={() => {
+                    return <EditProfile userId={this.props.userConnected.id} />;
                   }}
                 />
               </Switch>

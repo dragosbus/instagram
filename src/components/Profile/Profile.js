@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import {
   getUserDataMiddleware,
   getPostsMiddleware,
@@ -131,7 +132,9 @@ class Profile extends Component {
     let { currentPost } = this.props;
     console.log(this.props);
     let btnProfile = this.state.userLogged ? (
-      <button className="edit-profile">Edit Profile</button>
+      <Link to={`/${this.props.userId}/editprofile`} className="edit-profile">
+        Edit Profile
+      </Link>
     ) : (
       <FollowBtn follow={this.followHandler} isFollower={this.props.follow} />
     );
