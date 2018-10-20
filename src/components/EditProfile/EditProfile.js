@@ -1,18 +1,29 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { db } from '../../firebase/firebase';
 import './EditProfile.css';
 
 class EditProfile extends Component {
+  state = {
+    fullName: this.props.userData.fullName,
+    username: this.props.userData.username,
+    website: this.props.website ? this.props.website : '',
+    bio: this.props.bio ? this.props.bio : '',
+    email: this.props.email
+  };
+  saveEdit = e => {
+    e.preventDefault();
+  };
+
   render() {
-    let { userData } = this.props;
+    let userData = this.state;
     return (
       <div className="edit-profile-page">
         <div className="header">
-          <img src={userData.profile_picture} alt="profile picture" />
+          <img src={this.props.userData.profile_picture} alt="profile picture" />
           <p>{userData.username}</p>
-
         </div>
-        <form>
+        <form onSubmit={this.saveEdit}>
           <div>
             <label htmlFor="fullname">Name</label>
             <input type="text" id="fullname" value={userData.fullName} />
@@ -23,11 +34,11 @@ class EditProfile extends Component {
           </div>
           <div>
             <label htmlFor="website">Website</label>
-            <input type="text" id="website" value={userData.username ? userData.userData : ''} />
+            <input type="text" id="website" value={userData.website} />
           </div>
           <div>
             <label htmlFor="bio">Bio</label>
-            <input type="text" id="bio" value={userData.bio ? userData.bio : ''} />
+            <input type="text" id="bio" value={userData.bio} />
           </div>
           <div>
             <label htmlFor="email">Email</label>
