@@ -64,6 +64,7 @@ export const likePostHandler = async (postId, owner, userId) => {
 
 export const createActivity = (user, ownerId, type) => {
   let activity;
+  console.log(user, ownerId, type)
   if (type === 'follow') activity = 'started following you';
   else if (type === 'post_liked') activity = 'liked your photo';
   else if (type === 'post_comment') activity = 'commented your post';
