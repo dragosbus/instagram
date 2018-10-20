@@ -7,12 +7,29 @@ class EditProfile extends Component {
   state = {
     fullName: this.props.userData.fullName,
     username: this.props.userData.username,
-    website: this.props.website ? this.props.website : '',
-    bio: this.props.bio ? this.props.bio : '',
-    email: this.props.email
+    website: this.props.userData.website ? this.props.userData.website : '',
+    bio: this.props.userData.bio ? this.props.userData.bio : '',
+    email: this.props.userData.email,
+    gender: this.props.userData.gender ? this.props.userData.gender : 'Male'
   };
+
   saveEdit = e => {
     e.preventDefault();
+    let { fullName, username, website, bio, email, gender } = this.state;
+    db.ref(`users/${this.props.userId}`).set({
+      fullName,
+      username,
+      website,
+      bio,
+      email,
+      gender
+    });
+  };
+
+  onChangeInput = (e, prop) => {
+    if (e.target.value) {
+      this.setState({ [prop]: e.target.value });
+    }
   };
 
   render() {
@@ -26,27 +43,37 @@ class EditProfile extends Component {
         <form onSubmit={this.saveEdit}>
           <div>
             <label htmlFor="fullname">Name</label>
-            <input type="text" id="fullname" value={userData.fullName} />
+            <input
+              type="text"
+              id="fullname"
+              value={userData.fullName}
+              onChange={e => this.onChangeInput(e, 'fullName')}
+            />
           </div>
           <div>
             <label htmlFor="username">Username</label>
-            <input type="text" id="username" value={userData.username} />
+            <input
+              type="text"
+              id="username"
+              value={userData.username}
+              onChange={e => this.onChangeInput(e, 'username')}
+            />
           </div>
           <div>
             <label htmlFor="website">Website</label>
-            <input type="text" id="website" value={userData.website} />
+            <input type="text" id="website" value={userData.website} onChange={e => this.onChangeInput(e, 'website')} />
           </div>
           <div>
             <label htmlFor="bio">Bio</label>
-            <input type="text" id="bio" value={userData.bio} />
+            <input type="text" id="bio" value={userData.bio} onChange={e => this.onChangeInput(e, 'bio')} />
           </div>
           <div>
             <label htmlFor="email">Email</label>
-            <input type="text" id="email" value={userData.email} />
+            <input type="text" id="email" value={userData.email} onChange={e => this.onChangeInput(e, 'email')} />
           </div>
           <div>
             <label htmlFor="gender">Gender</label>
-            <select value={userData.gender ? userData.gender : 'male'}>
+            <select value={this.state.gender} onChange={e => this.onChangeInput(e, 'gender')}>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="not-specified">Not Specified</option>
