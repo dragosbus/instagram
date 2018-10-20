@@ -23,7 +23,9 @@ class EditProfile extends Component {
       bio,
       email,
       gender
-    });
+    }).then(()=>{
+      this.props.history(this.props.userId);
+    })
   };
 
   onChangeInput = (e, prop) => {

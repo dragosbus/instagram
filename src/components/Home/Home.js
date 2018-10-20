@@ -55,8 +55,11 @@ class Home extends Component {
                 />
                 <Route
                   path="/:userId/editprofile"
-                  render={() => {
-                    return <EditProfile userId={this.props.userConnected.id} />;
+                  render={(props) => {
+                    console.log(props)
+                    return <EditProfile userId={this.props.userConnected.id}
+                    history={props.history.replace}
+                     />;
                   }}
                 />
               </Switch>

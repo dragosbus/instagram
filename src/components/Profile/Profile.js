@@ -94,7 +94,7 @@ class Profile extends Component {
       });
     }
     //if the user is not logged in and the route is another user, after log in redirect to feed route
-    if (!this.props.userData.id) {
+    if (!this.props.userConnected.id) {
       this.props.history.push(`/`);
     }
     if (prevProps.userId !== this.props.userId) {
