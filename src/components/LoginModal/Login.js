@@ -5,18 +5,29 @@ import { loginMiddleware } from '../../actionCreators/actions';
 import './Login.css';
 
 import Input from '../Input/Input';
+import { Spinner } from '../FetchSpinner/Spinner';
 
 class LoginModal extends Component {
+  state = {
+    regiterBtnDisabled: false
+  };
+
   submitLogin = e => {
     e.preventDefault();
-    this.props.logIn({
-      email: this._email.state.value,
-      password: this._pass.state.value
+    this.setState({ regiterBtnDisabled: true }, () => {
+      this.props.logIn({
+        email: this._email.state.value,
+        password: this._pass.state.value
+      });
     });
   };
-  
+
+  componentWillReceiveProps(props) {
+    console.log(props);
+    this.setState({regiterBtnDisabled: false});
+  }
+
   render() {
-    
     const { userConnected } = this.props;
     let errorSpan = userConnected.error ? <span className="error-login">{userConnected.error}</span> : '';
     return (
@@ -33,7 +44,10 @@ class LoginModal extends Component {
           {errorSpan}
           <Input type="email" placeHolder="Email" ref={email => (this._email = email)} />
           <Input type="password" placeHolder="Password" ref={pass => (this._pass = pass)} />
-          <button type="submit">Login</button>
+          <button type="submit">
+            <Spinner {...this.state} />
+            Login
+          </button>
         </form>
       </div>
     );

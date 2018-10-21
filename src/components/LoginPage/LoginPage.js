@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { auth, db } from '../../firebase/firebase';
 import { ErrorSpan, MessageSpan } from '../ErrorSpan/Span';
 import LoginModal from '../LoginModal/Login';
-import {Spinner} from './Spinner';
+import {Spinner} from '../FetchSpinner/Spinner';
 import './LoginPage.css';
 
 class LoginPage extends Component {
