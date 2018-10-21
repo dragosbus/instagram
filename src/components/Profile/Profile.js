@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import {
   getUserDataMiddleware,
   getPostsMiddleware,
@@ -31,9 +32,10 @@ class Profile extends Component {
   };
 
   likePost = () => {
-    likePostHandler(this.state.currentPost.postId, this.state.currentPost.userId, this.props.userConnected.id).then(
+    likePostHandler(this.props.currentPost.postId, this.props.currentPost.userId, this.props.userConnected.id).then(
       () => {
         console.log('liked');
+        createActivity(this.props.userConnected, this.props.userId, 'post_liked');
       }
     );
   };
@@ -48,7 +50,7 @@ class Profile extends Component {
           this.onFollowChange('child_added').then(() => {
             console.log('child_added');
             this.props.getUserData(this.props.userId);
-            createActivity(this.props.userConnected.username, this.props.userId, 'follow');
+            createActivity(this.props.userConnected, this.props.userId, 'follow');
           });
         } else {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'unfollow');
@@ -92,7 +94,7 @@ class Profile extends Component {
       });
     }
     //if the user is not logged in and the route is another user, after log in redirect to feed route
-    if (!this.props.userData.id) {
+    if (!this.props.userConnected.id) {
       this.props.history.push(`/`);
     }
     if (prevProps.userId !== this.props.userId) {
@@ -130,7 +132,9 @@ class Profile extends Component {
     let { currentPost } = this.props;
     console.log(this.props);
     let btnProfile = this.state.userLogged ? (
-      <button className="edit-profile">Edit Profile</button>
+      <Link to={`/${this.props.userId}/editprofile`} className="edit-profile">
+        Edit Profile
+      </Link>
     ) : (
       <FollowBtn follow={this.followHandler} isFollower={this.props.follow} />
     );
@@ -159,8 +163,9 @@ class Profile extends Component {
                 showDetails={() => {
                   this.showDetails(i);
                 }}
+                postId={post.postId}
+                userId={post.userId}
                 image={post.photo}
-                likes={post.likes}
                 comments={0}
               />
             );
@@ -169,7 +174,6 @@ class Profile extends Component {
         <PostDetails
           data={this.props.userData}
           postImg={currentPost.photo}
-          likes={currentPost.likes}
           createdAt={currentPost.createdAt ? this.convertToDateString(currentPost.createdAt) : 0}
           showDetailsPost={this.state.showDetailsPost}
           toggleModal={this.toggleModal}

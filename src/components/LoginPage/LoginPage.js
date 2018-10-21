@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { auth, db } from '../../firebase/firebase';
 import { ErrorSpan, MessageSpan } from '../ErrorSpan/Span';
 import LoginModal from '../LoginModal/Login';
+import { Spinner } from '../FetchSpinner/Spinner';
 import './LoginPage.css';
 
 class LoginPage extends Component {
@@ -9,6 +10,7 @@ class LoginPage extends Component {
     super(props);
     this.state = {
       showModal: false,
+      regiterBtnDisabled: false,
       email: {
         isValid: true,
         value: ''
@@ -58,7 +60,7 @@ class LoginPage extends Component {
       });
     }
   };
-  
+
   onEmailChange = e => {
     this.changeInputHandler(e, 'email');
   };
@@ -82,10 +84,11 @@ class LoginPage extends Component {
   submitRegister = e => {
     e.preventDefault();
     let { email, fullName, pass, repeatPass } = this.state;
-
+    this.setState({ regiterBtnDisabled: true });
     if (!email.value || !fullName.value || !pass.value || !repeatPass.value) {
       this.setState({
         formIsValid: false,
+        regiterBtnDisabled: false,
         errorMessage: 'Fill the inputs'
       });
       //iterate through state and get the state of the inputs
@@ -96,16 +99,18 @@ class LoginPage extends Component {
             this.setState({
               [state]: {
                 value: this.state[state].value,
-                isValid: false
+                isValid: false,
+                regiterBtnDisabled: false
               }
             });
           }
         }
       }
-    } else {    
+    } else {
       if (pass.value !== repeatPass.value) {
         this.setState({
           formIsValid: false,
+          regiterBtnDisabled: false,
           errorMessage: 'Passwords dont match',
           pass: {
             value: this.state.pass.value,
@@ -119,6 +124,7 @@ class LoginPage extends Component {
       } else if (pass.value.length < 6) {
         this.setState({
           formIsValid: false,
+          regiterBtnDisabled: false,
           errorMessage: 'Password must be 6 or more characters long',
           pass: {
             value: this.state.pass.value,
@@ -127,34 +133,45 @@ class LoginPage extends Component {
         });
       } else {
         //register user here.What is up, are just error handlers
-        auth.createUserWithEmailAndPassword(email.value, pass.value).then(() => {
-          this.setState({
-            formIsValid: true,
-            successMessage: 'Welcome'
-          });
+        auth
+          .createUserWithEmailAndPassword(email.value, pass.value)
+          .then(() => {
+            this.setState({
+              formIsValid: true,
+              successMessage: 'Welcome',
+              regiterBtnDisabled: false
+            });
 
-          auth.onAuthStateChanged(user=> {
-            if (user) {
-              var uid = user.uid;
-              db.ref(`users/${uid}`).set({
-                id: uid,
-                username: this.state.username.value,
-                email: this.state.email.value,
-                gender: '',
-                profile_picture: 'https://www.sgbt.lu/uploads/tx_bisgbio/default-profile_01.png',
-                fullName: this.state.fullName.value
-              });
-            }
+            auth.onAuthStateChanged(user => {
+              if (user) {
+                var uid = user.uid;
+                db.ref(`users/${uid}`).set({
+                  id: uid,
+                  username: this.state.username.value,
+                  email: this.state.email.value,
+                  gender: '',
+                  profile_picture: 'https://www.sgbt.lu/uploads/tx_bisgbio/default-profile_01.png',
+                  fullName: this.state.fullName.value
+                });
+              }
+            });
+          })
+          .catch(err => {
+            this.setState({
+              formIsValid: false,
+              errorMessage: err.message,
+              regiterBtnDisabled: false
+            });
           });
-        }).catch(err=>{
-          this.setState({
-            formIsValid: false,
-            errorMessage: err.message
-          });
-        });
       }
     }
   };
+
+  componentWillReceiveProps() {
+    //when is returned an error, we should activate the register button
+    //after the register button is clicked, new props are received from redux store
+    this.setState({ regiterBtnDisabled: false });
+  }
 
   render() {
     let { email, fullName, username, pass, repeatPass, errorMessage, formIsValid } = this.state;
@@ -167,8 +184,7 @@ class LoginPage extends Component {
         }}
         className="success-register"
       >
-        {' '}
-        "Welcome"{' '}
+        "Welcome"
       </span>
     );
 
@@ -176,55 +192,59 @@ class LoginPage extends Component {
       <div className="login-page">
         <div className="intro-images">
           <img src="https://www.instagram.com/static/images/homepage/screenshot3.jpg/f0c687aa6ec2.jpg" alt="intro" />
-        </div>{' '}
+        </div>
         <div className="login">
           <header>
-            <h1 className="logo"> Instagram </h1>{' '}
-            <h3 className="intro"> Sign up to see photos and videos from your friends. </h3>{' '}
-          </header>{' '}
+            <h1 className="logo"> Instagram </h1>
+            <h3 className="intro"> Sign up to see photos and videos from your friends. </h3>
+          </header>
           <main>
             <button className="btn-login" onClick={this.toggleLoginModal}>
               Log in
-            </button>{' '}
+            </button>
             <hr />
             <form className="register-form" onSubmit={this.submitRegister}>
               <div>
-                <input type="email" placeholder="Email" value={email.value} onChange={this.onEmailChange} />{' '}
-                <ErrorSpan isValidInput={email.isValid} />{' '}
-              </div>{' '}
+                <input type="email" placeholder="Email" value={email.value} onChange={this.onEmailChange} />
+                <ErrorSpan isValidInput={email.isValid} />
+              </div>
               <div>
-                <input type="text" placeholder="Full Name" value={fullName.value} onChange={this.onFullNameChange} />{' '}
-                <ErrorSpan isValidInput={fullName.isValid} />{' '}
-              </div>{' '}
+                <input type="text" placeholder="Full Name" value={fullName.value} onChange={this.onFullNameChange} />
+                <ErrorSpan isValidInput={fullName.isValid} />
+              </div>
               <div>
                 <input type="text" placeholder="Username" value={username.value} onChange={this.onUsernameChange} />{' '}
-                <ErrorSpan isValidInput={username.isValid} />{' '}
-              </div>{' '}
+                <ErrorSpan isValidInput={username.isValid} />
+              </div>
               <div>
-                <input type="password" placeholder="Password" value={pass.value} onChange={this.onPasswordChange} />{' '}
-                <ErrorSpan isValidInput={pass.isValid} />{' '}
-              </div>{' '}
+                <input type="password" placeholder="Password" value={pass.value} onChange={this.onPasswordChange} />
+                <ErrorSpan isValidInput={pass.isValid} />
+              </div>
               <div>
                 <input
                   type="password"
                   placeholder="Repeat password"
                   value={repeatPass.value}
                   onChange={this.onRepeatPasswordChange}
-                />{' '}
-                <ErrorSpan isValidInput={repeatPass.isValid} />{' '}
-              </div>{' '}
-              <button type="submit"> Register </button> {messageSpan}{' '}
-            </form>{' '}
+                />
+                <ErrorSpan isValidInput={repeatPass.isValid} />
+              </div>
+              <button disabled={this.state.regiterBtnDisabled} type="submit">
+                Register
+                <Spinner {...this.state} />
+              </button>
+              {messageSpan}
+            </form>
             <p>
               By signing up, you agree to our Terms.Learn how we collect, use and share your data in our Data Policy and
-              how we use cookies and similar technology in our Cookies Policy.{' '}
-            </p>{' '}
-          </main>{' '}
+              how we use cookies and similar technology in our Cookies Policy.
+            </p>
+          </main>
           <footer>
-            <p> 2018 Instagram clone </p>{' '}
-          </footer>{' '}
-        </div>{' '}
-        <LoginModal toggleLoginModal={this.toggleLoginModal} showModal={this.state.showModal} />{' '}
+            <p> 2018 Instagram clone </p>
+          </footer>
+        </div>
+        <LoginModal toggleLoginModal={this.toggleLoginModal} showModal={this.state.showModal} />
       </div>
     );
   }

@@ -2,7 +2,7 @@ import React from 'react';
 import './Post.css';
 import { Comment, HeartIcon } from '../Home/Icons';
 import { Link } from 'react-router-dom';
-import {getDataFromFirebase} from '../../utils/firebaseHandlers';
+import { getDataFromFirebase, totalLikes } from '../../utils/firebaseHandlers';
 
 class PostDetails extends React.Component {
   state = {
@@ -10,36 +10,35 @@ class PostDetails extends React.Component {
     totalLikes: 0
   };
 
-  wasLikedHandler = () => {
-    //how the like button is cliked, change the classname sync
-    this.setState({ isLiked: true });
-  };
-
-  componentDidMount() {
-    //when the post mount, if is liked add the classname
-    this.checkLike(this.props.postId, this.props.userId, this.props.userConnected);
+  componentWillUpdate(props) {
+    if (props.showDetailsPost) {
+      this.checkLike(this.props.postId, this.props.userId, this.props.userConnected)
+        .then(async isLiked => {
+          let totalLikesN = await totalLikes(this.props.postId, this.props.userId);
+          return { totalLikesN, isLiked };
+        })
+        .then(res => {
+          this.setState({ totalLikes: res.totalLikesN, isLiked: res.isLiked });
+        });
+    }
   }
 
-  checkLike = (postId, owner, userId) => {
+  checkLike = async (postId, owner, userId) => {
     //check if is liked handler
-    getDataFromFirebase(`posts/${owner}/${postId}`).then(res => {
-      const props = res
-        ? Object.values(res).filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop))
-        : [];
+    let post = await getDataFromFirebase(`posts/${owner}/${postId}`);
+    const props = post
+      ? Object.values(post).filter(prop => typeof prop === 'object' && prop !== null && !Array.isArray(prop))
+      : [];
 
-      props.forEach(user => {
-        if (userId === user.userId) {
-          this.setState({ isLiked: true });
-        } else {
-          return false;
-        }
-      });
-      this.setState({ totalLikes: props.length });
+    let res = props.map(user => {
+      return userId === user.userId;
     });
+    return res.some(v => v);
   };
 
   render() {
     let data = this.props.data;
+
     return (
       <div className="overlay" style={{ display: this.props.showDetailsPost ? 'block' : 'none' }}>
         <button className="close-post-modal" onClick={this.props.toggleModal}>
@@ -67,7 +66,6 @@ class PostDetails extends React.Component {
             <div className="actions">
               <button
                 onClick={() => {
-                  this.wasLikedHandler();
                   this.props.likePost();
                 }}
                 className={this.state.isLiked || this.props.isLiked ? 'liked-icon-active' : ''}

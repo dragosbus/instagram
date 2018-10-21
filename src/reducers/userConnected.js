@@ -13,6 +13,10 @@ const userConnected = (state = {
         error: 'Please check if the email or the password is correct',
         isSignedIn: false
       };
+    case ActionTypes.LOG_OUT:
+      return Object.assign({}, {
+        isSignedIn: false
+      });
     default:
       return state;
   }

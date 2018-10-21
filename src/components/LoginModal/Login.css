@@ -39,15 +39,20 @@
 
 .login-modal form button {
   display: block;
-    margin: 1rem auto;
-    border: none;
-    border-radius: 4px;
-    width: 50%;
-    background: rgb(93, 167, 252);
-    color: #fff;
-    padding: 1rem 0.5rem;
-    font-size: 1.5rem;
-    font-weight: 700;
+  margin: 1rem auto;
+  border: none;
+  border-radius: 4px;
+  width: 50%;
+  background: rgb(93, 167, 252);
+  color: #fff;
+  padding: 1rem 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.login-modal form button:disabled {
+  background: rgba(93, 167, 252, 0.562);
+  cursor: not-allowed
 }
 
 .error-login {

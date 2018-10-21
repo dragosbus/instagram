@@ -27,6 +27,11 @@
     font-weight: 700;
 }
 
+.register-form button:disabled {
+    background: rgba(93, 167, 252, 0.671);
+    cursor: not-allowed;
+}
+
 .register-form {
     display: flex;
     justify-content: center;
@@ -34,7 +39,7 @@
     flex-direction: column;
 }
 
-.register-form div {
+.register-form div:not(.spinner, .bounce1, .bounce2, .bounce3) {
     display: block;
     width: 80%;
     text-align: center;
