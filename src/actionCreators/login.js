@@ -19,6 +19,10 @@ const loginError = () => ({
   type: ActionTypes.LOG_IN_ERROR
 });
 
+export const logOut = () => ({
+  type: ActionTypes.LOG_OUT
+});
+
 export const loginMiddleware = ({
   email,
   password

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { db } from '../../firebase/firebase';
+import { db, auth } from '../../firebase/firebase';
+import {logOut} from '../../actionCreators/login';
 import './EditProfile.css';
+import { bindActionCreators } from 'redux';
 
 class EditProfile extends Component {
   state = {
@@ -28,6 +30,10 @@ class EditProfile extends Component {
     })
   };
 
+  logOut = () => {
+    auth.signOut().then(this.props.logOut);
+  };
+
   onChangeInput = (e, prop) => {
     if (e.target.value) {
       this.setState({ [prop]: e.target.value });
@@ -41,6 +47,7 @@ class EditProfile extends Component {
         <div className="header">
           <img src={this.props.userData.profile_picture} alt="profile picture" />
           <p>{userData.username}</p>
+          <button onClick={this.logOut}>Log Out</button>
         </div>
         <form onSubmit={this.saveEdit}>
           <div>
@@ -92,4 +99,8 @@ const mapStateToProps = state => ({
   userData: state.userData
 });
 
-export default connect(mapStateToProps)(EditProfile);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  logOut
+}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);
