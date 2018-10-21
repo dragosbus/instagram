@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { auth, db } from '../../firebase/firebase';
 import { ErrorSpan, MessageSpan } from '../ErrorSpan/Span';
 import LoginModal from '../LoginModal/Login';
-import {Spinner} from '../FetchSpinner/Spinner';
+import { Spinner } from '../FetchSpinner/Spinner';
 import './LoginPage.css';
 
 class LoginPage extends Component {
@@ -84,10 +84,11 @@ class LoginPage extends Component {
   submitRegister = e => {
     e.preventDefault();
     let { email, fullName, pass, repeatPass } = this.state;
-    this.setState({regiterBtnDisabled: true})
+    this.setState({ regiterBtnDisabled: true });
     if (!email.value || !fullName.value || !pass.value || !repeatPass.value) {
       this.setState({
         formIsValid: false,
+        regiterBtnDisabled: false,
         errorMessage: 'Fill the inputs'
       });
       //iterate through state and get the state of the inputs
@@ -98,7 +99,8 @@ class LoginPage extends Component {
             this.setState({
               [state]: {
                 value: this.state[state].value,
-                isValid: false
+                isValid: false,
+                regiterBtnDisabled: false
               }
             });
           }
@@ -108,6 +110,7 @@ class LoginPage extends Component {
       if (pass.value !== repeatPass.value) {
         this.setState({
           formIsValid: false,
+          regiterBtnDisabled: false,
           errorMessage: 'Passwords dont match',
           pass: {
             value: this.state.pass.value,
@@ -121,6 +124,7 @@ class LoginPage extends Component {
       } else if (pass.value.length < 6) {
         this.setState({
           formIsValid: false,
+          regiterBtnDisabled: false,
           errorMessage: 'Password must be 6 or more characters long',
           pass: {
             value: this.state.pass.value,
@@ -155,12 +159,19 @@ class LoginPage extends Component {
           .catch(err => {
             this.setState({
               formIsValid: false,
-              errorMessage: err.message
+              errorMessage: err.message,
+              regiterBtnDisabled: false
             });
           });
       }
     }
   };
+
+  componentWillReceiveProps() {
+    //when is returned an error, we should activate the register button
+    //after the register button is clicked, new props are received from redux store
+    this.setState({ regiterBtnDisabled: false });
+  }
 
   render() {
     let { email, fullName, username, pass, repeatPass, errorMessage, formIsValid } = this.state;
@@ -220,7 +231,7 @@ class LoginPage extends Component {
               </div>
               <button disabled={this.state.regiterBtnDisabled} type="submit">
                 Register
-                <Spinner {...this.state}/>
+                <Spinner {...this.state} />
               </button>
               {messageSpan}
             </form>

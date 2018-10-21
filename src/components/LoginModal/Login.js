@@ -22,8 +22,9 @@ class LoginModal extends Component {
     });
   };
 
-  componentWillReceiveProps(props) {
-    console.log(props);
+  componentWillReceiveProps() {
+    //when is returned an error, we should activate the login button
+    //after the login button is clicked, new props are received from redux store
     this.setState({regiterBtnDisabled: false});
   }
 
@@ -44,7 +45,7 @@ class LoginModal extends Component {
           {errorSpan}
           <Input type="email" placeHolder="Email" ref={email => (this._email = email)} />
           <Input type="password" placeHolder="Password" ref={pass => (this._pass = pass)} />
-          <button type="submit">
+          <button type="submit" disabled={this.state.regiterBtnDisabled}>
             <Spinner {...this.state} />
             Login
           </button>
