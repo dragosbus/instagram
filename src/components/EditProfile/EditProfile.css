@@ -68,7 +68,8 @@ form input:focus {
   border-color: rgb(34, 115, 168);
 }
 
-form button {
+form button,
+.btn-logout {
   display: block;
   margin: 1rem auto;
   border: none;
@@ -79,6 +80,13 @@ form button {
   padding: 1rem 0.5rem;
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+.btn-logout {
+  background: rgb(233, 56, 71);
+  margin: 0 auto;
+  width: 20%;
+  font-size: 1.25rem;
 }
 
 @media (min-width: 660px) {

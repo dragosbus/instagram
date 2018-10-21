@@ -145,7 +145,7 @@ class LoginPage extends Component {
                 fullName: this.state.fullName.value
               });
             }
-          }).then(()=>console.log('registered'))
+          });
         }).catch(err=>{
           this.setState({
             formIsValid: false,

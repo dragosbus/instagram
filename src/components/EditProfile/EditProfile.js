@@ -26,7 +26,7 @@ class EditProfile extends Component {
       email,
       gender
     }).then(()=>{
-      this.props.history(this.props.userId);
+      this.props.history(`/${this.props.userId}`);
     })
   };
 
@@ -47,7 +47,7 @@ class EditProfile extends Component {
         <div className="header">
           <img src={this.props.userData.profile_picture} alt="profile picture" />
           <p>{userData.username}</p>
-          <button onClick={this.logOut}>Log Out</button>
+          <button className="btn-logout" onClick={this.logOut}>Log Out</button>
         </div>
         <form onSubmit={this.saveEdit}>
           <div>
