@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { db, auth } from '../../firebase/firebase';
-import {logOut} from '../../actionCreators/login';
+import { logOut } from '../../actionCreators/login';
+import {getUserDataMiddleware} from '../../actionCreators/actions';
 import './EditProfile.css';
 import { bindActionCreators } from 'redux';
 
@@ -18,20 +19,27 @@ class EditProfile extends Component {
   saveEdit = e => {
     e.preventDefault();
     let { fullName, username, website, bio, email, gender } = this.state;
-    db.ref(`users/${this.props.userId}`).set({
+    let newData = Object.assign({}, this.props.userData, {
       fullName,
       username,
       website,
       bio,
       email,
       gender
-    }).then(()=>{
-      this.props.history(`/${this.props.userId}`);
-    })
+    });
+    db.ref(`users/${this.props.userId}`)
+      .set(newData)
+      .then(() => {
+        this.props.getData(this.props.userId);
+        this.props.history(`/${this.props.userId}`);
+      });
   };
 
   logOut = () => {
-    auth.signOut().then(this.props.logOut);
+    auth.signOut().then(()=>{
+      this.props.logOut();
+      this.props.history('/');
+    });
   };
 
   onChangeInput = (e, prop) => {
@@ -47,7 +55,9 @@ class EditProfile extends Component {
         <div className="header">
           <img src={this.props.userData.profile_picture} alt="profile picture" />
           <p>{userData.username}</p>
-          <button className="btn-logout" onClick={this.logOut}>Log Out</button>
+          <button className="btn-logout" onClick={this.logOut}>
+            Log Out
+          </button>
         </div>
         <form onSubmit={this.saveEdit}>
           <div>
@@ -99,8 +109,16 @@ const mapStateToProps = state => ({
   userData: state.userData
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  logOut
-}, dispatch)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      logOut,
+      getData: getUserDataMiddleware
+    },
+    dispatch
+  );
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditProfile);
