@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { db, auth } from '../../firebase/firebase';
 import { logOut } from '../../actionCreators/login';
+import {getUserDataMiddleware} from '../../actionCreators/actions';
 import './EditProfile.css';
 import { bindActionCreators } from 'redux';
 
@@ -29,12 +30,16 @@ class EditProfile extends Component {
     db.ref(`users/${this.props.userId}`)
       .set(newData)
       .then(() => {
+        this.props.getData(this.props.userId);
         this.props.history(`/${this.props.userId}`);
       });
   };
 
   logOut = () => {
-    auth.signOut().then(this.props.logOut);
+    auth.signOut().then(()=>{
+      this.props.logOut();
+      this.props.history('/');
+    });
   };
 
   onChangeInput = (e, prop) => {
@@ -107,7 +112,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      logOut
+      logOut,
+      getData: getUserDataMiddleware
     },
     dispatch
   );

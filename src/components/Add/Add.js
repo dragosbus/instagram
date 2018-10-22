@@ -47,8 +47,8 @@ class AddPage extends Component {
               this.handleFile(e);
             }}
           /> */}
-          <input type="text" value={this.state.description} onChange={this.onChangeDescription} />
-          <input type="text" value={this.state.photo} onChange={this.onChangePhoto} />
+          <input type="text" value={this.state.description} onChange={this.onChangeDescription} placeholder="Description"/>
+          <input type="text" value={this.state.photo} onChange={this.onChangePhoto} placeholder="URL"/>
           <button type="submit">Add Post</button>
         </form>
         {/* <div id="fileList">
