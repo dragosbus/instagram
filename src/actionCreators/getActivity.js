@@ -9,7 +9,6 @@ const getActivity = data => ({
 export const fetchActivity = userId => dispatch => {
   getDataFromFirebase(`users/${userId}/activity`).then(res=>{
     if(res) {
-      console.log(Object.values(res));
       dispatch(getActivity(Object.values(res)))
     } else {
       dispatch(getActivity([]));

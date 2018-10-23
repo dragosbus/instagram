@@ -34,7 +34,6 @@ class Profile extends Component {
   likePost = () => {
     likePostHandler(this.props.currentPost.postId, this.props.currentPost.userId, this.props.userConnected.id).then(
       () => {
-        console.log('liked');
         createActivity(this.props.userConnected, this.props.userId, 'post_liked');
       }
     );
@@ -48,14 +47,12 @@ class Profile extends Component {
         if (!res) {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'follow');
           this.onFollowChange('child_added').then(() => {
-            console.log('child_added');
             this.props.getUserData(this.props.userId);
             createActivity(this.props.userConnected, this.props.userId, 'follow');
           });
         } else {
           followHandlerDb(this.props.userConnected.id, this.props.userId, 'unfollow');
           this.onFollowChange('child_removed').then(() => {
-            console.log('child_removed');
             this.props.getUserData(this.props.userId);
           });
         }
@@ -85,13 +82,8 @@ class Profile extends Component {
     -I did this in componentdidupdate and not in componentdidmount, because when the route is changed, the old component is not unmounting, just the data, and we want the component updated with the new data
     */
     if (this.props.userId === this.props.userConnected.id) {
-      console.log('connected');
-      this.onFollowChange('child_added').then(() => {
-        console.log('child_added');
-      });
-      this.onFollowChange('child_removed').then(() => {
-        console.log('child_removed');
-      });
+      this.onFollowChange('child_added');
+      this.onFollowChange('child_removed');
     }
     //if the user is not logged in and the route is another user, after log in redirect to feed route
     if (!this.props.userConnected.id) {
@@ -130,7 +122,7 @@ class Profile extends Component {
 
   render() {
     let { currentPost } = this.props;
-    console.log(this.props);
+
     let btnProfile = this.state.userLogged ? (
       <Link to={`/${this.props.userId}/editprofile`} className="edit-profile">
         Edit Profile
