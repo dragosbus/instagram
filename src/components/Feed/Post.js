@@ -34,7 +34,7 @@ class Post extends Component {
 
   wasLikedHandler = () => {
     //how the like button is cliked, change the classname sync
-    this.setState({ isLiked: true, totalLikes: this.state.totalLikes + 1 });
+    this.setState({ isLiked: true, totalLikes: this.state.totalLikes });
   };
 
   render() {
