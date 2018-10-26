@@ -53,7 +53,7 @@ class EditProfile extends Component {
     return (
       <div className="edit-profile-page">
         <div className="header">
-          <img src={this.props.userData.profile_picture} alt="profile picture" />
+          <img src={this.props.userData.profile_picture} alt="profile" />
           <p>{userData.username}</p>
           <button className="btn-logout" onClick={this.logOut}>
             Log Out

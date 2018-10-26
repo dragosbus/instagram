@@ -42,12 +42,12 @@ class Post extends Component {
       <li className="element-post">
         <div className="header-post">
           <Link to={`/${this.props.post.userId}`}>
-            <img src={this.props.post.profile_photo} />
+            <img src={this.props.post.profile_photo} alt="profile"/>
             <h4>{this.props.post.username}</h4>
           </Link>
         </div>
         <div className="main-post">
-          <img src={this.props.post.photo} />
+          <img src={this.props.post.photo} alt={this.props.post.description}/>
           <div className="actions">
             <button
               onClick={() => {
