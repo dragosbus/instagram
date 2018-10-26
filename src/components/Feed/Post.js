@@ -42,12 +42,12 @@ class Post extends Component {
       <li className="element-post">
         <div className="header-post">
           <Link to={`/${this.props.post.userId}`}>
-            <img src={this.props.post.profile_photo} alt="profile"/>
+            <img src={this.props.post.profile_photo} alt="profile" />
             <h4>{this.props.post.username}</h4>
           </Link>
         </div>
         <div className="main-post">
-          <img src={this.props.post.photo} alt={this.props.post.description}/>
+          <img src={this.props.post.photo} alt={this.props.post.description} />
           <div className="actions">
             <button
               onClick={() => {
@@ -67,9 +67,7 @@ class Post extends Component {
             <span>{this.props.post.username}:</span>
             {this.props.post.description}
           </p>
-          <p className="created-at">
-            {this.props.calcTimePostCreated(this.props.post.createdAt)}
-          </p>
+          <p className="created-at">{this.props.calcTimePostCreated(this.props.post.createdAt)}</p>
         </div>
       </li>
     );

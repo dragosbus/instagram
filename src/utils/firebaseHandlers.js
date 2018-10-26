@@ -68,14 +68,16 @@ export const createActivity = (user, ownerId, type) => {
   if (type === 'follow') activity = 'started following you';
   else if (type === 'post_liked') activity = 'liked your photo';
   else if (type === 'post_comment') activity = 'commented your post';
-  db.ref(`users/${ownerId}/activity`).push().set({
-    activity: {
-      profile_picture: user.profile_picture,
-      username: user.username,
-      activity,
-      type
-    }
-  });
+  if (user.id !== ownerId) {
+    db.ref(`users/${ownerId}/activity`).push().set({
+      activity: {
+        profile_picture: user.profile_picture,
+        username: user.username,
+        activity,
+        type
+      }
+    });
+  }
 };
 
 export const totalLikes = (postId, owner) => {
