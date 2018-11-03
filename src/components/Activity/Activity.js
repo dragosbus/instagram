@@ -22,7 +22,7 @@ class Activity extends Component {
                 return <ActivityElement key={i} {...el.activity}/>
               })
             }
-          </ul> : 'no'
+          </ul> : ''
         }
       </div>
     );

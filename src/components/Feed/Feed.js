@@ -68,9 +68,6 @@ class Feed extends Component {
           calcTimePostCreated={this.calcTimePostCreated}
           userConnected={this.props.userId}
         />
-        <button className="btn-load" onClick={this.loadPost}>
-          Load
-        </button>
       </div>
     );
   }
