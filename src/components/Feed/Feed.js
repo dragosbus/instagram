@@ -9,22 +9,12 @@ import { likePostHandler, createActivity } from '../../utils/firebaseHandlers';
 import './Feed.css';
 
 class Feed extends Component {
-  // handleScroll = e => {
-  //   let id = Math.floor(e.target.scrollingElement.scrollTop / 487);
-  //   console.log(e.target.scrollingElement.scrollTop);
-  //   this.setState(
-  //     prevState => ({
-  //       posts: prevState.posts.concat(post[id])
-  //     }),
-  //     () => console.log(post)
-  //   );
-  // };
-
   state = {
     loadPost: this.props.getPostsForFeed(this.props.userId)
   };
 
   componentDidMount() {
+    window.addEventListener('scroll', this.onScroll);
     this.state.loadPost(this.props.feedPosts.index);
   }
 
@@ -32,8 +22,15 @@ class Feed extends Component {
     this.state.loadPost(this.props.feedPosts.index);
   };
 
+  onScroll = () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      this.loadPost();
+      console.log('loaded')
+    }
+  };
+
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('scroll', this.onScroll);
   }
 
   calcTimePostCreated = createdAt => {
@@ -57,7 +54,7 @@ class Feed extends Component {
   likePost = index => {
     let currentPost = this.props.feedPosts.posts[index];
     likePostHandler(currentPost.postId, currentPost.userId, this.props.userId).then(() => {
-      console.log('liked', currentPost,this.props.userId);
+      console.log('liked', currentPost, this.props.userId);
       createActivity(this.props.userConnected, currentPost.userId, 'post_liked');
     });
   };
