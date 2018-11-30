@@ -1,8 +1,11 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
 
-export const initLogin = (userData) => ({
-  type: ActionTypes.INIT_LOGIN,
-  userData
+export const checkInitialStateLoggin = () => ({
+  type: ActionTypes.CHECK_INITIAL_STATE_LOGGIN
+});
+
+export const initLogin = () => ({
+  type: ActionTypes.INIT_LOGIN
 });
 
 export const loginSuccess = user => ({

@@ -1,4 +1,5 @@
 export const INIT_LOGIN = 'INIT_LOGIN';
+export const CHECK_INITIAL_STATE_LOGGIN = 'CHECK_INITIAL_STATE_LOGGIN';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
 export const LOG_IN_ERROR = 'LOG_IN_ERROR';
 export const LOG_OUT = 'LOG_OUT';

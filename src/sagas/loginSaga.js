@@ -1,7 +1,7 @@
 import {
   call,
   put,
-  takeLatest
+  takeLatest,
 } from 'redux-saga/effects';
 import {
   auth
@@ -11,51 +11,42 @@ import {
   loginError,
   logOut
 } from '../actionCreators/login';
+import {
+  getDataFromFirebase,
+  authHandler
+} from '../utils/firebaseHandlers';
 
 
 export function* loginWatcher() {
-  yield takeLatest('INIT_LOGIN', loginWorker);
+  yield takeLatest('CHECK_INITIAL_STATE_LOGGIN', checkInitialState);
+  // yield takeLatest('INIT_LOGIN', loginWorker);
 }
 
-function* loginWorker({ userData }) {
+function* checkInitialState() {
+  const userLogged = yield call(authHandler);
+  if (userLogged) {
+    const user = yield getDataFromFirebase(`users/${userLogged.uid}`);
+    yield put(loginSuccess({
+      id: user.id,
+      username: user.username,
+      profile_picture: user.profile_picture
+    }));
+  }
+}
+
+function* loginWorker({
+  userData
+}) {
   try {
     yield auth.signInWithEmailAndPassword(userData.email, userData.password);
-    yield auth.onAuthStateChanged(user => {
-      if (user) {
-        put(loginSuccess(user.uid))
-      }
-    });
+    const userLogged = yield call(authHandler);
+    const user = yield getDataFromFirebase(`users/${userLogged.uid}`);
+    yield put(loginSuccess({
+      id: user.id,
+      username: user.username,
+      profile_picture: user.profile_picture
+    }));
   } catch (err) {
     yield put(loginError(err.message));
   }
 };
-
-// export const loginMiddleware = ({
-//   email,
-//   password
-// }) => dispatch => {
-//   auth
-//     .signInWithEmailAndPassword(email, password)
-//     .then(() => {
-//       auth.onAuthStateChanged(function (user) {
-//         if (user) {
-//           //login user
-//           //get user data
-//           getDataFromFirebase(`users/${user.uid}`, data => {
-//             dispatch(getUserData(data.val()));
-//             dispatch(
-//               loginSuccess({
-//                 id: user.uid,
-//                 username: data.val().username,
-//                 profile_picture: data.val().profile_picture
-//               })
-//             );
-//           });
-//         } else {
-//           // User is signed out.
-//           // ...
-//         }
-//       });
-//     })
-//     .catch(err => dispatch(loginError()));
-// };

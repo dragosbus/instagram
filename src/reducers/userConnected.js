@@ -10,6 +10,7 @@ const initialState = {
 const userConnected = (state = initialState, action) => {
   switch (action.type) {
     case ActionTypes.INIT_LOGIN:
+    case ActionTypes.CHECK_INITIAL_STATE_LOGGIN:
       return {
         ...initialState,
         initLoggin: true
