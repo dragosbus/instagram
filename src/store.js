@@ -3,6 +3,7 @@ import {
   applyMiddleware
 } from 'redux';
 import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 import rootReducer from './reducers/index';
 import {
   auth
@@ -13,6 +14,9 @@ import {
 import {
   getUserData
 } from './actionCreators/getUserData';
+import {loginWatcher} from './sagas/loginSaga';
+
+const sagaMiddleware = createSagaMiddleware();
 
 auth.onAuthStateChanged(function (user) {
   if (user) {
@@ -33,6 +37,7 @@ auth.onAuthStateChanged(function (user) {
   }
 });
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = createStore(rootReducer, applyMiddleware(thunk, sagaMiddleware));
 
+sagaMiddleware.run(loginWatcher);
 export default store;

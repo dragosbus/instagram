@@ -29,7 +29,6 @@ export {
   getPostsMiddleware,
   getUsersSearchedMiddleware,
   isFollowMiddleware,
-  loginMiddleware,
   getCurrentPostIndex,
   fetchActivity
 }
