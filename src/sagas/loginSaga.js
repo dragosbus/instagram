@@ -18,8 +18,8 @@ import {
 
 
 export function* loginWatcher() {
-  yield takeLatest('CHECK_INITIAL_STATE_LOGGIN', checkInitialState);
-  // yield takeLatest('INIT_LOGIN', loginWorker);
+  // yield takeLatest('CHECK_INITIAL_STATE_LOGGIN', checkInitialState);
+  yield takeLatest('INIT_LOGIN', loginWorker);
 }
 
 function* checkInitialState() {
@@ -35,6 +35,7 @@ function* checkInitialState() {
 function* loginWorker({
   userData
 }) {
+  console.log(userData)
   try {
     yield auth.signInWithEmailAndPassword(userData.email, userData.password);
     const userLogged = yield call(authHandler);

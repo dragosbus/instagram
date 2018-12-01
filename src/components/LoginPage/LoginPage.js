@@ -41,7 +41,7 @@ class LoginPage extends Component {
   }
 
   componentDidMount() {
-    this.props.checkInitialState();
+    // this.props.checkInitialState();
   };
 
   toggleLoginModal = () => {
