@@ -2,15 +2,14 @@ import {
   db, auth
 } from '../firebase/firebase';
 
-export const authHandler = async () => {
-  let userLogged;
-  await auth.onAuthStateChanged(user => {
-    if(user) {
-      userLogged = user;
-    }
+export const authHandler = () => {
+  return new Promise((resolve, reject) => {
+    auth.onAuthStateChanged(user => {
+      if(user) {
+        resolve(user);
+      }
+    })
   });
-  
-  return userLogged;
 };
 
 export const getDataFromFirebase = async (ref, cb) => {

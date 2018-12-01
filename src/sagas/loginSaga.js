@@ -23,15 +23,13 @@ export function* loginWatcher() {
 }
 
 function* checkInitialState() {
-  const userLogged = yield call(authHandler);
-  if (userLogged) {
-    const user = yield getDataFromFirebase(`users/${userLogged.uid}`);
-    yield put(loginSuccess({
-      id: user.id,
-      username: user.username,
-      profile_picture: user.profile_picture
-    }));
-  }
+  const user = yield call(authHandler);
+  const userData = yield getDataFromFirebase(`users/${user.uid}`);
+  yield put(loginSuccess({
+    id: userData.id,
+    username: userData.username,
+    profile_picture: userData.profile_picture
+  }));
 }
 
 function* loginWorker({
