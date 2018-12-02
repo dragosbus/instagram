@@ -18,7 +18,7 @@ import {
 
 
 export function* loginWatcher() {
-  // yield takeLatest('CHECK_INITIAL_STATE_LOGGIN', checkInitialState);
+  yield takeLatest('CHECK_INITIAL_STATE_LOGGIN', checkInitialState);
   yield takeLatest('INIT_LOGIN', loginWorker);
 }
 
@@ -33,11 +33,10 @@ function* checkInitialState() {
 }
 
 function* loginWorker({
-  userData
+  payload
 }) {
-  console.log(userData)
   try {
-    yield auth.signInWithEmailAndPassword(userData.email, userData.password);
+    yield auth.signInWithEmailAndPassword(payload.email, payload.password);
     const userLogged = yield call(authHandler);
     const user = yield getDataFromFirebase(`users/${userLogged.uid}`);
     yield put(loginSuccess({

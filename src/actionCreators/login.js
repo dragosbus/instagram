@@ -4,8 +4,9 @@ export const checkInitialStateLoggin = () => ({
   type: ActionTypes.CHECK_INITIAL_STATE_LOGGIN
 });
 
-export const initLogin = () => ({
-  type: ActionTypes.INIT_LOGIN
+export const initLogin = (credentials) => ({
+  type: ActionTypes.INIT_LOGIN,
+  payload: credentials
 });
 
 export const loginSuccess = user => ({
