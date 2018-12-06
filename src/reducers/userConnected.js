@@ -1,17 +1,32 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
 
-const userConnected = (state = {
-  isSignedIn: false
-}, action) => {
+const initialState = {
+  initLoggin: false,
+  userId: null,
+  isSignedIn: false,
+  error: null,
+};
+
+const userConnected = (state = initialState, action) => {
   switch (action.type) {
+    case ActionTypes.INIT_LOGIN:
+      return {
+        ...initialState,
+        initLoggin: true
+      };
     case ActionTypes.LOG_IN_SUCCESS:
-      return Object.assign({}, action.payload, {
-        isSignedIn: true
-      });
+      return {
+        initLoggin: false,
+        ...action.payload,
+        isSignedIn: true,
+        error: null
+      };
     case ActionTypes.LOG_IN_ERROR:
       return {
-        error: 'Please check if the email or the password is correct',
-        isSignedIn: false
+        initLoggin: false,
+        isSignedIn: false,
+        userId: null,
+        error: action.err,
       };
     case ActionTypes.LOG_OUT:
       return Object.assign({}, {

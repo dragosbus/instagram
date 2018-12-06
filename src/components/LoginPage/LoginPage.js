@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { auth, db } from '../../firebase/firebase';
 import { ErrorSpan, MessageSpan } from '../ErrorSpan/Span';
 import LoginModal from '../LoginModal/Login';
 import { Spinner } from '../FetchSpinner/Spinner';
 import './LoginPage.css';
+import { bindActionCreators } from 'redux';
+import {checkInitialStateLoggin} from '../../actionCreators/login';
 
 class LoginPage extends Component {
   constructor(props) {
@@ -36,6 +39,10 @@ class LoginPage extends Component {
       successMessage: ''
     };
   }
+
+  componentDidMount() {
+    this.props.checkInitialState();
+  };
 
   toggleLoginModal = () => {
     this.setState({
@@ -250,4 +257,8 @@ class LoginPage extends Component {
   }
 }
 
-export default LoginPage;
+const mapDispatchToProps = dispatch => bindActionCreators({
+  checkInitialState: checkInitialStateLoggin,
+}, dispatch);
+
+export default connect(null, mapDispatchToProps)(LoginPage);

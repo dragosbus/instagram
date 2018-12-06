@@ -1,6 +1,7 @@
 .feed {
   width: 100%;
   margin: auto auto;
+  padding: 1rem 0;
 }
 
 .feed ul {

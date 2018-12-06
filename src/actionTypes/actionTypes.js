@@ -1,6 +1,13 @@
+export const INIT_LOGIN = 'INIT_LOGIN';
+export const CHECK_INITIAL_STATE_LOGGIN = 'CHECK_INITIAL_STATE_LOGGIN';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
 export const LOG_IN_ERROR = 'LOG_IN_ERROR';
 export const LOG_OUT = 'LOG_OUT';
+
+export const INIT_REGISTER = 'INIT_REGISTER';
+export const SUCCESS_REGISTER = 'SUCCESS_REGISTER';
+export const ERROR_REGISTER = 'ERROR_REGISTER';
+
 export const GET_USER_DATA = 'GET_USER_DATA';
 export const GET_USER_POSTS = 'GET_USER_POSTS';
 export const GET_USER_SEARCHED = 'GET_USER_SEARCHED';

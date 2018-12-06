@@ -10,7 +10,6 @@ export const getUserData = data => ({
 
 export const getUserDataMiddleware = userId => dispatch => {
   getDataFromFirebase(`users/${userId}`, data => {
-    console.log('dispatched:get user data');
     dispatch(getUserData(data.val()));
   });
 };

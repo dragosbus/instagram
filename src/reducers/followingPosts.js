@@ -17,6 +17,8 @@ export const feedPosts = (state = initialState, action) => {
         posts: [...state.posts],
         index: state.index + 1
       });
+    case ActionTypes.LOG_OUT:
+      return initialState;
     default:
       return state;
   }

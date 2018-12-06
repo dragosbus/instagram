@@ -1,12 +1,7 @@
 import * as ActionTypes from '../actionTypes/actionTypes';
 import {
   db,
-  auth
 } from '../firebase/firebase';
-import {
-  createActivity
-} from '../utils/firebaseHandlers';
-
 
 const isFollower = data => ({
   type: ActionTypes.IS_FOLLOW,

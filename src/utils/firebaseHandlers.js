@@ -1,6 +1,16 @@
 import {
-  db
+  db, auth
 } from '../firebase/firebase';
+
+export const authHandler = () => {
+  return new Promise((resolve, reject) => {
+    auth.onAuthStateChanged(user => {
+      if(user) {
+        resolve(user);
+      }
+    })
+  });
+};
 
 export const getDataFromFirebase = async (ref, cb) => {
   let data;
@@ -68,14 +78,16 @@ export const createActivity = (user, ownerId, type) => {
   if (type === 'follow') activity = 'started following you';
   else if (type === 'post_liked') activity = 'liked your photo';
   else if (type === 'post_comment') activity = 'commented your post';
-  db.ref(`users/${ownerId}/activity`).push().set({
-    activity: {
-      profile_picture: user.profile_picture,
-      username: user.username,
-      activity,
-      type
-    }
-  });
+  if (user.id !== ownerId) {
+    db.ref(`users/${ownerId}/activity`).push().set({
+      activity: {
+        profile_picture: user.profile_picture,
+        username: user.username,
+        activity,
+        type
+      }
+    });
+  }
 };
 
 export const totalLikes = (postId, owner) => {
